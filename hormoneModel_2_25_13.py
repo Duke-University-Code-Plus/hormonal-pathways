@@ -7,36 +7,36 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]), GIn : float = 0.1, 
    #check inputs for validity
     if not isinstance(gammaIn, np.ndarray):
         raise TypeError('gammaIn must be a numpy array')
-    if not isinstance(GIn, float):
-        raise TypeError('GIn must be a float')
-    if not isinstance(XminIn, float):
-        raise TypeError('XminIn must be a float')
-    if not isinstance(delSmaxIn, float):
-        raise TypeError('delSmaxIn must be a float')
-    if not isinstance(delCmaxIn, float):
-        raise TypeError('delCmaxIn must be a float')
-    if not isinstance(tauIn, float):
-        raise TypeError('tauIn must be a float')
-    if not isinstance(KIn, float):
-        raise TypeError('KIn must be a float')
-    if not isinstance(alphaIn, float):
-        raise TypeError('alphaIn must be a float')
-    if not isinstance(betaIn, float):
-        raise TypeError('betaIn must be a float')
-    if not isinstance(muIn, float):
-        raise TypeError('muIn must be a float')
+    if not isinstance(GIn, float) and not isinstance(GIn, int):
+            raise TypeError('GIn must be a float or int')
+    if not isinstance(XminIn, float) and not isinstance(XminIn, int):
+        raise TypeError('XminIn must be a float or int')
+    if not isinstance(delSmaxIn, float) and not isinstance(delSmaxIn, int):
+        raise TypeError('delSmaxIn must be a float or int')
+    if not isinstance(delCmaxIn, float) and not isinstance(delCmaxIn, int):
+        raise TypeError('delCmaxIn must be a float or int')
+    if not isinstance(tauIn, float) and not isinstance(tauIn, int):
+        raise TypeError('tauIn must be a float or int')
+    if not isinstance(KIn, float) and not isinstance(KIn, int):
+        raise TypeError('KIn must be a float or int')
+    if not isinstance(alphaIn, float) and not isinstance(alphaIn, int):
+        raise TypeError('alphaIn must be a float or int')
+    if not isinstance(betaIn, float) and not isinstance(betaIn, int):
+        raise TypeError('betaIn must be a float or int')
+    if not isinstance(muIn, float) and not isinstance(muIn, int):
+        raise TypeError('muIn must be a float or int')
     if not isinstance(zIn, np.ndarray):
         raise TypeError('zIn must be a numpy array')
     if not isinstance(NIn, int):
         raise TypeError('NIn must be an integer')
-    if not isinstance(foodShort, float):
-        raise TypeError('foodShort must be a float')
+    if not isinstance(foodShort, float) and not isinstance(foodShort, int):
+        raise TypeError('foodShort must be a float or int')
     if not isinstance(foodShortbegin, int):
         raise TypeError('foodShortbegin must be an integer')
     if not isinstance(foodShortend, int):
         raise TypeError('foodShortend must be an integer')
-    if not isinstance(F_tIn, float):
-        raise TypeError('F_tIn must be a float')
+    if not isinstance(F_tIn, float) and not isinstance(F_tIn, int):
+        raise TypeError('F_tIn must be a float or int')
     if not len(gammaIn) == 3:
         raise ValueError('gammaIn must have length 3')
     if not 0 <= GIn <= 1:
