@@ -29,7 +29,6 @@ def plotStudyResults(xHistory, sHistory, cHistory, wHistory, wCumulative):
     plt.figure(1)
     plt.clf
     plot_error_graphs(xHistory, 'Energy History w/ Error')
-
     
     plt.figure(2)
     plt.clf
