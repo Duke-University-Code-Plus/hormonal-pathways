@@ -2,20 +2,20 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 
-def rundelSmaxStudy():
+def rundelSmaxStudy(gammaIn : np.array = np.array([0.5, 1, .2]), GIn : float = 0.01, XminIn : float = 1, delSmaxIn : np.array = np.linspace(0.1, 10, 20), delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, alphaIn : float = 5, betaIn : float = 1, muIn : float = 0.01, zIn : np.array = np.array([0.1, 0.2, 0.3]), NIn : int = 20, foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20):
     # define constants:
-    gamma = np.array([0.5, 1, 2])
-    G = 0.01
-    Xmin = 1
-    delSmax = np.linspace(0.1, 10, 20)
-    delCmax = 1
-    tau = 1
-    K = 1
-    alpha = 5
-    beta = 1
-    mu = 0.01
-    z = np.array([0.1, 0.2, 0.3])
-    N = 20
+    gamma = gammaIn
+    G = GIn
+    Xmin = XminIn
+    delSmax = delSmaxIn
+    delCmax = delCmaxIn
+    tau = tauIn
+    K = KIn
+    alpha = alphaIn
+    beta = betaIn
+    mu = muIn
+    z = zIn
+    N = NIn
 
     # states being tracked
     Xhist = np.zeros((1, N, 20))
