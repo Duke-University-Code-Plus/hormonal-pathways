@@ -5,43 +5,43 @@ matplotlib.use('TkAgg')
 from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 
-def hormoneModel():
+def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]), GIn : float = 0.1, XminIn : float = 1, delSmaxIn : float = 1, delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20):
     # define constants:
     
     # weights on trait selection against mating effort:
-    gamma = np.ones(3)
+    gamma = gammaIn
     
     # Minimum hormonal state permissive of gamete maturation
-    G = 0.1
+    G = GIn
     
     # Minimum body condition permissive of reproduction
-    Xmin = 1
+    Xmin = XminIn
     
     # max change in sensitivity
-    delSmax = 1
+    delSmax = delSmaxIn
     
     # max change in production
-    delCmax = 1
+    delCmax = delCmaxIn
     
     # Food availability
-    tau = 5
+    tau = tauIn
     
     # Michaelis-Menten Constant
-    K = 1
-    
+    K = KIn
+
     # parameters for beta distribution over reproductive efficacy
-    alpha = 2
-    beta = 2
+    alpha = alphaIn
+    beta = betaIn
     
     # mortality probability
-    mu = 1e-10
+    mu = muIn
     
     # exponents in fitness function
-    z = np.array([0.2, 0.3, 0.5])
+    z = zIn
     
     # define simulation parameters
     alive = True
-    N = 100
+    N = NIn
     
     # states being tracked
     Xhist = np.zeros(N)
