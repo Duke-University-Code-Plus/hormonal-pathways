@@ -1,11 +1,9 @@
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
-matplotlib.use('TkAgg')
 from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 
-def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]), GIn : float = 0.1, XminIn : float = 1, delSmaxIn : float = 1, delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20):
+def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]), GIn : float = 0.1, XminIn : float = 1, delSmaxIn : float = 1, delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20, F_tIn : float = 1):
     # define constants:
     
     # weights on trait selection against mating effort:
@@ -61,7 +59,11 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]), GIn : float = 0.1, 
         # find beta for this timestep:
         beta_t = beta_dist.rvs(alpha, beta)
         # define food availability
-        F_t = 1
+        if foodShortbegin < i < foodShortend:
+            F_t = foodShort
+        else:
+            F_t = F_tIn
+        
         E_t = tau * F_t
         
         X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[i], beta_t, z, Shist[:, i], Chist[i], K, E_t, gamma, delCmax, delSmax, Xmin, G)
