@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 
-def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]), GIn : float = 0.1, XminIn : float = float(1), delSmaxIn : float = float(1), delCmaxIn : float = float(1), tauIn : float = float(5), KIn : float = float(1), alphaIn : float = float(2), betaIn : float = float(2), muIn : float = 0.0001, zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20, F_tIn : float = float(1)):
+def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]), GIn : float = 0.1, XminIn : float = float(1), delSmaxIn : float = float(1), delCmaxIn : float = float(1), tauIn : float = float(5), KIn : float = float(1), alphaIn : float = float(2), betaIn : float = float(2), muIn : float = 0.001, zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20, F_tIn : float = float(1)):
    #check inputs for validity
     if not isinstance(gammaIn, np.ndarray):
         raise TypeError('gammaIn must be a numpy array')
