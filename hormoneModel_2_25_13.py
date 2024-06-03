@@ -75,7 +75,7 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]), GIn : float = 0.1, 
         raise ValueError('foodShortbegin must be between 0 and NIn')
     if not 0 <= foodShortend < NIn:
         raise ValueError('foodShortend must be between 0 and NIn')
-   
+    
    # define constants:
     
     # weights on trait selection against mating effort:
