@@ -101,19 +101,18 @@ def hormoneModel():
     
     # Show plots with legends
     plt.figure(1)
-    plt.legend()
+
     
     plt.figure(2)
-    plt.legend(['S1', 'S2', 'S3'])
     
     plt.figure(3)
-    plt.legend()
+
     
     plt.figure(4)
-    plt.legend()
+
     
     plt.figure(5)
-    plt.legend()
+
     
     plt.show()
 
