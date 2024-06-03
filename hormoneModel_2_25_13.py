@@ -4,7 +4,79 @@ from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 
 def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]), GIn : float = 0.1, XminIn : float = 1, delSmaxIn : float = 1, delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20, F_tIn : float = 1):
-    # define constants:
+   #check inputs for validity
+    if not isinstance(gammaIn, np.ndarray):
+        raise TypeError('gammaIn must be a numpy array')
+    if not isinstance(GIn, float):
+        raise TypeError('GIn must be a float')
+    if not isinstance(XminIn, float):
+        raise TypeError('XminIn must be a float')
+    if not isinstance(delSmaxIn, float):
+        raise TypeError('delSmaxIn must be a float')
+    if not isinstance(delCmaxIn, float):
+        raise TypeError('delCmaxIn must be a float')
+    if not isinstance(tauIn, float):
+        raise TypeError('tauIn must be a float')
+    if not isinstance(KIn, float):
+        raise TypeError('KIn must be a float')
+    if not isinstance(alphaIn, float):
+        raise TypeError('alphaIn must be a float')
+    if not isinstance(betaIn, float):
+        raise TypeError('betaIn must be a float')
+    if not isinstance(muIn, float):
+        raise TypeError('muIn must be a float')
+    if not isinstance(zIn, np.ndarray):
+        raise TypeError('zIn must be a numpy array')
+    if not isinstance(NIn, int):
+        raise TypeError('NIn must be an integer')
+    if not isinstance(foodShort, float):
+        raise TypeError('foodShort must be a float')
+    if not isinstance(foodShortbegin, int):
+        raise TypeError('foodShortbegin must be an integer')
+    if not isinstance(foodShortend, int):
+        raise TypeError('foodShortend must be an integer')
+    if not isinstance(F_tIn, float):
+        raise TypeError('F_tIn must be a float')
+    if not len(gammaIn) == 3:
+        raise ValueError('gammaIn must have length 3')
+    if not 0 <= GIn <= 1:
+        raise ValueError('GIn must be between 0 and 1')
+    if not XminIn > 0:
+        raise ValueError('XminIn must be greater than 0')
+    if not delSmaxIn > 0:
+        raise ValueError('delSmaxIn must be greater than 0')
+    if not delCmaxIn > 0:
+        raise ValueError('delCmaxIn must be greater than 0')
+    if not tauIn > 0:
+        raise ValueError('tauIn must be greater than 0')
+    if not KIn > 0:
+        raise ValueError('KIn must be greater than 0')
+    if not alphaIn > 0:
+        raise ValueError('alphaIn must be greater than 0')
+    if not betaIn > 0:
+        raise ValueError('betaIn must be greater than 0')
+    if not 0 <= muIn <= 1:
+        raise ValueError('muIn must be between 0 and 1')
+    if not len(zIn) == 3:
+        raise ValueError('zIn must have length 3')
+    if not NIn > 0:
+        raise ValueError('NIn must be greater than 0')
+    if not 0 <= foodShort <= 1:
+        raise ValueError('foodShort must be between 0 and 1')
+    if not foodShortbegin >= 0:
+        raise ValueError('foodShortbegin must be greater than or equal to 0')
+    if not foodShortend >= 0:
+        raise ValueError('foodShortend must be greater than or equal to 0')
+    if not F_tIn > 0:
+        raise ValueError('F_tIn must be greater than 0')
+    if not foodShortbegin < foodShortend:
+        raise ValueError('foodShortbegin must be less than foodShortend')
+    if not 0 <= foodShortbegin < NIn:
+        raise ValueError('foodShortbegin must be between 0 and NIn')
+    if not 0 <= foodShortend < NIn:
+        raise ValueError('foodShortend must be between 0 and NIn')
+   
+   # define constants:
     
     # weights on trait selection against mating effort:
     gamma = gammaIn
