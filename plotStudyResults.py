@@ -1,14 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-#from runGStudy import runGStudy
 #from rungamma1Study import rungamma1Study
 from rundelSmaxStudy import rundelSmaxStudy
-#from runKStudy import runKStudy
-#from rundelSmaxStudy import rundelSmaxStudy
- 
+
 Xhist, Shist, Chist, Whist, Wcuml = rundelSmaxStudy()
-#Xhist, Shist, Chist, Whist, Wcuml = runGStudy()
-#Xhist, Shist, Chist, Whist, Wcuml = runKStudy()
 #Xhist, Shist, Chist, Whist, Wcuml = rungamma1Study()
 
 
