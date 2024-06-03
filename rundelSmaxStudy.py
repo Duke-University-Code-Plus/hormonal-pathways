@@ -2,7 +2,7 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 
-def rundelSmaxStudy(gammaIn : np.array = np.array([0.5, 1, .2]), GIn : float = 0.01, XminIn : float = 1, delSmaxIn : np.array = np.linspace(0.1, 10, 20), delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, alphaIn : float = 5, betaIn : float = 1, muIn : float = 0.01, zIn : np.array = np.array([0.1, 0.2, 0.3]), NIn : int = 20, foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20):
+def rundelSmaxStudy(gammaIn : np.array = np.array([0.5, 1, .2]), GIn : float = 0.01, XminIn : float = 1, delSmaxIn : np.array = np.linspace(0.1, 10, 20), delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, alphaIn : float = 5, betaIn : float = 1, muIn : float = 0.01, zIn : np.array = np.array([0.1, 0.2, 0.3]), NIn : int = 20, foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 10, F_tIn : float = 1):
     # define constants:
     gamma = gammaIn
     G = GIn
@@ -38,6 +38,10 @@ def rundelSmaxStudy(gammaIn : np.array = np.array([0.5, 1, .2]), GIn : float = 0
             beta_t = beta_dist.rvs(alpha, beta)
             # define food availability
             F_t = 1
+            if foodShortbegin < i < foodShortend:
+                F_t = foodShort
+            else:
+                F_t = F_tIn
             E_t = tau * F_t
 
             X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[0, i, j], beta_t, z, Shist[:, i, j], Chist[0, i, j], K, E_t, gamma, delCmax, delSmax[j], Xmin, G)
