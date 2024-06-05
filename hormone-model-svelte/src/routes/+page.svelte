@@ -1,4 +1,7 @@
 <head>
+
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hormone Model Visualization</title>
@@ -14,8 +17,14 @@
     <canvas id="cumulativeFitnessChart"></canvas>
 
     <script>
-        // Fetch data from the API
-        fetch('/hormonemodel')
+        import axios from 'axios';
+        import { onMount } from 'svelte';
+
+        let data = {};
+
+        onMount(async () => {
+        try {
+          const response = await axios.get('http://127.0.0.1:5000/hormonemodel');
             .then(response => response.json())
             .then(data => {
                 // Data from API
@@ -148,6 +157,9 @@
                     }
                 });
             })
-            .catch(error => console.error('Error fetching data:', error));
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    });
     </script>
 </body>

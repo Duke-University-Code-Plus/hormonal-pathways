@@ -1,18 +1,19 @@
 <script>
-const axios = require('axios');
+  import axios from 'axios';
+  import { onMount } from 'svelte';
 
-// Make a request for a user with a given ID
-axios.get('/user?ID=12345')
-  .then(function (response) {
-    // handle success
-    console.log(response);
-  })
-  .catch(function (error) {
-    // handle error
-    console.log(error);
-  })
-  .finally(function () {
-    // always executed
+  let data = {};
+
+  onMount(async () => {
+      try {
+          const response = await axios.get('http://127.0.0.1:5000/hormonemodel');
+          data = response.data;
+      } catch (error) {
+          console.error('Error fetching data:', error);
+      }
   });
-
 </script>
+
+<main>
+  <h1>{data.message}</h1>
+</main>
