@@ -1,60 +1,3 @@
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        background-color: #f4f4f9;
-    }
-
-    h1 {
-        text-align: center;
-        color: #333;
-    }
-
-    .input-container {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-bottom: 20px;
-    }
-
-    .input-container input {
-        margin: 5px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        width: 80px;
-        text-align: center;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .input-container button {
-        margin: 5px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        background-color: #28a745;
-        color: white;
-        cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .input-container button:hover {
-        background-color: #218838;
-    }
-
-    .chart-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 20px;
-    }
-
-    canvas {
-        max-width: 100%;
-        margin: 20px 0;
-    }
-</style>
-
 <script>
     import { onMount } from 'svelte';
     import axios from 'axios';
@@ -76,7 +19,7 @@
     let K = writable(1);
     let alpha = writable(2);
     let beta = writable(2);
-    let mu = writable(0.001);
+    let mu = writable(0.5);
     let z = writable([0.2, 0.3, 0.3]);
     let N = writable(100);
     let foodShort = writable(0.4);
@@ -261,6 +204,73 @@
     }
 </script>
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f4f4f9;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .input-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        margin: 5px;
+    }
+
+    .input-group label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .input-group input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 120px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-container button {
+        margin: 5px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #28a745;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-container button:hover {
+        background-color: #218838;
+    }
+
+    .chart-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    canvas {
+        max-width: 100%;
+        margin: 20px 0;
+    }
+</style>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -271,22 +281,67 @@
     <h1>Hormone Model Visualization</h1>
     
     <div class="input-container">
-        <!-- Input fields for parameters -->
-        <input type="text" placeholder="gamma" bind:value={$gamma} />
-        <input type="text" placeholder="G" bind:value={$G} />
-        <input type="text" placeholder="Xmin" bind:value={$Xmin} />
-        <input type="text" placeholder="delSmax" bind:value={$delSmax} />
-        <input type="text" placeholder="delCmax" bind:value={$delCmax} />
-        <input type="text" placeholder="tau" bind:value={$tau} />
-        <input type="text" placeholder="K" bind:value={$K} />
-        <input type="text" placeholder="alpha" bind:value={$alpha} />
-        <input type="text" placeholder="beta" bind:value={$beta} />
-        <input type="text" placeholder="mu" bind:value={$mu} />
-        <input type="text" placeholder="z" bind:value={$z} />
-        <input type="text" placeholder="N" bind:value={$N} />
-        <input type="text" placeholder="foodShort" bind:value={$foodShort} />
-        <input type="text" placeholder="foodShortbegin" bind:value={$foodShortbegin} />
-        <input type="text" placeholder="foodShortend" bind:value={$foodShortend} />
+        <!-- Input fields for parameters with labels -->
+        <div class="input-group">
+            <label for="gamma">Gamma</label>
+            <input id="gamma" type="text" placeholder="0.1,0.2,0.3" bind:value={$gamma} />
+        </div>
+        <div class="input-group">
+            <label for="G">G</label>
+            <input id="G" type="text" placeholder="0.1" bind:value={$G} />
+        </div>
+        <div class="input-group">
+            <label for="Xmin">Xmin</label>
+            <input id="Xmin" type="text" placeholder="1" bind:value={$Xmin} />
+        </div>
+        <div class="input-group">
+            <label for="delSmax">delSmax</label>
+            <input id="delSmax" type="text" placeholder="1" bind:value={$delSmax} />
+        </div>
+        <div class="input-group">
+            <label for="delCmax">delCmax</label>
+            <input id="delCmax" type="text" placeholder="1" bind:value={$delCmax} />
+        </div>
+        <div class="input-group">
+            <label for="tau">Tau</label>
+            <input id="tau" type="text" placeholder="5" bind:value={$tau} />
+        </div>
+        <div class="input-group">
+            <label for="K">K</label>
+            <input id="K" type="text" placeholder="1" bind:value={$K} />
+        </div>
+        <div class="input-group">
+            <label for="alpha">Alpha</label>
+            <input id="alpha" type="text" placeholder="2" bind:value={$alpha} />
+        </div>
+        <div class="input-group">
+            <label for="beta">Beta</label>
+            <input id="beta" type="text" placeholder="2" bind:value={$beta} />
+        </div>
+        <div class="input-group">
+            <label for="mu">Mu</label>
+            <input id="mu" type="text" placeholder="0.5" bind:value={$mu} />
+        </div>
+        <div class="input-group">
+            <label for="z">Z</label>
+            <input id="z" type="text" placeholder="0.2,0.3,0.3" bind:value={$z} />
+        </div>
+        <div class="input-group">
+            <label for="N">N</label>
+            <input id="N" type="text" placeholder="100" bind:value={$N} />
+        </div>
+        <div class="input-group">
+            <label for="foodShort">Food Short</label>
+            <input id="foodShort" type="text" placeholder="0.4" bind:value={$foodShort} />
+        </div>
+        <div class="input-group">
+            <label for="foodShortbegin">Food Short Begin</label>
+            <input id="foodShortbegin" type="text" placeholder="8" bind:value={$foodShortbegin} />
+        </div>
+        <div class="input-group">
+            <label for="foodShortend">Food Short End</label>
+            <input id="foodShortend" type="text" placeholder="20" bind:value={$foodShortend} />
+        </div>
 
         <!-- Run button to fetch data -->
         <button on:click={fetchData}>Run</button>
