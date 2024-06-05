@@ -8,7 +8,7 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]), GIn : float = 0.1, 
     if not isinstance(gammaIn, np.ndarray):
         raise TypeError('gammaIn must be a numpy array')
     if not isinstance(GIn, float) and not isinstance(GIn, int):
-            raise TypeError('GIn must be a float or int')
+        raise TypeError('GIn must be a float or int')
     if not isinstance(XminIn, float) and not isinstance(XminIn, int):
         raise TypeError('XminIn must be a float or int')
     if not isinstance(delSmaxIn, float) and not isinstance(delSmaxIn, int):
