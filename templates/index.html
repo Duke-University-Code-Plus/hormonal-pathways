@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hormone Model Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <h1>Hormone Model Visualization</h1>
+    <!-- chart js edits the canvas element; below are the ids of each canvas element we want to create-->
+    <canvas id="bodyConditionChart"></canvas>
+    <canvas id="sensitivityChart"></canvas>
+    <canvas id="productionChart"></canvas>
+    <canvas id="fitnessChart"></canvas>
+    <canvas id="cumulativeFitnessChart"></canvas>
+
+    <script>
+        // Fetch data from the API
+        fetch('/hormonemodel')
+            .then(response => response.json())
+            .then(data => {
+                // Data from API
+                const Xhist = data.Xhist;
+                const Shist = data.Shist;
+                const Chist = data.Chist;
+                const Whist = data.Whist;
+                const Wcuml = data.Wcuml;
+
+                // Create Body Condition Chart
+                
+        const Xchart = new Chart(document.getElementById('bodyConditionChart'), {
+                    type: 'line',
+                    data: {
+                        // creates an array of integers from 0 to Xhist.length - 1
+                        labels: Array.from({ length: Xhist.length }, (_, i) => i),
+                        datasets: [{
+                            label: 'Body Condition',
+                            data: Xhist,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+
+                // Create Sensitivity Chart
+        const Schart = new Chart(document.getElementById('sensitivityChart'), {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({ length: Shist[0].length }, (_, i) => i),
+                        datasets: [
+                            {
+                                label: 'Sensitivity 1',
+                                data: Shist[0],
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1,
+                                fill: false
+                            },
+                            {
+                                label: 'Sensitivity 2',
+                                data: Shist[1],
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1,
+                                fill: false
+                            },
+                            {
+                                label: 'Sensitivity 3',
+                                data: Shist[2],
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+
+                // Create Production Chart
+        const Cchart = new Chart(document.getElementById('productionChart'), {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({ length: Chist.length }, (_, i) => i),
+                        datasets: [{
+                            label: 'Production',
+                            data: Chist,
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+
+                // Create Fitness Chart
+        const Fchart =  new Chart(document.getElementById('fitnessChart'), {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({ length: Whist.length }, (_, i) => i),
+                        datasets: [{
+                            label: 'Fitness',
+                            data: Whist,
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+
+                // Create Cumulative Fitness Chart
+        const WcumlChart = new Chart(document.getElementById('cumulativeFitnessChart'), {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({ length: Wcuml.length }, (_, i) => i),
+                        datasets: [{
+                            label: 'Cumulative Fitness',
+                            data: Wcuml,
+                            borderColor: 'rgba(255, 206, 86, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+</html>
