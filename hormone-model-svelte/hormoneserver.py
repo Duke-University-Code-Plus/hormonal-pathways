@@ -1,12 +1,13 @@
 import json
+import numpy as np
 from hormoneModel_6_4_24 import hormoneModel
 from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
 
 def parse_array_param(param):
-    """Convert a comma-separated string into a list of floats."""
-    return [float(x) for x in param.split(',')] if param else []
+    """Convert a comma-separated string into a numpy array of floats."""
+    return np.array([float(x) for x in param.split(',')]) if param else np.array([])
 
 @app.route('/hormonemodel', methods=['GET'])
 def get_arrays():
@@ -31,10 +32,6 @@ def get_arrays():
         foodShortend=int(request.args.get('foodShortend', 0))
     )
     return jsonify(results)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(port=5000)
