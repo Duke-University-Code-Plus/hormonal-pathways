@@ -1,3 +1,60 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f4f4f9;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .input-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .input-container input {
+        margin: 5px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 80px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-container button {
+        margin: 5px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #28a745;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-container button:hover {
+        background-color: #218838;
+    }
+
+    .chart-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    canvas {
+        max-width: 100%;
+        margin: 20px 0;
+    }
+</style>
+
 <script>
     import { onMount } from 'svelte';
     import axios from 'axios';
@@ -19,12 +76,18 @@
     let K = writable(1);
     let alpha = writable(2);
     let beta = writable(2);
-    let mu = writable(0.5);
+    let mu = writable(0.001);
     let z = writable([0.2, 0.3, 0.3]);
     let N = writable(100);
     let foodShort = writable(0.4);
     let foodShortbegin = writable(8);
     let foodShortend = writable(20);
+
+    let bodyConditionChartInstance = null;
+    let sensitivityChartInstance = null;
+    let productionChartInstance = null;
+    let fitnessChartInstance = null;
+    let cumulativeFitnessChartInstance = null;
 
     onMount(() => {
         fetchData();
@@ -68,8 +131,15 @@
     }
 
     function createCharts() {
+        // Destroy existing charts if they exist
+        if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
+        if (sensitivityChartInstance) sensitivityChartInstance.destroy();
+        if (productionChartInstance) productionChartInstance.destroy();
+        if (fitnessChartInstance) fitnessChartInstance.destroy();
+        if (cumulativeFitnessChartInstance) cumulativeFitnessChartInstance.destroy();
+
         // Create Body Condition Chart
-        new Chart(document.getElementById('bodyConditionChart'), {
+        bodyConditionChartInstance = new Chart(document.getElementById('bodyConditionChart'), {
             type: 'line',
             data: {
                 labels: Array.from({ length: Xhist.length }, (_, i) => i),
@@ -90,7 +160,7 @@
         });
 
         // Create Sensitivity Chart
-        new Chart(document.getElementById('sensitivityChart'), {
+        sensitivityChartInstance = new Chart(document.getElementById('sensitivityChart'), {
             type: 'line',
             data: {
                 labels: Array.from({ length: Shist[0].length }, (_, i) => i),
@@ -127,7 +197,7 @@
         });
 
         // Create Production Chart
-        new Chart(document.getElementById('productionChart'), {
+        productionChartInstance = new Chart(document.getElementById('productionChart'), {
             type: 'line',
             data: {
                 labels: Array.from({ length: Chist.length }, (_, i) => i),
@@ -148,7 +218,7 @@
         });
 
         // Create Fitness Chart
-        new Chart(document.getElementById('fitnessChart'), {
+        fitnessChartInstance = new Chart(document.getElementById('fitnessChart'), {
             type: 'line',
             data: {
                 labels: Array.from({ length: Whist.length }, (_, i) => i),
@@ -169,7 +239,7 @@
         });
 
         // Create Cumulative Fitness Chart
-        new Chart(document.getElementById('cumulativeFitnessChart'), {
+        cumulativeFitnessChartInstance = new Chart(document.getElementById('cumulativeFitnessChart'), {
             type: 'line',
             data: {
                 labels: Array.from({ length: Wcuml.length }, (_, i) => i),
@@ -200,29 +270,33 @@
 <body>
     <h1>Hormone Model Visualization</h1>
     
-    <!-- Input fields for parameters -->
-    <input type="text" placeholder="Enter gamma value" bind:value={$gamma} />
-    <input type="text" placeholder="Enter G value" bind:value={$G} />
-    <input type="text" placeholder="Enter Xmin value" bind:value={$Xmin} />
-    <input type="text" placeholder="Enter delSmax value" bind:value={$delSmax} />
-    <input type="text" placeholder="Enter delCmax value" bind:value={$delCmax} />
-    <input type="text" placeholder="Enter tau value" bind:value={$tau} />
-    <input type="text" placeholder="Enter K value" bind:value={$K} />
-    <input type="text" placeholder="Enter alpha value" bind:value={$alpha} />
-    <input type="text" placeholder="Enter beta value" bind:value={$beta} />
-    <input type="text" placeholder="Enter mu value" bind:value={$mu} />
-    <input type="text" placeholder="Enter z value" bind:value={$z} />
-    <input type="text" placeholder="Enter N value" bind:value={$N} />
-    <input type="text" placeholder="Enter foodShort value" bind:value={$foodShort} />
-    <input type="text" placeholder="Enter foodShortbegin value" bind:value={$foodShortbegin} />
-    <input type="text" placeholder="Enter foodShortend value" bind:value={$foodShortend} />
+    <div class="input-container">
+        <!-- Input fields for parameters -->
+        <input type="text" placeholder="gamma" bind:value={$gamma} />
+        <input type="text" placeholder="G" bind:value={$G} />
+        <input type="text" placeholder="Xmin" bind:value={$Xmin} />
+        <input type="text" placeholder="delSmax" bind:value={$delSmax} />
+        <input type="text" placeholder="delCmax" bind:value={$delCmax} />
+        <input type="text" placeholder="tau" bind:value={$tau} />
+        <input type="text" placeholder="K" bind:value={$K} />
+        <input type="text" placeholder="alpha" bind:value={$alpha} />
+        <input type="text" placeholder="beta" bind:value={$beta} />
+        <input type="text" placeholder="mu" bind:value={$mu} />
+        <input type="text" placeholder="z" bind:value={$z} />
+        <input type="text" placeholder="N" bind:value={$N} />
+        <input type="text" placeholder="foodShort" bind:value={$foodShort} />
+        <input type="text" placeholder="foodShortbegin" bind:value={$foodShortbegin} />
+        <input type="text" placeholder="foodShortend" bind:value={$foodShortend} />
 
-    <!-- Run button to fetch data -->
-    <button on:click={fetchData}>Run</button>
+        <!-- Run button to fetch data -->
+        <button on:click={fetchData}>Run</button>
+    </div>
 
-    <canvas id="bodyConditionChart"></canvas>
-    <canvas id="sensitivityChart"></canvas>
-    <canvas id="productionChart"></canvas>
-    <canvas id="fitnessChart"></canvas>
-    <canvas id="cumulativeFitnessChart"></canvas>
+    <div class="chart-container">
+        <canvas id="bodyConditionChart"></canvas>
+        <canvas id="sensitivityChart"></canvas>
+        <canvas id="productionChart"></canvas>
+        <canvas id="fitnessChart"></canvas>
+        <canvas id="cumulativeFitnessChart"></canvas>
+    </div>
 </body>

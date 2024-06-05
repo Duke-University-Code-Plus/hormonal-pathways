@@ -1,13 +1,14 @@
 import json
 import numpy as np
 from hormoneModel_6_4_24 import hormoneModel
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 def parse_array_param(param):
-    """Convert a comma-separated string into a numpy array of floats."""
-    return np.array([float(x) for x in param.split(',')]) if param else np.array([])
+    return np.array([float(x) for x in param.split(',')] if param else np.array([]))
 
 @app.route('/hormonemodel', methods=['GET'])
 def get_arrays():
@@ -35,5 +36,6 @@ def get_arrays():
 
 if __name__ == '__main__':
     app.run(port=5000)
+
 
 
