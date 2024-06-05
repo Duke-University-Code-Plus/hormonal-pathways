@@ -6,7 +6,13 @@ app = Flask(__name__)
 
 @app.route('/hormonemodel', methods=['GET'])
 def get_arrays():
-    return jsonify(hormoneModel())
+    results = hormoneModel(gammaIn= request.args.get('gammaIn'), 
+                 GIn = request.args.get('GIn'), XminIn= request.args.get('XminIN'), delSmaxIn= request.args.get('delSmaxIn'), 
+                 delCmaxIn = request.args.get('delCmaxIN'), tauIn = request.args.get('tauIn'), KIn = request.args.get('KIn'), 
+                 alphaIn = request.args.get('alphaIn'), betaIn= request.args.get('betaIn'), muIn= request.args.get('muIn'), 
+                 zIn = request.args.get('zIn'), NIn = request.args.get('NIn'), foodShort = request.args.get('foodShort'), 
+                 foodShortbegin = request.args.get('foodShortbegin'), foodShortend =request.args.get('foodShortend'))
+    return jsonify(results)
 
 @app.route('/')
 def index():
