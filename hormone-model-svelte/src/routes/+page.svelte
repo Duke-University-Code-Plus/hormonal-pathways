@@ -17,9 +17,9 @@
     let delCmax = writable(1);
     let tau = writable(5);
     let K = writable(1);
-    let alpha = writable(2);
+    let alpha = writable(4);
     let beta = writable(2);
-    let mu = writable(0.5);
+    let mu = writable(0.01);
     let z = writable([0.2, 0.3, 0.3]);
     let N = writable(100);
     let foodShort = writable(0.4);
