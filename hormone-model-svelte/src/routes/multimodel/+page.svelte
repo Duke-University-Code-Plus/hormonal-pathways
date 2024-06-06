@@ -1,5 +1,5 @@
 <nav>
-    <a href="/">home</a>
+    <a href="/">Home</a>
     <a href="/multimodel">multimodel</a>
 </nav>
 
@@ -30,6 +30,10 @@
     let foodShort = writable(0.4);
     let foodShortbegin = writable(8);
     let foodShortend = writable(20);
+    let variableName = writable("Gamma");
+    let variableRangeBegin = writable(10);
+    let variableRangeEnd = writable(20);
+    let numRuns = writable(20);
 
     let bodyConditionChartInstance = null;
     let sensitivityChartInstance = null;
@@ -274,6 +278,56 @@
         max-width: 100%;
         margin: 20px 0;
     }
+
+    .dropbtn {
+        background-color: #04AA6D;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content button {
+        background: none;
+        border: none;
+        color: black;
+        padding: 12px 16px;
+        text-align: left;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .dropdown-content button:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: #3e8e41;
+    }
+
+    .dropdown {
+        float: left;
+    }
 </style>
 
 <head>
@@ -289,65 +343,98 @@
         <!-- Input fields for parameters with labels -->
         <div class="input-group">
             <label for="gamma">Gamma</label>
-            <input id="gamma" type="text" placeholder="0.1,0.2,0.3" bind:value={$gamma} />
+            <input id="gamma" type="number" placeholder="0.1,0.2,0.3" bind:value={$gamma} />
         </div>
         <div class="input-group">
             <label for="G">G</label>
-            <input id="G" type="text" placeholder="0.1" bind:value={$G} />
+            <input id="G" type="number" placeholder="0.1" bind:value={$G} />
         </div>
         <div class="input-group">
             <label for="Xmin">Xmin</label>
-            <input id="Xmin" type="text" placeholder="1" bind:value={$Xmin} />
+            <input id="Xmin" type="number" placeholder="1" bind:value={$Xmin} />
         </div>
         <div class="input-group">
             <label for="delSmax">delSmax</label>
-            <input id="delSmax" type="text" placeholder="1" bind:value={$delSmax} />
+            <input id="delSmax" type="number" placeholder="1" bind:value={$delSmax} />
         </div>
         <div class="input-group">
             <label for="delCmax">delCmax</label>
-            <input id="delCmax" type="text" placeholder="1" bind:value={$delCmax} />
+            <input id="delCmax" type="number" placeholder="1" bind:value={$delCmax} />
         </div>
         <div class="input-group">
             <label for="tau">Tau</label>
-            <input id="tau" type="text" placeholder="5" bind:value={$tau} />
+            <input id="tau" type="number" placeholder="5" bind:value={$tau} />
         </div>
         <div class="input-group">
             <label for="K">K</label>
-            <input id="K" type="text" placeholder="1" bind:value={$K} />
+            <input id="K" type="number" placeholder="1" bind:value={$K} />
         </div>
         <div class="input-group">
             <label for="alpha">Alpha</label>
-            <input id="alpha" type="text" placeholder="2" bind:value={$alpha} />
+            <input id="alpha" type="number" placeholder="2" bind:value={$alpha} />
         </div>
         <div class="input-group">
             <label for="beta">Beta</label>
-            <input id="beta" type="text" placeholder="2" bind:value={$beta} />
+            <input id="beta" type="number" placeholder="2" bind:value={$beta} />
         </div>
         <div class="input-group">
             <label for="mu">Mu</label>
-            <input id="mu" type="text" placeholder="0.5" bind:value={$mu} />
+            <input id="mu" type="number" placeholder="0.5" bind:value={$mu} />
         </div>
         <div class="input-group">
             <label for="z">Z</label>
-            <input id="z" type="text" placeholder="0.2,0.3,0.3" bind:value={$z} />
+            <input id="z" type="number" placeholder="0.2,0.3,0.3" bind:value={$z} />
         </div>
         <div class="input-group">
             <label for="N">N</label>
-            <input id="N" type="text" placeholder="100" bind:value={$N} />
+            <input id="N" type="number" placeholder="100" bind:value={$N} />
         </div>
         <div class="input-group">
             <label for="foodShort">Food Short</label>
-            <input id="foodShort" type="text" placeholder="0.4" bind:value={$foodShort} />
+            <input id="foodShort" type="number" placeholder="0.4" bind:value={$foodShort} />
         </div>
         <div class="input-group">
             <label for="foodShortbegin">Food Short Begin</label>
-            <input id="foodShortbegin" type="text" placeholder="8" bind:value={$foodShortbegin} />
+            <input id="foodShortbegin" type="number" placeholder="8" bind:value={$foodShortbegin} />
         </div>
         <div class="input-group">
             <label for="foodShortend">Food Short End</label>
-            <input id="foodShortend" type="text" placeholder="20" bind:value={$foodShortend} />
+            <input id="foodShortend" type="number" placeholder="20" bind:value={$foodShortend} />
         </div>
-
+        <div class="dropdown">
+            <button class="dropbtn">Select Variable to Experiment With</button>
+            <div class="dropdown-content">
+                <button on:click={() => variableName.set("Gamma")}>Gamma</button>
+                <button on:click={() => variableName.set("G")}>G</button>
+                <button on:click={() => variableName.set("Xmin")}>Xmin</button>
+                <button on:click={() => variableName.set("delSmax")}>delSmax</button>
+                <button on:click={() => variableName.set("delCmax")}>delCmax</button>
+                <button on:click={() => variableName.set("Tau")}>Tau</button>
+                <button on:click={() => variableName.set("K")}>K</button>
+                <button on:click={() => variableName.set("Alpha")}>Alpha</button>
+                <button on:click={() => variableName.set("Beta")}>Beta</button>
+                <button on:click={() => variableName.set("Mu")}>Mu</button>
+                <button on:click={() => variableName.set("Z")}>Z</button>
+            </div>
+        </div>
+        <h3>Variable You Chose: {$variableName}</h3>
+        <div class="input-group">
+            <label for="variableRange">Variable Range Begin</label>
+            <input id="variableRange" type="number" placeholder="10" bind:value={$variableRangeBegin} />
+        </div>
+        <div class="input-group">
+            <label for="variableRange">Variable Range End</label>
+            <input id="variableRange" type="number" placeholder="20" bind:value={$variableRangeEnd} />
+        <div class="input-group">
+            <label for="numRuns">Number of Runs</label>
+            <input id="numRuns" type="number" placeholder="20" bind:value={$numRuns} />
+        </div>
+        <p>
+            The range of the {$variableName} is from {$variableRangeBegin} to {$variableRangeEnd} and the number of lines is {$numRuns}.
+            Thus the variable will iterate from {$variableRangeBegin} to {$variableRangeEnd} in steps of size {($variableRangeEnd-$variableRangeBegin)/$numRuns}.
+            This can be seen in the chart below.
+            With blue being the lowest value and red being the highest value.
+        </p>
         <!-- Run button to fetch data -->
         <button on:click={fetchData}>Run</button>
     </div>

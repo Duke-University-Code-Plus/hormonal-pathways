@@ -3,7 +3,7 @@ from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 
 def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]), 
-                 GIn : float = 0.1, XminIn : float = 1, delSmaxIn : np.array = np.array([10, 20, 1]),
+                 GIn : float = 0.1, XminIn : float = 1, delSmaxIn : np.array = np.array([10, 20]),
                  delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, 
                  alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, 
                  zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, 
@@ -45,11 +45,11 @@ def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]),
     N = NIn
 
     # states being tracked
-    Xhist = np.zeros((1, N, 20))
-    Shist = np.zeros((3, N, 20))
-    Chist = np.zeros((1, N, 20))
-    Whist = np.zeros((1, N, 20))
-    Wcuml = np.zeros((1, N, 20))
+    Xhist = np.zeros((1, N, numRuns))
+    Shist = np.zeros((3, N, numRuns))
+    Chist = np.zeros((1, N, numRuns))
+    Whist = np.zeros((1, N, numRuns))
+    Wcuml = np.zeros((1, N, numRuns))
 
     for j in range(numRuns):
         # populate with initial conditions
