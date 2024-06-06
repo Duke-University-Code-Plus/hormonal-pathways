@@ -128,6 +128,127 @@
             });
         }
     }
+    //create Sensitivity Chart
+        /*sensitivityChartInstance = new Chart(
+            document.getElementById("sensitivityChart"),
+            {
+                type: "line",
+                data: {
+                    labels: Array.from(
+                        { length: Shist[0].length },
+                        (_, i) => i,
+                    ),
+                    datasets: [
+                        {
+                            label: "Sensitivity 1",
+                            data: Shist[0],
+                            borderColor: "rgba(255, 99, 132, 1)",
+                            borderWidth: 1,
+                            fill: false,
+                        },
+                        {
+                            label: "Sensitivity 2",
+                            data: Shist[1],
+                            borderColor: "rgba(54, 162, 235, 1)",
+                            borderWidth: 1,
+                            fill: false,
+                        },
+                        {
+                            label: "Sensitivity 3",
+                            data: Shist[2],
+                            borderColor: "rgba(75, 192, 192, 1)",
+                            borderWidth: 1,
+                            fill: false,
+                        },
+                    ],
+                },
+                options: {
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true },
+                    },
+                },
+            },
+        );
+
+        //create Production Chart
+        productionChartInstance = new Chart(
+            document.getElementById("productionChart"),
+            {
+                type: "line",
+                data: {
+                    labels: Array.from({ length: Chist.length }, (_, i) => i),
+                    datasets: [
+                        {
+                            label: "Production",
+                            data: Chist,
+                            borderColor: "rgba(153, 102, 255, 1)",
+                            borderWidth: 1,
+                            fill: false,
+                        },
+                    ],
+                },
+                options: {
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true },
+                    },
+                },
+            },
+        );
+
+        //create Fitness Chart
+        fitnessChartInstance = new Chart(
+            document.getElementById("fitnessChart"),
+            {
+                type: "line",
+                data: {
+                    labels: Array.from({ length: Whist.length }, (_, i) => i),
+                    datasets: [
+                        {
+                            label: "Fitness",
+                            data: Whist,
+                            borderColor: "rgba(255, 159, 64, 1)",
+                            borderWidth: 1,
+                            fill: false,
+                        },
+                    ],
+                },
+                options: {
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true },
+                    },
+                },
+            },
+        );
+
+        //create Cumulative Fitness Chart
+        cumulativeFitnessChartInstance = new Chart(
+            document.getElementById("cumulativeFitnessChart"),
+            {
+                type: "line",
+                data: {
+                    labels: Array.from({ length: Wcuml.length }, (_, i) => i),
+                    datasets: [
+                        {
+                            label: "Cumulative Fitness",
+                            data: Wcuml,
+                            borderColor: "rgba(255, 206, 86, 1)",
+                            borderWidth: 1,
+                            fill: false,
+                        },
+                    ],
+                },
+                options: {
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true },
+                    },
+                },
+            },
+        );*/
+    
 </script>
 
 <nav>
