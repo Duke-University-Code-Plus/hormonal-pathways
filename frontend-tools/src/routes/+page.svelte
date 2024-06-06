@@ -13,28 +13,30 @@
     onMount(
         async () => {
             try {
-                const response = await axios.get('http://localhost:5000/', {});
+                const response = await axios.get('http://localhost:5000');
                 responseData = response.data
-                createCharts();
+                Charts();
             } catch (error) {
-                console.error('Error :', error);
-                }
+                console.error(error);
             }
-        );
+        }
+    );
 
-    function createCharts() {
-        const ctx = document.getElementById('lineChart');
-        new Chart(ctx, {
+    function Charts() {
+        var ctx = document.getElementById('lineChart');
+        var x = Array.from({ length: responseData[0].Xhist.length }, (_, i) => i + 1);
+        new Chart(ctx, { 
             type: 'line', 
             data: {
-                labels: Array.from({ length: responseData[0].Xhist.length }, (_, i) => i + 1), // Generating labels from 1 to N
+                labels: x, 
                 datasets: [
                     {
                     label: 'Energy',
                     data: responseData[0].Xhist,
                     borderColor: 'rgba(75, 75, 75, 1)', 
                     tension: 0.1 
-                    }]
+                    }
+                ]
                 }
             });
         }
