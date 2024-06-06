@@ -14,7 +14,7 @@
     let Whist = [];
     let Wcuml = [];
 
-    // Initialize writable stores with default values
+    //initialize writable stores with default values
     let gamma = writable("0.1,0.2,0.3");
     let G = writable(0.1);
     let Xmin = writable(1);
@@ -48,7 +48,7 @@
     async function fetchData() {
         try {
             const params = {
-                gamma: get(gamma).split(','), // Convert comma-separated string to array
+                gamma: get(gamma).split(','), //convert comma-separated string to array
                 G: get(G),
                 Xmin: get(Xmin),
                 delSmax: get(delSmax),
@@ -58,7 +58,7 @@
                 alpha: get(alpha),
                 beta: get(beta),
                 mu: get(mu),
-                z: get(z).split(','), // Convert comma-separated string to array
+                z: get(z).split(','), //convert comma-separated string to array
                 N: get(N),
                 foodShort: get(foodShort),
                 foodShortbegin: get(foodShortbegin),
@@ -69,7 +69,7 @@
             const response = await axios.get(`http://127.0.0.1:5000/hormonemodel?${queryString}`);
             const data = response.data;
 
-            // Data from API
+            //data from API
             Xhist = data.Xhist;
             Shist = data.Shist;
             Chist = data.Chist;
@@ -83,14 +83,14 @@
     }
 
     function createCharts() {
-        // Destroy existing charts if they exist
+        //destroy existing charts if they exist
         if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
         if (sensitivityChartInstance) sensitivityChartInstance.destroy();
         if (productionChartInstance) productionChartInstance.destroy();
         if (fitnessChartInstance) fitnessChartInstance.destroy();
         if (cumulativeFitnessChartInstance) cumulativeFitnessChartInstance.destroy();
 
-        // Create Body Condition Chart
+        //dreate Body Condition Chart
         bodyConditionChartInstance = new Chart(document.getElementById('bodyConditionChart'), {
             type: 'line',
             data: {
@@ -111,7 +111,7 @@
             }
         });
 
-        // Create Sensitivity Chart
+        //create Sensitivity Chart
         sensitivityChartInstance = new Chart(document.getElementById('sensitivityChart'), {
             type: 'line',
             data: {
@@ -148,7 +148,7 @@
             }
         });
 
-        // Create Production Chart
+        //create Production Chart
         productionChartInstance = new Chart(document.getElementById('productionChart'), {
             type: 'line',
             data: {
@@ -169,7 +169,7 @@
             }
         });
 
-        // Create Fitness Chart
+        //create Fitness Chart
         fitnessChartInstance = new Chart(document.getElementById('fitnessChart'), {
             type: 'line',
             data: {
@@ -190,7 +190,7 @@
             }
         });
 
-        // Create Cumulative Fitness Chart
+        //create Cumulative Fitness Chart
         cumulativeFitnessChartInstance = new Chart(document.getElementById('cumulativeFitnessChart'), {
             type: 'line',
             data: {
@@ -255,14 +255,14 @@
         padding: 10px 20px;
         border: none;
         border-radius: 4px;
-        background-color: #28a745;
+        background-color: #2187c7;
         color: white;
         cursor: pointer;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .input-container button:hover {
-        background-color: #218838;
+        background-color: #032e73;
     }
 
     .chart-container {
@@ -278,7 +278,7 @@
     }
 
     .dropbtn {
-        background-color: #04AA6D;
+        background-color: #0d6de3;
         color: white;
         padding: 10px 20px;
         font-size: 16px;
@@ -321,18 +321,27 @@
     }
 
     .dropdown:hover .dropbtn {
-        background-color: #3e8e41;
+        background-color: #463e8e;
+    }
+
+    #run-button {
+        margin: 0;
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+         transform: translate(-50%, -50%);
     }
 </style>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hormone Model Mutli-Run Visualization</title>
+    <title>Hormone Model MultiRun Visualization</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <h1>Hormone Model Mutli-Run Visualization</h1>
+    <h1>Hormone Model Multi-Run Visualization</h1>
     
     <div class="input-container">
         <!-- Input fields for parameters with labels -->
@@ -432,7 +441,8 @@
             With blue being the lowest value and red being the highest value.
         </p>
         <!-- Run button to fetch data -->
-        <button on:click={fetchData}>Run</button>
+   
+        <button id="run-button" on:click={fetchData}>Run</button>
     </div>
 
     <div class="chart-container">
