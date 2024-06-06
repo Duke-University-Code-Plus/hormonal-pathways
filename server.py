@@ -15,7 +15,9 @@ def data():
 
 @app.route('/test', methods=['GET'])
 def test():
-    return jsonify('boo: 1')
+    input = request.args.get('input')
+    print(input)
+    return jsonify('boo:'+input)
 
 if __name__ == '__main__':
     app.run(port=5000)

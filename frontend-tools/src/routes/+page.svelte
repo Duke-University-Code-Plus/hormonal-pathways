@@ -1,7 +1,3 @@
-<div>
-    <canvas id="lineChart"></canvas> <!-- creating canvas -->
-</div>
-
 <script>
     import { onMount } from 'svelte';
     import axios from 'axios';
@@ -13,9 +9,11 @@
     onMount(
         async () => {
             try {
-                const response = await axios.get('http://localhost:5000');
+                //const response = await axios.get(`http://127.0.0.1:5000/test?input=8`);
+                const response = await axios.get('api/test?input=8');
                 responseData = response.data
-                Charts();
+                console.log("responseData", responseData)
+                //Charts();
             } catch (error) {
                 console.error(error);
             }
@@ -43,3 +41,6 @@
 
 </script>
   
+<div>
+    <canvas id="lineChart"></canvas> <!-- creating canvas -->
+</div>
