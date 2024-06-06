@@ -78,34 +78,15 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]), GIn : float = 0.1, 
         Wcuml[i + 1] = Wcuml[i] + W_t1
         i += 1
     
-    # plot the results
-    plt.figure(1)
-    plt.clf()
-    plt.plot(range(N), Xhist)
-    plt.title('Energy History')
-    
-    plt.figure(2)
-    plt.clf()
-    plt.plot(range(N), Shist[0, :], 'r', range(N), Shist[1, :], 'b', range(N), Shist[2, :], 'g')
-    plt.title('Sensitivity History')
-    plt.legend(['S1', 'S2', 'S3'])
-    
-    plt.figure(3)
-    plt.clf()
-    plt.plot(range(N), Chist)
-    plt.title('Circulating Level History')
-    
-    plt.figure(4)
-    plt.clf()
-    plt.plot(range(N), Whist)
-    plt.title('Fitness History')
-    
-    plt.figure(5)
-    plt.clf()
-    plt.plot(range(N), Wcuml)
-    plt.title('Accumulated Fitness')
-    
-    plt.show()
+    results = [
+        {'Xhist': Xhist.tolist()},
+        {'Shist': Shist.tolist()},
+        {'Chist': Chist.tolist()},
+        {'Whist': Whist.tolist()},
+        {'Wcuml': Wcuml.tolist()} 
+        ]
+    return results
+
 
 def forwardModel(X_t, beta_t, z_t, S_t, C_t, K, E_t1, gamma_t, delCmax, delSmax, Xmin, G):
     def fitness_wrapped(delCS):
