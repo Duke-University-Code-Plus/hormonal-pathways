@@ -7,7 +7,10 @@ def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]),
                  delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, 
                  alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, 
                  zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, 
-                 foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20, numRuns : int = 20):
+                 foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20, numRuns : int = 20,
+                 variableName : str = 'gamma',
+                 variableRangeBegin : float =10, variableRangEnd : float = 20):
+
     # define constants:
     # weights on trait selection against mating effort:
     gamma = gammaIn
@@ -44,6 +47,19 @@ def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]),
     alive = True
     N = NIn
 
+    params = [gamma,G,Xmin,delSmax,delCmax,tau,K,alpha,beta,mu,z,N,numRuns]
+
+    variableName = variableName
+    variableRangeBegin = variableRangeBegin
+    variableRangEnd = variableRangEnd
+
+
+    for numParams in range(len(params)):
+        if str(variableName) == str(params[numParams]):
+            params[numParams] = np.linspace(variableRangeBegin, variableRangEnd, numRuns)
+            break
+
+
     # states being tracked
     Xhist = np.zeros((1, N, numRuns))
     Shist = np.zeros((3, N, numRuns))
@@ -62,7 +78,7 @@ def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]),
 
         while alive and i < N - 1:
             # find beta for this timestep:
-            beta_t = beta_dist.rvs(alpha, beta)
+            beta_t = beta_dist.rvs(alpha[j] if "alpha" == variableName else alpha, beta[j] if "beta" == variableName else beta)
             # define food availability
             if foodShortbegin < i < foodShortend:
                 F_t = foodShort
@@ -72,11 +88,19 @@ def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]),
             E_t = tau * F_t
                 
 
-            X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[0, i, j], beta_t, z, Shist[:, i, j], Chist[0, i, j], K, E_t, gamma, delCmax, delSmax[j], Xmin, G)
+            X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[0, i, j], beta_t, z, Shist[:, i, j], Chist[0, i, j],
+                                                  K[j] if "K" == variableName else K,
+                                                  E_t,
+                                                  gamma,delCmax[j] if "delCmax"== variableName else delCmax,
+                                                  delSmax[j] if delSmax == variableName else delSmax,
+                                                  Xmin[j] if "Xmin" == variableName else Xmin,
+                                                  G[j] if "G" == variableName else G)
             Xhist[0, i + 1, j] = X_t1
             Shist[:, i + 1, j] = S_t1
             Chist[0, i + 1, j] = C_t1
             Whist[0, i + 1, j] = W_t1
+
+            mu = mu[j] if "mu" == variableName else mu
 
             if np.random.rand() < mu or X_t1 < 0:
                 alive = False

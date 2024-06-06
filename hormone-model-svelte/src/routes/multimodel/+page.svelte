@@ -408,7 +408,6 @@
         <div class="dropdown">
             <button class="dropbtn">Select Variable to Experiment With</button>
             <div class="dropdown-content">
-                <button on:click={() => variableName.set("Gamma")}>Gamma</button>
                 <button on:click={() => variableName.set("G")}>G</button>
                 <button on:click={() => variableName.set("Xmin")}>Xmin</button>
                 <button on:click={() => variableName.set("delSmax")}>delSmax</button>
@@ -418,7 +417,6 @@
                 <button on:click={() => variableName.set("Alpha")}>Alpha</button>
                 <button on:click={() => variableName.set("Beta")}>Beta</button>
                 <button on:click={() => variableName.set("Mu")}>Mu</button>
-                <button on:click={() => variableName.set("Z")}>Z</button>
             </div>
         </div>
         <h3>Variable You Chose: {$variableName}</h3>
