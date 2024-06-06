@@ -1,7 +1,7 @@
 import json
 import numpy as np
 from hormoneModel_6_4_24 import hormoneModel
-from hormoneMutli import runMutliRun
+from hormoneMulti import runMultiRun
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -42,7 +42,7 @@ def get_multi_arrays():
     gamma = parse_array_param(request.args.get('gamma'))
     z = parse_array_param(request.args.get('z'))
 
-    results = runMutliRun(
+    results = runMultiRun(
         gammaIn=gamma, 
         GIn=float(request.args.get('G', 0)), 
         XminIn=float(request.args.get('Xmin', 0)), 

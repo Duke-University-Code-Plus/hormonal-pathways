@@ -2,7 +2,7 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 
-def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]), 
+def runMultiRun(gammaIn : np.array = np.array([.1, 2, .3]), 
                  GIn : float = 0.1, XminIn : float = 1, delSmaxIn : np.array = np.array([10, 20]),
                  delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, 
                  alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, 
@@ -22,7 +22,9 @@ def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]),
     Xmin = XminIn
     
     # max change in sensitivity
-    delSmax = np.linspace(delSmaxIn[0], delSmaxIn[1], numRuns)
+    #delSmax = np.linspace(delSmaxIn[0], delSmaxIn[1], numRuns)
+    #delSmax = delSmaxIn
+    delSmax = 1 # why are we setting delSMax as an array?
     
     # max change in production
     delCmax = delCmaxIn
@@ -54,9 +56,9 @@ def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]),
     variableRangEnd = variableRangEnd
 
 
-    for numParams in range(len(params)):
-        if str(variableName) == str(params[numParams]):
-            params[numParams] = np.linspace(variableRangeBegin, variableRangEnd, numRuns)
+    for param in params:
+        if str(variableName) == str(param):
+            param = np.linspace(variableRangeBegin, variableRangEnd, numRuns)
             break
 
 
@@ -86,13 +88,13 @@ def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]),
                 F_t = 1
             
             E_t = tau * F_t
-                
+            
 
             X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[0, i, j], beta_t, z, Shist[:, i, j], Chist[0, i, j],
                                                   K[j] if "K" == variableName else K,
                                                   E_t,
                                                   gamma,delCmax[j] if "delCmax"== variableName else delCmax,
-                                                  delSmax[j] if delSmax == variableName else delSmax,
+                                                  delSmax[j] if 'delSmax' == variableName else delSmax,
                                                   Xmin[j] if "Xmin" == variableName else Xmin,
                                                   G[j] if "G" == variableName else G)
             Xhist[0, i + 1, j] = X_t1
@@ -114,7 +116,7 @@ def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]),
         'Whist': Whist.tolist(),
         'Wcuml': Wcuml.tolist()
     }
-    return Xhist, Shist, Chist, Whist, Wcuml
+    return results
 
 def forwardModel(X_t, beta_t, z_t, S_t, C_t, K, E_t1, gamma_t, delCmax, delSmax, Xmin, G):
     def fitness(delCS):
@@ -156,5 +158,3 @@ def fitness_function(beta, z, S, C, K, X_t, E_t1, gamma, delCS, Xmin, G):
         W_t1 = 0
 
     return -(abs(W_t1) ** 3) * (abs(X_t1) ** 0.01)
-
-runMutliRun()
