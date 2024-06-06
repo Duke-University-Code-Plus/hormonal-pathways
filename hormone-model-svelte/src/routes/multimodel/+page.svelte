@@ -15,7 +15,7 @@
     let Wcuml = [];
 
     // Initialize writable stores with default values
-    let gamma = writable([0.1, 0.2, 0.3]);
+    let gamma = writable("0.1,0.2,0.3");
     let G = writable(0.1);
     let Xmin = writable(1);
     let delSmax = writable(1);
@@ -25,7 +25,7 @@
     let alpha = writable(4);
     let beta = writable(2);
     let mu = writable(0.01);
-    let z = writable([0.2, 0.3, 0.3]);
+    let z = writable("0.2,0.3,0.3");
     let N = writable(100);
     let foodShort = writable(0.4);
     let foodShortbegin = writable(8);
@@ -48,7 +48,7 @@
     async function fetchData() {
         try {
             const params = {
-                gamma: get(gamma).join(','), // Convert array to comma-separated string
+                gamma: get(gamma).split(','), // Convert comma-separated string to array
                 G: get(G),
                 Xmin: get(Xmin),
                 delSmax: get(delSmax),
@@ -58,7 +58,7 @@
                 alpha: get(alpha),
                 beta: get(beta),
                 mu: get(mu),
-                z: get(z).join(','), // Convert array to comma-separated string
+                z: get(z).split(','), // Convert comma-separated string to array
                 N: get(N),
                 foodShort: get(foodShort),
                 foodShortbegin: get(foodShortbegin),
@@ -227,19 +227,19 @@
 
     .input-container {
         display: flex;
-        justify-content: center;
         flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
         margin-bottom: 20px;
     }
 
     .input-group {
         display: flex;
         flex-direction: column;
-        margin: 5px;
+        gap: 10px;
     }
 
     .input-group label {
-        margin-bottom: 5px;
         font-weight: bold;
     }
 
@@ -247,13 +247,11 @@
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        width: 120px;
         text-align: center;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .input-container button {
-        margin: 5px;
         padding: 10px 20px;
         border: none;
         border-radius: 4px;
@@ -282,10 +280,11 @@
     .dropbtn {
         background-color: #04AA6D;
         color: white;
-        padding: 16px;
+        padding: 10px 20px;
         font-size: 16px;
         border: none;
         cursor: pointer;
+        border-radius: 4px;
     }
 
     .dropdown {
@@ -324,30 +323,26 @@
     .dropdown:hover .dropbtn {
         background-color: #3e8e41;
     }
-
-    .dropdown {
-        float: left;
-    }
 </style>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hormone Model Visualization</title>
+    <title>Hormone Model Mutli-Run Visualization</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <h1>Hormone Model Visualization</h1>
+    <h1>Hormone Model Mutli-Run Visualization</h1>
     
     <div class="input-container">
         <!-- Input fields for parameters with labels -->
         <div class="input-group">
             <label for="gamma">Gamma</label>
-            <input id="gamma" type="number" placeholder="0.1,0.2,0.3" bind:value={$gamma} />
+            <input id="gamma" type="text" placeholder="0.1,0.2,0.3" bind:value={$gamma} />
         </div>
         <div class="input-group">
             <label for="G">G</label>
-            <input id="G" type="number" placeholder="0.1" bind:value={$G} />
+            <input id="G" type="number" min="0" max="1" step="0.1" placeholder="0.1" bind:value={$G} />
         </div>
         <div class="input-group">
             <label for="Xmin">Xmin</label>
@@ -371,35 +366,35 @@
         </div>
         <div class="input-group">
             <label for="alpha">Alpha</label>
-            <input id="alpha" type="number" placeholder="2" bind:value={$alpha} />
+            <input id="alpha" type="number" min="0" placeholder="2" bind:value={$alpha} />
         </div>
         <div class="input-group">
             <label for="beta">Beta</label>
-            <input id="beta" type="number" placeholder="2" bind:value={$beta} />
+            <input id="beta" type="number" min="0" placeholder="2" bind:value={$beta} />
         </div>
         <div class="input-group">
             <label for="mu">Mu</label>
-            <input id="mu" type="number" placeholder="0.5" bind:value={$mu} />
+            <input id="mu" type="number" min="0" max="1" step="0.001" placeholder="0.01" bind:value={$mu} />
         </div>
         <div class="input-group">
             <label for="z">Z</label>
-            <input id="z" type="number" placeholder="0.2,0.3,0.3" bind:value={$z} />
+            <input id="z" type="text" placeholder="0.2,0.3,0.3" bind:value={$z} />
         </div>
         <div class="input-group">
             <label for="N">N</label>
-            <input id="N" type="number" placeholder="100" bind:value={$N} />
+            <input id="N" type="number" min="0" placeholder="100" bind:value={$N} />
         </div>
         <div class="input-group">
             <label for="foodShort">Food Short</label>
-            <input id="foodShort" type="number" placeholder="0.4" bind:value={$foodShort} />
+            <input id="foodShort" type="number" min="0" max="1" step="0.1"placeholder="0.4" bind:value={$foodShort} />
         </div>
         <div class="input-group">
             <label for="foodShortbegin">Food Short Begin</label>
-            <input id="foodShortbegin" type="number" placeholder="8" bind:value={$foodShortbegin} />
+            <input id="foodShortbegin" type="number" min="0" max={$N} placeholder="8" bind:value={$foodShortbegin} />
         </div>
         <div class="input-group">
             <label for="foodShortend">Food Short End</label>
-            <input id="foodShortend" type="number" placeholder="20" bind:value={$foodShortend} />
+            <input id="foodShortend" type="number" min={$foodShortbegin} max={$N} placeholder="20" bind:value={$foodShortend} />
         </div>
         <div class="dropdown">
             <button class="dropbtn">Select Variable to Experiment With</button>
@@ -419,19 +414,20 @@
         </div>
         <h3>Variable You Chose: {$variableName}</h3>
         <div class="input-group">
-            <label for="variableRange">Variable Range Begin</label>
-            <input id="variableRange" type="number" placeholder="10" bind:value={$variableRangeBegin} />
+            <label for="variableRangeBegin">Variable Range Begin</label>
+            <input id="variableRangeBegin" type="number" placeholder="10" bind:value={$variableRangeBegin} />
         </div>
         <div class="input-group">
-            <label for="variableRange">Variable Range End</label>
-            <input id="variableRange" type="number" placeholder="20" bind:value={$variableRangeEnd} />
+            <label for="variableRangeEnd">Variable Range End</label>
+            <input id="variableRangeEnd" type="number" placeholder="20" bind:value={$variableRangeEnd} />
+        </div>
         <div class="input-group">
             <label for="numRuns">Number of Runs</label>
             <input id="numRuns" type="number" placeholder="20" bind:value={$numRuns} />
         </div>
         <p>
             The range of the {$variableName} is from {$variableRangeBegin} to {$variableRangeEnd} and the number of lines is {$numRuns}.
-            Thus the variable will iterate from {$variableRangeBegin} to {$variableRangeEnd} in steps of size {($variableRangeEnd-$variableRangeBegin)/$numRuns}.
+            Thus the variable will iterate from {$variableRangeBegin} to {$variableRangeEnd} in steps of size {($variableRangeEnd - $variableRangeBegin) / $numRuns}.
             This can be seen in the chart below.
             With blue being the lowest value and red being the highest value.
         </p>
