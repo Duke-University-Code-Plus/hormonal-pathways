@@ -7,60 +7,43 @@ def runMultiRun(gammaIn : np.array = np.array([.1, 2, .3]),
                  delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, 
                  alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, 
                  zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, 
-                 foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20, numRuns : int = 20,
-                 variableName : str = 'gamma',
-                 variableRangeBegin : float =10, variableRangEnd : float = 20):
+                 foodShort : float = 0.5, foodShortbegin : int = 8, foodShortend : int = 20, numRuns : int = 20,
+                 variableName : str = 'mu',
+                 variableRangeBegin : float = 0.1, variableRangeEnd : float = 1):
 
     # define constants:
-    # weights on trait selection against mating effort:
     gamma = gammaIn
-    
-    # Minimum hormonal state permissive of gamete maturation
     G = GIn
-    
-    # Minimum body condition permissive of reproduction
     Xmin = XminIn
-    
-    # max change in sensitivity
-    #delSmax = np.linspace(delSmaxIn[0], delSmaxIn[1], numRuns)
-    #delSmax = delSmaxIn
-    delSmax = 1 # why are we setting delSMax as an array?
-    
-    # max change in production
+    delSmax = delSmaxIn
     delCmax = delCmaxIn
-    
-    # Food availability
     tau = tauIn
-    
-    # Michaelis-Menten Constant
     K = KIn
-
-    # parameters for beta distribution over reproductive efficacy
     alpha = alphaIn
     beta = betaIn
-    
-    # mortality probability
     mu = muIn
-    
-    # exponents in fitness function
     z = zIn
-    
-    # define simulation parameters
-    alive = True
     N = NIn
 
-    params = [gamma,G,Xmin,delSmax,delCmax,tau,K,alpha,beta,mu,z,N,numRuns]
+    params = {
+        'gamma': gamma,
+        'G': G,
+        'Xmin': Xmin,
+        'delSmax': delSmax,
+        'delCmax': delCmax,
+        'tau': tau,
+        'K': K,
+        'alpha': alpha,
+        'beta': beta,
+        'mu': mu,
+        'z': z,
+        'N': N,
+        'numRuns': numRuns
+    }
 
-    variableName = variableName
-    variableRangeBegin = variableRangeBegin
-    variableRangEnd = variableRangEnd
-
-
-    for param in params:
-        if str(variableName) == str(param):
-            param = np.linspace(variableRangeBegin, variableRangEnd, numRuns)
-            break
-
+    if variableName in params:
+        variable_values = np.array = np.linspace(variableRangeBegin, variableRangeEnd, numRuns)
+        params[variableName] = variable_values
 
     # states being tracked
     Xhist = np.zeros((1, N, numRuns))
@@ -70,45 +53,44 @@ def runMultiRun(gammaIn : np.array = np.array([.1, 2, .3]),
     Wcuml = np.zeros((1, N, numRuns))
 
     for j in range(numRuns):
-        # populate with initial conditions
+
         Xhist[0, 0, j] = 1
         Shist[:, 0, j] = np.array([1, 1, 1])
         Chist[0, 0, j] = 1
         Whist[0, 0, j] = 1
+        Wcuml[0, 0, j] = 1
+
         alive = True
         i = 0
 
+        if variableName in params:
+            params[variableName] = variable_values[j]
+
         while alive and i < N - 1:
             # find beta for this timestep:
-            beta_t = beta_dist.rvs(alpha[j] if "alpha" == variableName else alpha, beta[j] if "beta" == variableName else beta)
+            beta_t = beta_dist.rvs(alpha[j] if variableName == 'alpha' else alpha, 
+                                   beta[j] if variableName == 'beta' else beta)
             # define food availability
             if foodShortbegin < i < foodShortend:
                 F_t = foodShort
             else:
                 F_t = 1
-            
-            E_t = tau * F_t
-            
 
-            X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[0, i, j], beta_t, z, Shist[:, i, j], Chist[0, i, j],
-                                                  K[j] if "K" == variableName else K,
-                                                  E_t,
-                                                  gamma,delCmax[j] if "delCmax"== variableName else delCmax,
-                                                  delSmax[j] if 'delSmax' == variableName else delSmax,
-                                                  Xmin[j] if "Xmin" == variableName else Xmin,
-                                                  G[j] if "G" == variableName else G)
+            E_t = tau * F_t
+
+            X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[0, i, j], beta_t, z, Shist[:, i, j], Chist[0, i, j], K, E_t, gamma, delCmax, delSmax, Xmin, G)
             Xhist[0, i + 1, j] = X_t1
             Shist[:, i + 1, j] = S_t1
             Chist[0, i + 1, j] = C_t1
             Whist[0, i + 1, j] = W_t1
 
-            mu = mu[j] if "mu" == variableName else mu
-
-            if np.random.rand() < mu or X_t1 < 0:
+            current_mu = mu[j] if variableName == 'mu' else mu
+            if np.random.rand() < current_mu or X_t1 < 0:
                 alive = False
 
             Wcuml[0, i + 1, j] = Wcuml[0, i, j] + W_t1
             i += 1
+
     results = {
         'Xhist': Xhist.tolist(),
         'Shist': Shist.tolist(),

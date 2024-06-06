@@ -1,3 +1,7 @@
+<nav>
+    <a href="/">Home</a>
+    <a href="/multimodel">Multi-Run</a>
+</nav>
 <script>
     import { onMount } from "svelte";
     import axios from "axios";
@@ -9,8 +13,7 @@
     let Whist = [];
     let Wcuml = [];
 
-    // Initialize writable stores with default values
-    let gamma = writable("0.1,0.2,0.3");
+    let gamma = writable([0.1, 0.2, 0.3]);
     let G = writable(0.1);
     let Xmin = writable(1);
     let delSmax = writable(1);
@@ -20,7 +23,7 @@
     let alpha = writable(4);
     let beta = writable(2);
     let mu = writable(0.01);
-    let z = writable("0.2,0.3,0.3");
+    let z = writable([0.2, 0.3, 0.3]);
     let N = writable(100);
     let foodShort = writable(0.4);
     let foodShortbegin = writable(8);
@@ -35,6 +38,7 @@
     let productionChartInstance = null;
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
+    let errorMessage = writable('');
 
     onMount(() => {
         fetchData();
@@ -43,7 +47,7 @@
     async function fetchData() {
         try {
             const params = {
-                gamma: get(gamma).split(","),
+                gamma: get(gamma).join(','), // Convert array to comma-separated string
                 G: get(G),
                 Xmin: get(Xmin),
                 delSmax: get(delSmax),
@@ -53,7 +57,7 @@
                 alpha: get(alpha),
                 beta: get(beta),
                 mu: get(mu),
-                z: get(z).split(","),
+                z: get(z).join(','), // Convert array to comma-separated string
                 N: get(N),
                 foodShort: get(foodShort),
                 foodShortbegin: get(foodShortbegin),
@@ -65,9 +69,7 @@
             };
 
             const queryString = new URLSearchParams(params).toString();
-            const response = await axios.get(
-                `http://127.0.0.1:5000/multihormonemodel?${queryString}`
-            );
+            const response = await axios.get(`http://127.0.0.1:5000/multihormonemodel?${queryString}`);
             const data = response.data;
 
             // Data from API
@@ -79,192 +81,297 @@
 
             createCharts();
         } catch (error) {
-            console.error("Error fetching data:", error);
+            console.error('Error fetching data:', error);
+            errorMessage.set(`Error fetching data: ${error.response ? error.response.data.error : error.message}`);
         }
     }
 
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
     function createCharts() {
-        // Destroy existing charts if they exist
         if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
         if (sensitivityChartInstance) sensitivityChartInstance.destroy();
         if (productionChartInstance) productionChartInstance.destroy();
         if (fitnessChartInstance) fitnessChartInstance.destroy();
-        if (cumulativeFitnessChartInstance)
-            cumulativeFitnessChartInstance.destroy();
-
-        // Create Body Condition Chart
-        let XhistData = {
-            labels: [],
-            datasets: [],
-        };
+        if (cumulativeFitnessChartInstance) cumulativeFitnessChartInstance.destroy();
 
         const numRunsValue = get(numRuns);
+        const NValue = get(N);
 
-        for (let line = 0; line < numRunsValue; line += 1) {
-            if (Xhist[line] && Xhist[line].length) {
-                XhistData.labels = Xhist[line].map((_, i) => i);
-                XhistData.datasets.push({
-                    label: `Run ${line}`,
-                    data: Xhist[line],
-                    borderColor: "rgba(75, 192, 192, 1)",
+        // Create Body Condition Chart
+        const bodyConditionDatasets = [];
+        for (let run = 0; run < numRunsValue; run++) {
+            bodyConditionDatasets.push({
+                label: `Run ${run}`,
+                data: Array.from({ length: NValue }, (_, i) => Xhist[0][i][run]),
+                borderColor: getRandomColor(),
+                borderWidth: 1,
+                fill: false
+            });
+        }
+        bodyConditionChartInstance = new Chart(document.getElementById('bodyConditionChart'), {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: NValue }, (_, i) => i),
+                datasets: bodyConditionDatasets
+            },
+            options: {
+                scales: {
+                    x: { beginAtZero: true },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Create Sensitivity Chart
+        const sensitivityDatasets = [];
+        for (let i = 0; i < 3; i++) {
+            for (let run = 0; run < numRunsValue; run++) {
+                sensitivityDatasets.push({
+                    label: `Run ${run} - Sensitivity ${i + 1}`,
+                    data: Array.from({ length: NValue }, (_, j) => Shist[i][j][run]),
+                    borderColor: getRandomColor(),
                     borderWidth: 1,
-                    fill: false,
+                    fill: false
                 });
             }
         }
+        sensitivityChartInstance = new Chart(document.getElementById('sensitivityChart'), {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: NValue }, (_, i) => i),
+                datasets: sensitivityDatasets
+            },
+            options: {
+                scales: {
+                    x: { beginAtZero: true },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
 
-        // Create the chart
-        const chartElement = document.getElementById('bodyConditionChart');
-        if (chartElement) {
-            bodyConditionChartInstance = new Chart(chartElement, {
-                type: "line",
-                data: XhistData,
-                options: {
-                    scales: {
-                        x: { beginAtZero: true },
-                        y: { beginAtZero: true },
-                    },
-                },
+        // Create Production Chart
+        const productionDatasets = [];
+        for (let run = 0; run < numRunsValue; run++) {
+            productionDatasets.push({
+                label: `Run ${run}`,
+                data: Array.from({ length: NValue }, (_, i) => Chist[0][i][run]),
+                borderColor: getRandomColor(),
+                borderWidth: 1,
+                fill: false
             });
         }
+        productionChartInstance = new Chart(document.getElementById('productionChart'), {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: NValue }, (_, i) => i),
+                datasets: productionDatasets
+            },
+            options: {
+                scales: {
+                    x: { beginAtZero: true },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Create Fitness Chart
+        const fitnessDatasets = [];
+        for (let run = 0; run < numRunsValue; run++) {
+            fitnessDatasets.push({
+                label: `Run ${run}`,
+                data: Array.from({ length: NValue }, (_, i) => Whist[0][i][run]),
+                borderColor: getRandomColor(),
+                borderWidth: 1,
+                fill: false
+            });
+        }
+        fitnessChartInstance = new Chart(document.getElementById('fitnessChart'), {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: NValue }, (_, i) => i),
+                datasets: fitnessDatasets
+            },
+            options: {
+                scales: {
+                    x: { beginAtZero: true },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Create Cumulative Fitness Chart
+        const cumulativeFitnessDatasets = [];
+        for (let run = 0; run < numRunsValue; run++) {
+            cumulativeFitnessDatasets.push({
+                label: `Run ${run}`,
+                data: Array.from({ length: NValue }, (_, i) => Wcuml[0][i][run]),
+                borderColor: getRandomColor(),
+                borderWidth: 1,
+                fill: false
+            });
+        }
+        cumulativeFitnessChartInstance = new Chart(document.getElementById('cumulativeFitnessChart'), {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: NValue }, (_, i) => i),
+                datasets: cumulativeFitnessDatasets
+            },
+            options: {
+                scales: {
+                    x: { beginAtZero: true },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
     }
-    //create Sensitivity Chart
-        /*sensitivityChartInstance = new Chart(
-            document.getElementById("sensitivityChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from(
-                        { length: Shist[0].length },
-                        (_, i) => i,
-                    ),
-                    datasets: [
-                        {
-                            label: "Sensitivity 1",
-                            data: Shist[0],
-                            borderColor: "rgba(255, 99, 132, 1)",
-                            borderWidth: 1,
-                            fill: false,
-                        },
-                        {
-                            label: "Sensitivity 2",
-                            data: Shist[1],
-                            borderColor: "rgba(54, 162, 235, 1)",
-                            borderWidth: 1,
-                            fill: false,
-                        },
-                        {
-                            label: "Sensitivity 3",
-                            data: Shist[2],
-                            borderColor: "rgba(75, 192, 192, 1)",
-                            borderWidth: 1,
-                            fill: false,
-                        },
-                    ],
-                },
-                options: {
-                    scales: {
-                        x: { beginAtZero: true },
-                        y: { beginAtZero: true },
-                    },
-                },
-            },
-        );
-
-        //create Production Chart
-        productionChartInstance = new Chart(
-            document.getElementById("productionChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from({ length: Chist.length }, (_, i) => i),
-                    datasets: [
-                        {
-                            label: "Production",
-                            data: Chist,
-                            borderColor: "rgba(153, 102, 255, 1)",
-                            borderWidth: 1,
-                            fill: false,
-                        },
-                    ],
-                },
-                options: {
-                    scales: {
-                        x: { beginAtZero: true },
-                        y: { beginAtZero: true },
-                    },
-                },
-            },
-        );
-
-        //create Fitness Chart
-        fitnessChartInstance = new Chart(
-            document.getElementById("fitnessChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from({ length: Whist.length }, (_, i) => i),
-                    datasets: [
-                        {
-                            label: "Fitness",
-                            data: Whist,
-                            borderColor: "rgba(255, 159, 64, 1)",
-                            borderWidth: 1,
-                            fill: false,
-                        },
-                    ],
-                },
-                options: {
-                    scales: {
-                        x: { beginAtZero: true },
-                        y: { beginAtZero: true },
-                    },
-                },
-            },
-        );
-
-        //create Cumulative Fitness Chart
-        cumulativeFitnessChartInstance = new Chart(
-            document.getElementById("cumulativeFitnessChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from({ length: Wcuml.length }, (_, i) => i),
-                    datasets: [
-                        {
-                            label: "Cumulative Fitness",
-                            data: Wcuml,
-                            borderColor: "rgba(255, 206, 86, 1)",
-                            borderWidth: 1,
-                            fill: false,
-                        },
-                    ],
-                },
-                options: {
-                    scales: {
-                        x: { beginAtZero: true },
-                        y: { beginAtZero: true },
-                    },
-                },
-            },
-        );*/
-    
 </script>
 
-<nav>
-    <a href="/">Home</a>
-    <a href="/multimodel">multimodel</a>
-</nav>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f4f4f9;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .input-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        margin: 5px;
+    }
+
+    .input-group label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .input-group input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 120px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-container button {
+        margin: 5px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #28a745;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-container button:hover {
+        background-color: #218838;
+    }
+
+    .chart-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    canvas {
+        max-width: 100%;
+        margin: 20px 0;
+    }
+
+    .dropbtn {
+        background-color: #0d6de3;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content button {
+        background: none;
+        border: none;
+        color: black;
+        padding: 12px 16px;
+        text-align: left;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .dropdown-content button:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: #463e8e;
+    }
+
+    #run-button {
+        margin: 0;
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+    .error {
+        color: red;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hormone Model MultiRun Visualization</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hormone Model Visualization</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <h1>Hormone Model Multi-Run Visualization</h1>
-
+    
     <div class="input-container">
         <!-- Input fields for parameters with labels -->
         <div class="input-group">
@@ -273,7 +380,7 @@
         </div>
         <div class="input-group">
             <label for="G">G</label>
-            <input id="G" type="number" min="0" max="1" step="0.1" placeholder="0.1" bind:value={$G} />
+            <input id="G" type="number" placeholder="0.1" bind:value={$G} />
         </div>
         <div class="input-group">
             <label for="Xmin">Xmin</label>
@@ -361,7 +468,6 @@
             With blue being the lowest value and red being the highest value.
         </p>
         <!-- Run button to fetch data -->
-
         <button id="run-button" on:click={fetchData}>Run</button>
     </div>
 
@@ -372,126 +478,11 @@
         <canvas id="fitnessChart"></canvas>
         <canvas id="cumulativeFitnessChart"></canvas>
     </div>
+    {#if $errorMessage}
+        <p class="error">{$errorMessage}</p>
+    {/if}
 </body>
 
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        background-color: #f4f4f9;
-    }
 
-    h1 {
-        text-align: center;
-        color: #333;
-    }
 
-    .input-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 20px;
-    }
-
-    .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .input-group label {
-        font-weight: bold;
-    }
-
-    .input-group input {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        text-align: center;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .input-container button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        background-color: #2187c7;
-        color: white;
-        cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .input-container button:hover {
-        background-color: #032e73;
-    }
-
-    .chart-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 20px;
-    }
-
-    canvas {
-        max-width: 100%;
-        margin: 20px 0;
-    }
-
-    .dropbtn {
-        background-color: #0d6de3;
-        color: white;
-        padding: 10px 20px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
-    }
-
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        right: 0;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        z-index: 1;
-    }
-
-    .dropdown-content button {
-        background: none;
-        border: none;
-        color: black;
-        padding: 12px 16px;
-        text-align: left;
-        width: 100%;
-        cursor: pointer;
-    }
-
-    .dropdown-content button:hover {
-        background-color: #f1f1f1;
-    }
-
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
-
-    .dropdown:hover .dropbtn {
-        background-color: #463e8e;
-    }
-
-    #run-button {
-        margin: 0;
-        position: absolute;
-        top: 65%;
-        left: 50%;
-        -ms-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-    }
-</style>
 
