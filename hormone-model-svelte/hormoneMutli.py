@@ -2,20 +2,47 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 
-def rundelSmaxStudy():
+def runMutliRun(gammaIn : np.array = np.array([.1, 2, .3]), 
+                 GIn : float = 0.1, XminIn : float = 1, delSmaxIn : np.array = np.array([10, 20, 1]),
+                 delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, 
+                 alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, 
+                 zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, 
+                 foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20, numRuns : int = 20):
     # define constants:
-    gamma = np.array([0.5, 1, 2])
-    G = 0.01
-    Xmin = 1
-    delSmax = np.linspace(0.1, 10, 20)
-    delCmax = 1
-    tau = 1
-    K = 1
-    alpha = 5
-    beta = 1
-    mu = 0.01
-    z = np.array([0.1, 0.2, 0.3])
-    N = 20
+    # weights on trait selection against mating effort:
+    gamma = gammaIn
+    
+    # Minimum hormonal state permissive of gamete maturation
+    G = GIn
+    
+    # Minimum body condition permissive of reproduction
+    Xmin = XminIn
+    
+    # max change in sensitivity
+    delSmax = np.linspace(delSmaxIn[0], delSmaxIn[1], numRuns)
+    
+    # max change in production
+    delCmax = delCmaxIn
+    
+    # Food availability
+    tau = tauIn
+    
+    # Michaelis-Menten Constant
+    K = KIn
+
+    # parameters for beta distribution over reproductive efficacy
+    alpha = alphaIn
+    beta = betaIn
+    
+    # mortality probability
+    mu = muIn
+    
+    # exponents in fitness function
+    z = zIn
+    
+    # define simulation parameters
+    alive = True
+    N = NIn
 
     # states being tracked
     Xhist = np.zeros((1, N, 20))
@@ -24,7 +51,7 @@ def rundelSmaxStudy():
     Whist = np.zeros((1, N, 20))
     Wcuml = np.zeros((1, N, 20))
 
-    for j in range(20):
+    for j in range(numRuns):
         # populate with initial conditions
         Xhist[0, 0, j] = 1
         Shist[:, 0, j] = np.array([1, 1, 1])
@@ -37,8 +64,13 @@ def rundelSmaxStudy():
             # find beta for this timestep:
             beta_t = beta_dist.rvs(alpha, beta)
             # define food availability
-            F_t = 1
+            if foodShortbegin < i < foodShortend:
+                F_t = foodShort
+            else:
+                F_t = 1
+            
             E_t = tau * F_t
+                
 
             X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[0, i, j], beta_t, z, Shist[:, i, j], Chist[0, i, j], K, E_t, gamma, delCmax, delSmax[j], Xmin, G)
             Xhist[0, i + 1, j] = X_t1
@@ -51,7 +83,13 @@ def rundelSmaxStudy():
 
             Wcuml[0, i + 1, j] = Wcuml[0, i, j] + W_t1
             i += 1
-
+    results = {
+        'Xhist': Xhist.tolist(),
+        'Shist': Shist.tolist(),
+        'Chist': Chist.tolist(),
+        'Whist': Whist.tolist(),
+        'Wcuml': Wcuml.tolist()
+    }
     return Xhist, Shist, Chist, Whist, Wcuml
 
 def forwardModel(X_t, beta_t, z_t, S_t, C_t, K, E_t1, gamma_t, delCmax, delSmax, Xmin, G):
@@ -95,4 +133,4 @@ def fitness_function(beta, z, S, C, K, X_t, E_t1, gamma, delCS, Xmin, G):
 
     return -(abs(W_t1) ** 3) * (abs(X_t1) ** 0.01)
 
-rundelSmaxStudy()
+runMutliRun()
