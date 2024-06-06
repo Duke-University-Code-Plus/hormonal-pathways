@@ -11,6 +11,7 @@ CORS(app)  # Enable CORS for all routes
 def parse_array_param(param):
     return np.array([float(x) for x in param.split(',')] if param else np.array([]))
 
+# Define a route for the default URL
 @app.route('/hormonemodel', methods=['GET'])
 def get_arrays():
     gamma = parse_array_param(request.args.get('gamma'))
@@ -35,6 +36,7 @@ def get_arrays():
     )
     return jsonify(results)
 
+# Define a route for the the mutli-run model
 @app.route('/multihormonemodel', methods=['GET'])
 def get_multi_arrays():
     gamma = parse_array_param(request.args.get('gamma'))
