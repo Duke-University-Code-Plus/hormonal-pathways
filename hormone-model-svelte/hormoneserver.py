@@ -60,13 +60,14 @@ def get_multi_arrays():
             foodShort=float(request.args.get('foodShort', 0)), 
             foodShortbegin=int(request.args.get('foodShortbegin', 0)), 
             foodShortend=int(request.args.get('foodShortend', 0)),
-            numRuns=int(request.args.get('numRuns', 0)),
             variableName=request.args.get('variableName', ''),
             variableRangeBegin=float(request.args.get('variableRangeBegin', 0)),
-            variableRangeEnd=float(request.args.get('variableRangeEnd', 0))
+            variableRangeEnd=float(request.args.get('variableRangeEnd', 0)),
+            numRuns=int(request.args.get('numRuns', 0))
         )
         return jsonify(results)
     except Exception as e:
+        app.logger.error(f"Error processing request: {e}")
         return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':

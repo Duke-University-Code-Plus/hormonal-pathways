@@ -1,11 +1,11 @@
 <nav>
     <a href="/">Home</a>
-    <a href="/multimodel">Multi-Run</a>
+    <a href="/multimodel">Multi-Model</a>
 </nav>
 <script>
-    import { onMount } from "svelte";
-    import axios from "axios";
-    import { writable, get } from "svelte/store";
+    import { onMount } from 'svelte';
+    import axios from 'axios';
+    import { writable, get } from 'svelte/store';
 
     let Xhist = [];
     let Shist = [];
@@ -13,7 +13,8 @@
     let Whist = [];
     let Wcuml = [];
 
-    let gamma = writable([0.1, 0.2, 0.3]);
+    //initialize all the parameters
+    let gamma = writable("0.1,0.2,0.3");
     let G = writable(0.1);
     let Xmin = writable(1);
     let delSmax = writable(1);
@@ -23,22 +24,21 @@
     let alpha = writable(4);
     let beta = writable(2);
     let mu = writable(0.01);
-    let z = writable([0.2, 0.3, 0.3]);
+    let z = writable("0.2,0.3,0.3");
     let N = writable(100);
     let foodShort = writable(0.4);
     let foodShortbegin = writable(8);
     let foodShortend = writable(20);
-    let variableName = writable("Gamma");
-    let variableRangeBegin = writable(10);
-    let variableRangeEnd = writable(20);
-    let numRuns = writable(20);
+    let variableName = writable('delSmax');
+    let variableRangeBegin = writable(1);
+    let variableRangeEnd = writable(2);
+    let numRuns = writable(2);
 
     let bodyConditionChartInstance = null;
     let sensitivityChartInstance = null;
     let productionChartInstance = null;
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
-    let errorMessage = writable('');
 
     onMount(() => {
         fetchData();
@@ -47,7 +47,7 @@
     async function fetchData() {
         try {
             const params = {
-                gamma: get(gamma).join(','), // Convert array to comma-separated string
+                gamma: get(gamma),
                 G: get(G),
                 Xmin: get(Xmin),
                 delSmax: get(delSmax),
@@ -57,15 +57,15 @@
                 alpha: get(alpha),
                 beta: get(beta),
                 mu: get(mu),
-                z: get(z).join(','), // Convert array to comma-separated string
+                z: get(z),
                 N: get(N),
                 foodShort: get(foodShort),
                 foodShortbegin: get(foodShortbegin),
                 foodShortend: get(foodShortend),
-                numRuns: get(numRuns),
                 variableName: get(variableName),
                 variableRangeBegin: get(variableRangeBegin),
                 variableRangeEnd: get(variableRangeEnd),
+                numRuns: get(numRuns)
             };
 
             const queryString = new URLSearchParams(params).toString();
@@ -73,26 +73,63 @@
             const data = response.data;
 
             // Data from API
-            Xhist = data.Xhist || [];
-            Shist = data.Shist || [];
-            Chist = data.Chist || [];
-            Whist = data.Whist || [];
-            Wcuml = data.Wcuml || [];
+            Xhist = data.Xhist;
+            Shist = data.Shist;
+            Chist = data.Chist;
+            Whist = data.Whist;
+            Wcuml = data.Wcuml;
 
             createCharts();
         } catch (error) {
             console.error('Error fetching data:', error);
-            errorMessage.set(`Error fetching data: ${error.response ? error.response.data.error : error.message}`);
         }
     }
 
-    function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
+    function createDatasets(data, labelPrefix) {
+    const numRunsValue = get(numRuns); // Number of lines
+
+    function interpolateColor(startColor, endColor, factor) {
+        const result = startColor.slice();
+        for (let i = 0; i < 3; i++) {
+            result[i] = Math.round(result[i] + factor * (endColor[i] - startColor[i]));
         }
-        return color;
+        return result;
+    }
+
+    const startColor = [0, 0, 255]; // Blue
+    const endColor = [255, 0, 0]; // Red
+
+    const datasets = Array.from({ length: numRunsValue }, (_, runIndex) => {
+        const factor = runIndex / (numRunsValue - 1);
+        const color = interpolateColor(startColor, endColor, factor);
+        return {
+            label: `${labelPrefix} ${runIndex + 1}`,
+            data: data.map(point => point[runIndex]),
+            borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
+            borderWidth: 1,
+            fill: false
+        };
+    });
+
+    return datasets;
+}
+
+    function createSensitivityDatasets(data, labelPrefix, color) {
+        const numRunsValue = get(numRuns); 
+        const colors = [[255, 99, 132], [75, 192, 192], [153, 102, 255]]; 
+        const datasets = [];
+
+        for (let i = 0; i < 3; i++) {
+            datasets.push(...Array.from({ length: numRunsValue }, (_, runIndex) => ({
+                label: `${labelPrefix} ${i + 1} Run ${runIndex + 1}`,
+                data: data[i].map(point => point[runIndex]),
+                borderColor: `rgba(${colors[i][0]}, ${colors[i][1]}, ${colors[i][2]}, 1)`,
+                borderWidth: 1,
+                fill: false
+            })));
+        }
+
+        return datasets;
     }
 
     function createCharts() {
@@ -102,131 +139,102 @@
         if (fitnessChartInstance) fitnessChartInstance.destroy();
         if (cumulativeFitnessChartInstance) cumulativeFitnessChartInstance.destroy();
 
-        const numRunsValue = get(numRuns);
-        const NValue = get(N);
- 
-        const bodyConditionDatasets = [];
-        for (let run = 0; run < numRunsValue; run++) {
-            bodyConditionDatasets.push({
-                label: `Run ${run}`,
-                data: Array.from({ length: NValue }, (_, i) => Xhist[0][i][run]),
-                borderColor: getRandomColor(),
-                borderWidth: 1,
-                fill: false
-            });
-        }
+        //create body condition chart
         bodyConditionChartInstance = new Chart(document.getElementById('bodyConditionChart'), {
             type: 'line',
             data: {
-                labels: Array.from({ length: NValue }, (_, i) => i),
-                datasets: bodyConditionDatasets
+                labels: Array.from({ length: Xhist.length }, (_, i) => i),
+                datasets: createDatasets(Xhist, 'Body Condition', [75, 192, 192])
             },
             options: {
                 scales: {
                     x: { beginAtZero: true },
                     y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 }
             }
         });
 
-        // Create Sensitivity Chart
-        const sensitivityDatasets = [];
-        for (let i = 0; i < 3; i++) {
-            for (let run = 0; run < numRunsValue; run++) {
-                sensitivityDatasets.push({
-                    label: `Run ${run} - Sensitivity ${i + 1}`,
-                    data: Array.from({ length: NValue }, (_, j) => Shist[i][j][run]),
-                    borderColor: getRandomColor(),
-                    borderWidth: 1,
-                    fill: false
-                });
-            }
-        }
+        //create sensitivity chart
         sensitivityChartInstance = new Chart(document.getElementById('sensitivityChart'), {
             type: 'line',
             data: {
-                labels: Array.from({ length: NValue }, (_, i) => i),
-                datasets: sensitivityDatasets
+                labels: Array.from({ length: Shist[0].length }, (_, i) => i), //use the length of the first array
+                datasets: createSensitivityDatasets(Shist, 'Sensitivity', [255, 99, 132])
             },
             options: {
                 scales: {
                     x: { beginAtZero: true },
                     y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: {
+                        display: false 
+                    }
                 }
             }
         });
 
-        // Create Production Chart
-        const productionDatasets = [];
-        for (let run = 0; run < numRunsValue; run++) {
-            productionDatasets.push({
-                label: `Run ${run}`,
-                data: Array.from({ length: NValue }, (_, i) => Chist[0][i][run]),
-                borderColor: getRandomColor(),
-                borderWidth: 1,
-                fill: false
-            });
-        }
+        //production chart
         productionChartInstance = new Chart(document.getElementById('productionChart'), {
             type: 'line',
             data: {
-                labels: Array.from({ length: NValue }, (_, i) => i),
-                datasets: productionDatasets
+                labels: Array.from({ length: Chist.length }, (_, i) => i),
+                datasets: createDatasets(Chist, 'Production', [153, 102, 255])
             },
             options: {
                 scales: {
                     x: { beginAtZero: true },
                     y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: {
+                        display: false 
+                    }
                 }
             }
         });
 
-        // Create Fitness Chart
-        const fitnessDatasets = [];
-        for (let run = 0; run < numRunsValue; run++) {
-            fitnessDatasets.push({
-                label: `Run ${run}`,
-                data: Array.from({ length: NValue }, (_, i) => Whist[0][i][run]),
-                borderColor: getRandomColor(),
-                borderWidth: 1,
-                fill: false
-            });
-        }
+        //fitness chart
         fitnessChartInstance = new Chart(document.getElementById('fitnessChart'), {
             type: 'line',
             data: {
-                labels: Array.from({ length: NValue }, (_, i) => i),
-                datasets: fitnessDatasets
+                labels: Array.from({ length: Whist.length }, (_, i) => i),
+                datasets: createDatasets(Whist, 'Fitness', [255, 159, 64])
             },
             options: {
                 scales: {
                     x: { beginAtZero: true },
                     y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: {
+                        display: false 
+                    }
                 }
             }
         });
 
-        // Create Cumulative Fitness Chart
-        const cumulativeFitnessDatasets = [];
-        for (let run = 0; run < numRunsValue; run++) {
-            cumulativeFitnessDatasets.push({
-                label: `Run ${run}`,
-                data: Array.from({ length: NValue }, (_, i) => Wcuml[0][i][run]),
-                borderColor: getRandomColor(),
-                borderWidth: 1,
-                fill: false
-            });
-        }
+        //cumulative fitness chart
         cumulativeFitnessChartInstance = new Chart(document.getElementById('cumulativeFitnessChart'), {
             type: 'line',
             data: {
-                labels: Array.from({ length: NValue }, (_, i) => i),
-                datasets: cumulativeFitnessDatasets
+                labels: Array.from({ length: Wcuml.length }, (_, i) => i),
+                datasets: createDatasets(Wcuml, 'Cumulative Fitness', [255, 206, 86])
             },
             options: {
                 scales: {
                     x: { beginAtZero: true },
                     y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 }
             }
         });
@@ -247,19 +255,19 @@
 
     .input-container {
         display: flex;
-        justify-content: center;
         flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
         margin-bottom: 20px;
     }
 
     .input-group {
         display: flex;
         flex-direction: column;
-        margin: 5px;
+        gap: 10px;
     }
 
     .input-group label {
-        margin-bottom: 5px;
         font-weight: bold;
     }
 
@@ -267,13 +275,11 @@
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        width: 120px;
         text-align: center;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .input-container button {
-        margin: 5px;
         padding: 10px 20px;
         border: none;
         border-radius: 4px;
@@ -300,7 +306,7 @@
     }
 
     .dropbtn {
-        background-color: #0d6de3;
+        background-color: #04AA6D;
         color: white;
         padding: 10px 20px;
         font-size: 16px;
@@ -320,7 +326,7 @@
         right: 0;
         background-color: #f9f9f9;
         min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 1;
     }
 
@@ -343,33 +349,18 @@
     }
 
     .dropdown:hover .dropbtn {
-        background-color: #463e8e;
-    }
-
-    #run-button {
-        margin: 0;
-        position: absolute;
-        top: 65%;
-        left: 50%;
-        -ms-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-    }
-
-    .error {
-        color: red;
-        font-weight: bold;
-        text-align: center;
+        background-color: #3e8e41;
     }
 </style>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hormone Model Visualization</title>
+    <title>Hormone Multi-Run Visualization</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <h1>Hormone Model Multi-Run Visualization</h1>
+    <h1>Hormone Multi-Run Visualization</h1>
     
     <div class="input-container">
         <!-- Input fields for parameters with labels -->
@@ -379,7 +370,7 @@
         </div>
         <div class="input-group">
             <label for="G">G</label>
-            <input id="G" type="number" placeholder="0.1" bind:value={$G} />
+            <input id="G" type="number" min="0" max="1" placeholder="0.1" bind:value={$G} />
         </div>
         <div class="input-group">
             <label for="Xmin">Xmin</label>
@@ -411,7 +402,7 @@
         </div>
         <div class="input-group">
             <label for="mu">Mu</label>
-            <input id="mu" type="number" min="0" max="1" step="0.001" placeholder="0.01" bind:value={$mu} />
+            <input id="mu" type="number" min="0" max="1" placeholder="0.5" bind:value={$mu} />
         </div>
         <div class="input-group">
             <label for="z">Z</label>
@@ -423,7 +414,7 @@
         </div>
         <div class="input-group">
             <label for="foodShort">Food Short</label>
-            <input id="foodShort" type="number" min="0" max="1" step="0.1" placeholder="0.4" bind:value={$foodShort} />
+            <input id="foodShort" type="number" min="0" max="1" placeholder="0.4" bind:value={$foodShort} />
         </div>
         <div class="input-group">
             <label for="foodShortbegin">Food Short Begin</label>
@@ -440,11 +431,11 @@
                 <button on:click={() => variableName.set("Xmin")}>Xmin</button>
                 <button on:click={() => variableName.set("delSmax")}>delSmax</button>
                 <button on:click={() => variableName.set("delCmax")}>delCmax</button>
-                <button on:click={() => variableName.set("Tau")}>Tau</button>
+                <button on:click={() => variableName.set("tau")}>Tau</button>
                 <button on:click={() => variableName.set("K")}>K</button>
-                <button on:click={() => variableName.set("Alpha")}>Alpha</button>
-                <button on:click={() => variableName.set("Beta")}>Beta</button>
-                <button on:click={() => variableName.set("Mu")}>Mu</button>
+                <button on:click={() => variableName.set("alpha")}>Alpha</button>
+                <button on:click={() => variableName.set("beta")}>Beta</button>
+                <button on:click={() => variableName.set("mu")}>Mu</button>
             </div>
         </div>
         <h3>Variable You Chose: {$variableName}</h3>
@@ -467,7 +458,7 @@
             With blue being the lowest value and red being the highest value.
         </p>
         <!-- Run button to fetch data -->
-        <button id="run-button" on:click={fetchData}>Run</button>
+        <button on:click={fetchData}>Run</button>
     </div>
 
     <div class="chart-container">
@@ -477,10 +468,10 @@
         <canvas id="fitnessChart"></canvas>
         <canvas id="cumulativeFitnessChart"></canvas>
     </div>
-    {#if $errorMessage}
-        <p class="error">{$errorMessage}</p>
-    {/if}
 </body>
+
+
+
 
 
 
