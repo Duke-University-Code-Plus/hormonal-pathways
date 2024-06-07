@@ -3,7 +3,7 @@ from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 
 def runMultiRun(gammaIn : np.array = np.array([.1, 2, .3]), 
-                 GIn : float = 0.1, XminIn : float = 1, delSmaxIn : np.array = np.array([10, 20]),
+                 GIn : float = 0.1, XminIn : float = 1, delSmaxIn : float = 1,
                  delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, 
                  alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, 
                  zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, 

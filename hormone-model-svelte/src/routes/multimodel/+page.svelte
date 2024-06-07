@@ -104,8 +104,7 @@
 
         const numRunsValue = get(numRuns);
         const NValue = get(N);
-
-        // Create Body Condition Chart
+ 
         const bodyConditionDatasets = [];
         for (let run = 0; run < numRunsValue; run++) {
             bodyConditionDatasets.push({

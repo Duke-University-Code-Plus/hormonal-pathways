@@ -46,9 +46,9 @@ def get_multi_arrays():
 
         results = runMultiRun(
             gammaIn=gamma, 
-            GIn=float(request.args.get('G', 0)), 
-            XminIn=float(request.args.get('Xmin', 0)), 
-            delSmaxIn=float(request.args.get('delSmax', 0)), 
+            GIn=float(request.args.get('G', 0.1)), 
+            XminIn=float(request.args.get('Xmin', 1)), 
+            delSmaxIn=float(request.args.get('delSmax', 1)), 
             delCmaxIn=float(request.args.get('delCmax', 0)), 
             tauIn=float(request.args.get('tau', 0)), 
             KIn=float(request.args.get('K', 0)), 
