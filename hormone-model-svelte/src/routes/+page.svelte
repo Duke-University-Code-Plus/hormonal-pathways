@@ -242,7 +242,7 @@
         src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"
     ></script>
 </head>
-<body >
+<body class="m-0 p-0">
     <nav class="bg-gray-200 shadow shadow-gray-300 w-100 px-8 md:px-auto">
         <div
             class="md:h-16 h-28 mx-auto md:px-4 container flex items-center justify-between flex-wrap md:flex-nowrap"
