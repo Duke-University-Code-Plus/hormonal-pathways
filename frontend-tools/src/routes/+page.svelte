@@ -134,12 +134,12 @@
     let muIn = 0.0001; 
     let NIn = 100; 
     let foodShort = 0.5;  
-    let foodShortbegin = 8; 
-    let foodShortend = 20; 
+    let foodShortbegin = 50; 
+    let foodShortend = 75; 
 
     onMount(async () => {
         try {
-            const response = await axios.get(`api/test?GIn=${GIn}&XminIn=${XminIn}&delSmaxIn=${delSmaxIn}&delCmaxIn=${delCmaxIn}`);
+            const response = await axios.get(`api/test?GIn=${GIn}&XminIn=${XminIn}&delSmaxIn=${delSmaxIn}&delCmaxIn=${delCmaxIn}&tauIn=${tauIn}&KIn=${KIn}&alphaIn=${alphaIn}&betaIn=${betaIn}&muIn=${muIn}&NIn=${NIn}&foodShort=${foodShort}&foodShortbegin=${foodShortbegin}&foodShortend=${foodShortend}`);
 
             responseData = response.data;
             console.log("responseData: ", responseData);
