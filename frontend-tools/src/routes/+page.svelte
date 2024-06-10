@@ -47,7 +47,9 @@
 <body>
     <h1 class="text-center text-2xl font-serif font-bold p-4">
         Hormonal Pathways
+        
     </h1>
+    
 
     <!-- First row of sliders -->
     <div class="slidecontainer">
@@ -132,23 +134,22 @@
     let alphaIn = 2;
     let betaIn = 2;
     let muIn = 0.0001; 
-    let NIn = 100; 
-    let foodShort = 0.5;  
+    let NIn = 10; 
+    let foodShort = 1.5;  
     let foodShortbegin = 50; 
     let foodShortend = 75; 
 
-    onMount(async () => {
-        try {
-            const response = await axios.get(`api/test?GIn=${GIn}&XminIn=${XminIn}&delSmaxIn=${delSmaxIn}&delCmaxIn=${delCmaxIn}&tauIn=${tauIn}&KIn=${KIn}&alphaIn=${alphaIn}&betaIn=${betaIn}&muIn=${muIn}&NIn=${NIn}&foodShort=${foodShort}&foodShortbegin=${foodShortbegin}&foodShortend=${foodShortend}`);
 
-            responseData = response.data;
-            console.log("responseData: ", responseData);
-            Charts();
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    });
-
+    async function fetchData() {
+    try {
+      const response = await axios.get(`api/test?GIn=${GIn}&XminIn=${XminIn}&delSmaxIn=${delSmaxIn}&delCmaxIn=${delCmaxIn}&tauIn=${tauIn}&KIn=${KIn}&alphaIn=${alphaIn}&betaIn=${betaIn}&muIn=${muIn}&NIn=${NIn}&foodShort=${foodShort}&foodShortbegin=${foodShortbegin}&foodShortend=${foodShortend}`);
+      responseData = response.data;
+      console.log("responseData: ", responseData);
+      Charts();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
     function Charts() {
         createChart(
             "Xhist",
@@ -212,4 +213,36 @@
             },
         });
     }
+    function updateCharts() {
+    console.log("Updating charts with responseData:", responseData);
+    if (Chist) {
+      Chist.destroy();
+    }
+    const ctx = document.getElementById('Chist');
+    Chist = createChart(ctx, 'Concentration', Object.values(responseData), 'rgba(75, 192, 192, 1)');
+  }
+
+
+//function increment(event) {  NIn += 1;}
+
 </script>
+
+<label>
+    GIn: {GIn}
+    <input type="range" min="0" max="10" bind:value={GIn} >
+  </label>
+<button on:click={fetchData}>Fetch Data</button>
+<button on:click={updateCharts}>Update Charts</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
