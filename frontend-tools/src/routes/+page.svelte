@@ -5,7 +5,11 @@
     <style>
         /* Container for slider, acts as a template  */
         .slidecontainer {
-            width: 50%;
+            display: flex; /* allows elements to spread evenly */
+            flex-wrap: wrap; /* wrap to another line if not enough space */
+            justify-content: space-between;
+            width: 100%;
+            padding: 10px;
         }
 
         /* Slider */
@@ -41,30 +45,76 @@
 </head>
 
 <body>
-    <h1 class="text-center text-2xl font-serif font-bold p-4">Hormonal Pathways</h1>
+    <h1 class="text-center text-2xl font-serif font-bold p-4">
+        Hormonal Pathways
+    </h1>
 
+    <!-- First row of sliders -->
     <div class="slidecontainer">
-        <input
-            type="range"
-            min="1"
-            max="100"
-            value="50"
-            class="slider"
-            id="parameter1"
-        />
-        <p>Value: <span id="demo"></span></p>
+        <div>
+            <label for="GIn_slider">GIn: </label>  <!-- Label for slider -->
+            <input
+                type="range"
+                min="0.0"
+                max="0.5"
+                step="0.1"
+                value="0.1"
+                class="slider"
+                id="GIn_slider"
+            />
+            <span id="GIn_output">0.1</span> <!-- Label for value of slider -->
+        </div>
+        
+        <div>
+            <label for="XminIn_slider">XminIn: :</label>
+            <input
+                type="range"
+                min="0"
+                max="5"
+                step="1"
+                value="1"
+                class="slider"
+                id="XminIn_slider"
+            />
+            <span id="XminIn_output">1</span>
+        </div>
     </div>
 
-    <script>
-        var slider = document.getElementById("parameter1");
-        var output = document.getElementById("demo");
-        output.innerHTML = slider.value;
 
-        slider.oninput = function () {
-            output.innerHTML = this.value;
-        };
+    <script>
+        // Update slider values
+        function updateSliderValue(sliderID, outputID) {
+            var slider = document.getElementById(sliderID); //retrieves slider
+            var output = document.getElementById(outputID); //retrieves output
+            output.innerHTML = slider.value; //sets inner HTML content of output element to value of slider
+
+            slider.oninput = function () { //event: when slider value changes, function is executed
+                output.innerHTML = this.value; //this refers to slider element that triggered the event 
+            };
+        }
+
+        // Update values for each slider
+        updateSliderValue("GIn_slider", "GIn_output");
+        updateSliderValue("XminIn_slider", "XminIn_output");
     </script>
 </body>
+
+<div class="p-8">
+    <canvas id="Xhist"></canvas>
+    <!-- Energy -->
+    <canvas id="Shist_1"></canvas>
+    <!-- Sensitivity 1 -->
+    <canvas id="Shist_2"></canvas>
+    <!-- Sensitivity 2 -->
+    <canvas id="Shist_3"></canvas>
+    <!-- Sensitivity 3 -->
+    <canvas id="Chist"></canvas>
+    <!-- Concentration -->
+    <canvas id="Whist"></canvas>
+    <!-- Fitness -->
+    <canvas id="Wcuml"></canvas>
+    <!-- Cumulative Fitness -->
+</div>
 
 <script>
     import { onMount } from "svelte";
@@ -73,12 +123,24 @@
 
     let responseData = {};
 
-    // https://rapidapi.com/guides/axios-async-await
+    let GIn = 0.1;
+    let XminIn = 1;
+    let delSmaxIn = 1;
+    let delCmaxIn = 1; 
+    let tauIn = 5;
+    let KIn = 1;
+    let alphaIn = 2;
+    let betaIn = 2;
+    let muIn = 0.0001; 
+    let NIn = 100; 
+    let foodShort = 0.5;  
+    let foodShortbegin = 8; 
+    let foodShortend = 20; 
+
     onMount(async () => {
         try {
-            //const response = await axios.get(`http://127.0.0.1:5000/test?input=8`);
-            //const response = await axios.get('api/test?gammaIn1=8');
-            const response = await axios.get("api/test");
+            const response = await axios.get(`api/test?GIn=${GIn}&XminIn=${XminIn}&delSmaxIn=${delSmaxIn}&delCmaxIn=${delCmaxIn}`);
+
             responseData = response.data;
             console.log("responseData: ", responseData);
             Charts();
@@ -151,20 +213,3 @@
         });
     }
 </script>
-
-<div class="p-8">
-    <canvas id="Xhist"></canvas>
-    <!-- Energy -->
-    <canvas id="Shist_1"></canvas>
-    <!-- Sensitivity 1 -->
-    <canvas id="Shist_2"></canvas>
-    <!-- Sensitivity 2 -->
-    <canvas id="Shist_3"></canvas>
-    <!-- Sensitivity 3 -->
-    <canvas id="Chist"></canvas>
-    <!-- Concentration -->
-    <canvas id="Whist"></canvas>
-    <!-- Fitness -->
-    <canvas id="Wcuml"></canvas>
-    <!-- Cumulative Fitness -->
-</div>

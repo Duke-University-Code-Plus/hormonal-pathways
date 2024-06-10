@@ -7,16 +7,16 @@ CORS(app)
 
 @app.route('/', methods=['GET'])
 def data():
-    # parameters = json.loads(request.data)
-    # parse through json and create variables for each parameter
-    # input parameters into hormoneModel 
-    data = hormoneModel()
+    GIn = float(request.args.get('GIn'))
+    XminIn = float(request.args.get('XminIn'))
+    delSmaxIn = float(request.args.get('delSmaxIn'))
+    delCmaxIn = float(request.args.get('delCmaxIn'))
+
+    data = hormoneModel(GIn=GIn, XminIn=XminIn, delSmaxIn=delSmaxIn, delCmaxIn=delCmaxIn)
     return jsonify(data)
 
 @app.route('/test', methods=['GET'])
 def test():
-    # gammaIn1 = request.args.get('gammaIn1')
-    # print(gammaIn1)
     return jsonify('boo:')
 
 if __name__ == '__main__':
