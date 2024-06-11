@@ -1,11 +1,8 @@
-<nav>
-    <a href="/">Home</a>
-    <a href="/multimodel">Multi-Model</a>
-</nav>
 <script>
     import { onMount } from 'svelte';
     import axios from 'axios';
     import { writable, get } from 'svelte/store';
+    import Chart from 'chart.js/auto';
 
     let Xhist = [];
     let Shist = [];
@@ -13,7 +10,7 @@
     let Whist = [];
     let Wcuml = [];
 
-    //initialize all the parameters
+    // Initialize writable stores with default values
     let gamma = writable("0.1,0.2,0.3");
     let G = writable(0.1);
     let Xmin = writable(1);
@@ -86,37 +83,37 @@
     }
 
     function createDatasets(data, labelPrefix) {
-    const numRunsValue = get(numRuns); // Number of lines
+        const numRunsValue = get(numRuns); // Number of lines
 
-    function interpolateColor(startColor, endColor, factor) {
-        const result = startColor.slice();
-        for (let i = 0; i < 3; i++) {
-            result[i] = Math.round(result[i] + factor * (endColor[i] - startColor[i]));
+        function interpolateColor(startColor, endColor, factor) {
+            const result = startColor.slice();
+            for (let i = 0; i < 3; i++) {
+                result[i] = Math.round(result[i] + factor * (endColor[i] - startColor[i]));
+            }
+            return result;
         }
-        return result;
+
+        const startColor = [0, 0, 255]; // Blue
+        const endColor = [255, 0, 0]; // Red
+
+        const datasets = Array.from({ length: numRunsValue }, (_, runIndex) => {
+            const factor = runIndex / (numRunsValue - 1);
+            const color = interpolateColor(startColor, endColor, factor);
+            return {
+                label: `${labelPrefix} ${runIndex + 1}`,
+                data: data.map(point => point[runIndex]),
+                borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
+                borderWidth: 1,
+                fill: false
+            };
+        });
+
+        return datasets;
     }
 
-    const startColor = [0, 0, 255]; // Blue
-    const endColor = [255, 0, 0]; // Red
-
-    const datasets = Array.from({ length: numRunsValue }, (_, runIndex) => {
-        const factor = runIndex / (numRunsValue - 1);
-        const color = interpolateColor(startColor, endColor, factor);
-        return {
-            label: `${labelPrefix} ${runIndex + 1}`,
-            data: data.map(point => point[runIndex]),
-            borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
-            borderWidth: 1,
-            fill: false
-        };
-    });
-
-    return datasets;
-}
-
-    function createSensitivityDatasets(data, labelPrefix, color) {
-        const numRunsValue = get(numRuns); 
-        const colors = [[255, 99, 132], [75, 192, 192], [153, 102, 255]]; 
+    function createSensitivityDatasets(data, labelPrefix) {
+        const numRunsValue = get(numRuns);
+        const colors = [[255, 99, 132], [75, 192, 192], [153, 102, 255]];
         const datasets = [];
 
         for (let i = 0; i < 3; i++) {
@@ -139,336 +136,168 @@
         if (fitnessChartInstance) fitnessChartInstance.destroy();
         if (cumulativeFitnessChartInstance) cumulativeFitnessChartInstance.destroy();
 
-        //create body condition chart
+        const chartOptions = {
+            scales: {
+                x: { beginAtZero: true },
+                y: { beginAtZero: true }
+            }
+        };
+
+        // Create Body Condition Chart
         bodyConditionChartInstance = new Chart(document.getElementById('bodyConditionChart'), {
             type: 'line',
             data: {
                 labels: Array.from({ length: Xhist.length }, (_, i) => i),
-                datasets: createDatasets(Xhist, 'Body Condition', [75, 192, 192])
+                datasets: createDatasets(Xhist, 'Body Condition')
             },
-            options: {
-                scales: {
-                    x: { beginAtZero: true },
-                    y: { beginAtZero: true }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
+            options: chartOptions
         });
 
-        //create sensitivity chart
+        // Create Sensitivity Chart
         sensitivityChartInstance = new Chart(document.getElementById('sensitivityChart'), {
             type: 'line',
             data: {
-                labels: Array.from({ length: Shist[0].length }, (_, i) => i), //use the length of the first array
-                datasets: createSensitivityDatasets(Shist, 'Sensitivity', [255, 99, 132])
+                labels: Array.from({ length: Shist[0].length }, (_, i) => i),
+                datasets: createSensitivityDatasets(Shist, 'Sensitivity')
             },
-            options: {
-                scales: {
-                    x: { beginAtZero: true },
-                    y: { beginAtZero: true }
-                },
-                plugins: {
-                    legend: {
-                        display: false 
-                    }
-                }
-            }
+            options: chartOptions
         });
 
-        //production chart
+        // Create Production Chart
         productionChartInstance = new Chart(document.getElementById('productionChart'), {
             type: 'line',
             data: {
                 labels: Array.from({ length: Chist.length }, (_, i) => i),
-                datasets: createDatasets(Chist, 'Production', [153, 102, 255])
+                datasets: createDatasets(Chist, 'Production')
             },
-            options: {
-                scales: {
-                    x: { beginAtZero: true },
-                    y: { beginAtZero: true }
-                },
-                plugins: {
-                    legend: {
-                        display: false 
-                    }
-                }
-            }
+            options: chartOptions
         });
 
-        //fitness chart
+        // Create Fitness Chart
         fitnessChartInstance = new Chart(document.getElementById('fitnessChart'), {
             type: 'line',
             data: {
                 labels: Array.from({ length: Whist.length }, (_, i) => i),
-                datasets: createDatasets(Whist, 'Fitness', [255, 159, 64])
+                datasets: createDatasets(Whist, 'Fitness')
             },
-            options: {
-                scales: {
-                    x: { beginAtZero: true },
-                    y: { beginAtZero: true }
-                },
-                plugins: {
-                    legend: {
-                        display: false 
-                    }
-                }
-            }
+            options: chartOptions
         });
 
-        //cumulative fitness chart
+        // Create Cumulative Fitness Chart
         cumulativeFitnessChartInstance = new Chart(document.getElementById('cumulativeFitnessChart'), {
             type: 'line',
             data: {
                 labels: Array.from({ length: Wcuml.length }, (_, i) => i),
-                datasets: createDatasets(Wcuml, 'Cumulative Fitness', [255, 206, 86])
+                datasets: createDatasets(Wcuml, 'Cumulative Fitness')
             },
-            options: {
-                scales: {
-                    x: { beginAtZero: true },
-                    y: { beginAtZero: true }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
+            options: chartOptions
         });
     }
 </script>
 
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        background-color: #f4f4f9;
-    }
-
-    h1 {
-        text-align: center;
-        color: #333;
-    }
-
-    .input-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 20px;
-    }
-
-    .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .input-group label {
-        font-weight: bold;
-    }
-
-    .input-group input {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        text-align: center;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .input-container button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        background-color: #28a745;
-        color: white;
-        cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .input-container button:hover {
-        background-color: #218838;
-    }
-
-    .chart-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 20px;
-    }
-
-    canvas {
-        max-width: 100%;
-        margin: 20px 0;
-    }
-
-    .dropbtn {
-        background-color: #04AA6D;
-        color: white;
-        padding: 10px 20px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
-    }
-
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        right: 0;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-    }
-
-    .dropdown-content button {
-        background: none;
-        border: none;
-        color: black;
-        padding: 12px 16px;
-        text-align: left;
-        width: 100%;
-        cursor: pointer;
-    }
-
-    .dropdown-content button:hover {
-        background-color: #f1f1f1;
-    }
-
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
-
-    .dropdown:hover .dropbtn {
-        background-color: #3e8e41;
-    }
-</style>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hormone Multi-Run Visualization</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-</head>
-<body>
-    <h1>Hormone Multi-Run Visualization</h1>
-    
-    <div class="input-container">
-        <!-- Input fields for parameters with labels -->
-        <div class="input-group">
-            <label for="gamma">Gamma</label>
-            <input id="gamma" type="text" placeholder="0.1,0.2,0.3" bind:value={$gamma} />
+<nav class="bg-gray-100 shadow w-full px-8">
+    <div class="h-16 container mx-auto flex items-center justify-between">
+        <div class="text-gray-500 flex space-x-4">
+            <a href="/" class="text-xl font-semibold hover:text-indigo-500">Home</a>
+            <a href="/multimodel" class="text-xl font-semibold text-indigo-500">Multi-Model</a>
         </div>
-        <div class="input-group">
-            <label for="G">G</label>
-            <input id="G" type="number" min="0" max="1" placeholder="0.1" bind:value={$G} />
-        </div>
-        <div class="input-group">
-            <label for="Xmin">Xmin</label>
-            <input id="Xmin" type="number" placeholder="1" bind:value={$Xmin} />
-        </div>
-        <div class="input-group">
-            <label for="delSmax">delSmax</label>
-            <input id="delSmax" type="number" placeholder="1" bind:value={$delSmax} />
-        </div>
-        <div class="input-group">
-            <label for="delCmax">delCmax</label>
-            <input id="delCmax" type="number" placeholder="1" bind:value={$delCmax} />
-        </div>
-        <div class="input-group">
-            <label for="tau">Tau</label>
-            <input id="tau" type="number" placeholder="5" bind:value={$tau} />
-        </div>
-        <div class="input-group">
-            <label for="K">K</label>
-            <input id="K" type="number" placeholder="1" bind:value={$K} />
-        </div>
-        <div class="input-group">
-            <label for="alpha">Alpha</label>
-            <input id="alpha" type="number" min="0" placeholder="2" bind:value={$alpha} />
-        </div>
-        <div class="input-group">
-            <label for="beta">Beta</label>
-            <input id="beta" type="number" min="0" placeholder="2" bind:value={$beta} />
-        </div>
-        <div class="input-group">
-            <label for="mu">Mu</label>
-            <input id="mu" type="number" min="0" max="1" placeholder="0.5" bind:value={$mu} />
-        </div>
-        <div class="input-group">
-            <label for="z">Z</label>
-            <input id="z" type="text" placeholder="0.2,0.3,0.3" bind:value={$z} />
-        </div>
-        <div class="input-group">
-            <label for="N">N</label>
-            <input id="N" type="number" min="0" placeholder="100" bind:value={$N} />
-        </div>
-        <div class="input-group">
-            <label for="foodShort">Food Short</label>
-            <input id="foodShort" type="number" min="0" max="1" placeholder="0.4" bind:value={$foodShort} />
-        </div>
-        <div class="input-group">
-            <label for="foodShortbegin">Food Short Begin</label>
-            <input id="foodShortbegin" type="number" min="0" max={$N} placeholder="8" bind:value={$foodShortbegin} />
-        </div>
-        <div class="input-group">
-            <label for="foodShortend">Food Short End</label>
-            <input id="foodShortend" type="number" min={$foodShortbegin} max={$N} placeholder="20" bind:value={$foodShortend} />
-        </div>
-        <div class="dropdown">
-            <button class="dropbtn">Select Variable to Experiment With</button>
-            <div class="dropdown-content">
-                <button on:click={() => variableName.set("G")}>G</button>
-                <button on:click={() => variableName.set("Xmin")}>Xmin</button>
-                <button on:click={() => variableName.set("delSmax")}>delSmax</button>
-                <button on:click={() => variableName.set("delCmax")}>delCmax</button>
-                <button on:click={() => variableName.set("tau")}>Tau</button>
-                <button on:click={() => variableName.set("K")}>K</button>
-                <button on:click={() => variableName.set("alpha")}>Alpha</button>
-                <button on:click={() => variableName.set("beta")}>Beta</button>
-                <button on:click={() => variableName.set("mu")}>Mu</button>
-            </div>
-        </div>
-        <h3>Variable You Chose: {$variableName}</h3>
-        <div class="input-group">
-            <label for="variableRangeBegin">Variable Range Begin</label>
-            <input id="variableRangeBegin" type="number" placeholder="10" bind:value={$variableRangeBegin} />
-        </div>
-        <div class="input-group">
-            <label for="variableRangeEnd">Variable Range End</label>
-            <input id="variableRangeEnd" type="number" placeholder="20" bind:value={$variableRangeEnd} />
-        </div>
-        <div class="input-group">
-            <label for="numRuns">Number of Runs</label>
-            <input id="numRuns" type="number" placeholder="20" bind:value={$numRuns} />
-        </div>
-        <p>
-            The range of the {$variableName} is from {$variableRangeBegin} to {$variableRangeEnd} and the number of lines is {$numRuns}.
-            Thus the variable will iterate from {$variableRangeBegin} to {$variableRangeEnd} in steps of size {($variableRangeEnd - $variableRangeBegin) / $numRuns}.
-            This can be seen in the chart below.
-            With blue being the lowest value and red being the highest value.
-        </p>
-        <!-- Run button to fetch data -->
-        <button on:click={fetchData}>Run</button>
     </div>
+</nav>
 
-    <div class="chart-container">
-        <canvas id="bodyConditionChart"></canvas>
-        <canvas id="sensitivityChart"></canvas>
-        <canvas id="productionChart"></canvas>
-        <canvas id="fitnessChart"></canvas>
-        <canvas id="cumulativeFitnessChart"></canvas>
+<h1
+class="mb-4 text-center text-2xl font-extrabold md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo p-3"
+>
+Hormone Multi-Run Model Visualization
+</h1>
+
+<div class="flex flex-wrap justify-center space-x-4">
+    <div class="w-64 m-2">
+        <label for="gamma" class="block text-gray-700">Gamma</label>
+        <input id="gamma" type="text" placeholder="0.1,0.2,0.3" bind:value={$gamma} class="form-input mt-1 block w-full" />
     </div>
-</body>
+    <div class="w-64 m-2">
+        <label for="G" class="block text-gray-700">G</label>
+        <input id="G" type="number" min="0" max="1" placeholder="0.1" bind:value={$G} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="Xmin" class="block text-gray-700">Xmin</label>
+        <input id="Xmin" type="number" placeholder="1" bind:value={$Xmin} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="delSmax" class="block text-gray-700">delSmax</label>
+        <input id="delSmax" type="number" placeholder="1" bind:value={$delSmax} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="delCmax" class="block text-gray-700">delCmax</label>
+        <input id="delCmax" type="number" placeholder="1" bind:value={$delCmax} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="tau" class="block text-gray-700">Tau</label>
+        <input id="tau" type="number" placeholder="5" bind:value={$tau} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="K" class="block text-gray-700">K</label>
+        <input id="K" type="number" placeholder="1" bind:value={$K} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="alpha" class="block text-gray-700">Alpha</label>
+        <input id="alpha" type="number" min="0" placeholder="2" bind:value={$alpha} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="beta" class="block text-gray-700">Beta</label>
+        <input id="beta" type="number" min="0" placeholder="2" bind:value={$beta} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="mu" class="block text-gray-700">Mu</label>
+        <input id="mu" type="number" min="0" max="1" placeholder="0.5" bind:value={$mu} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="z" class="block text-gray-700">Z</label>
+        <input id="z" type="text" placeholder="0.2,0.3,0.3" bind:value={$z} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="N" class="block text-gray-700">N</label>
+        <input id="N" type="number" min="0" placeholder="100" bind:value={$N} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="foodShort" class="block text-gray-700">Food Short</label>
+        <input id="foodShort" type="number" min="0" max="1" placeholder="0.4" bind:value={$foodShort} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="foodShortbegin" class="block text-gray-700">Food Short Begin</label>
+        <input id="foodShortbegin" type="number" min="0" max={$N} placeholder="8" bind:value={$foodShortbegin} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="foodShortend" class="block text-gray-700">Food Short End</label>
+        <input id="foodShortend" type="number" min={$foodShortbegin} max={$N} placeholder="20" bind:value={$foodShortend} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="variableRangeBegin" class="block text-gray-700">Variable Range Begin</label>
+        <input id="variableRangeBegin" type="number" placeholder="10" bind:value={$variableRangeBegin} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="variableRangeEnd" class="block text-gray-700">Variable Range End</label>
+        <input id="variableRangeEnd" type="number" placeholder="20" bind:value={$variableRangeEnd} class="form-input mt-1 block w-full" />
+    </div>
+    <div class="w-64 m-2">
+        <label for="numRuns" class="block text-gray-700">Number of Runs</label>
+        <input id="numRuns" type="number" placeholder="20" bind:value={$numRuns} class="form-input mt-1 block w-full" />
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <button class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded" on:click={fetchData}>Run</button>
+</div>
+
+
+<div class="chart-container">
+    <canvas id="bodyConditionChart"></canvas>
+    <canvas id="sensitivityChart"></canvas>
+    <canvas id="productionChart"></canvas>
+    <canvas id="fitnessChart"></canvas>
+    <canvas id="cumulativeFitnessChart"></canvas>
+</div>
+
 
 
 
