@@ -1,8 +1,13 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [],
+export default {
+  darkMode: 'class',
+  content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        darkIndigo: '#312e81',
+      }
+    },
   },
   plugins: [],
 }
