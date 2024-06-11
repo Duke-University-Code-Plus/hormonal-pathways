@@ -3,6 +3,7 @@
     import axios from "axios";
     import { writable, get } from "svelte/store";
     import Chart from 'chart.js/auto'
+    import FormInput from './FormInput.svelte'
 
     let Xhist = [];
     let Shist = [];
@@ -285,7 +286,22 @@
             />
         </div>-->
 
-        <div class="w-72 m-2">
+
+
+
+
+        <FormInput
+            id="G"
+            type="number"
+            min="0"
+            max="1"
+            step="0.1"
+        />
+
+
+
+
+        <!-- <div class="w-72 m-2">
             <div class="relative w-full min-w-[200px] h-10">
                 <input
                     id="G"
@@ -293,11 +309,7 @@
                     min="0"
                     max="1"
                     step="0.1"
-                    class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
+                    class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
                     bind:value={$G}
                 />
                 <label
@@ -316,8 +328,14 @@
                     >G</label
                 >
             </div>
-        </div>
+        </div> -->
 
+
+
+
+
+
+        
         <!--<div class="input-group">
             <label for="G">G</label>
             <input id="G" type="text" placeholder="0.1" bind:value={$G} />
