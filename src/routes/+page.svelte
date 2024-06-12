@@ -243,7 +243,7 @@
                         <li
                             class="md:px-4 md:py-2 hover:text-indigo-500 text-xl"
                         >
-                            <a href="/multimodel">Multimodel</a>
+                            <a href="#">Multimodel</a>
                         </li>
                     </ul>
                 </div>
