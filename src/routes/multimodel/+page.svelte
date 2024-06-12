@@ -195,19 +195,26 @@
     }
 </script>
 
-<nav class="bg-gray-100 shadow w-full px-8">
-    <div class="h-16 container mx-auto flex items-center justify-between">
-        <div class="text-gray-500 flex space-x-4">
-            <a href="/" class="text-xl font-semibold hover:text-indigo-500">Home</a>
-            <a href="/multimodel" class="text-xl font-semibold text-indigo-500">Multi-Model</a>
+<nav class="bg-gray-100 dark:bg-gray-100 shadow shadow-gray-300 w-full px-8 md:px-auto">
+    <div class="md:h-16 h-28 mx-auto md:px-4 container flex items-center justify-between flex-wrap md:flex-nowrap">
+        <div class="flex w-full justify-center md:justify-between items-center">
+            <div class="text-gray-500 order-2 md:order-1 w-full md:w-auto md:flex-1">
+                <ul class="flex font-semibold justify-center w-full">
+                    <li class="md:px-4 md:py-2 hover:text-indigo-500 text-xl">
+                        <a href="/">Home</a>
+                    </li>
+                    <li class="md:px-4 md:py-2 text-indigo-500 text-xl">
+                        <a href="/multimodel">Multimodel</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="flex flex-col justify-center ml-3"></div>
         </div>
     </div>
 </nav>
 
-<h1
-class="mb-4 text-center text-2xl font-extrabold md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo p-3"
->
-Hormone Multi-Run Model Visualization
+<h1 class="mb-4 text-center text-2xl font-extrabold md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo p-3">
+    Hormone Multi-Run Model Visualization
 </h1>
 
 <div class="flex flex-wrap justify-center space-x-4">
@@ -271,6 +278,21 @@ Hormone Multi-Run Model Visualization
         <label for="foodShortend" class="block text-gray-700">Food Short End</label>
         <input id="foodShortend" type="number" min={$foodShortbegin} max={$N} placeholder="20" bind:value={$foodShortend} class="form-input mt-1 block w-full" />
     </div>
+    <div class="dropdown">
+        <button class="dropbtn bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded">Select Variable to Experiment With</button>
+        <div class="dropdown-content">
+            <button on:click={() => variableName.set("G")}>G</button>
+            <button on:click={() => variableName.set("Xmin")}>Xmin</button>
+            <button on:click={() => variableName.set("delSmax")}>delSmax</button>
+            <button on:click={() => variableName.set("delCmax")}>delCmax</button>
+            <button on:click={() => variableName.set("tau")}>Tau</button>
+            <button on:click={() => variableName.set("K")}>K</button>
+            <button on:click={() => variableName.set("alpha")}>Alpha</button>
+            <button on:click={() => variableName.set("beta")}>Beta</button>
+            <button on:click={() => variableName.set("mu")}>Mu</button>
+        </div>
+    <h3>Variable You Chose: {$variableName}</h3>
+</div>
     <div class="w-64 m-2">
         <label for="variableRangeBegin" class="block text-gray-700">Variable Range Begin</label>
         <input id="variableRangeBegin" type="number" placeholder="10" bind:value={$variableRangeBegin} class="form-input mt-1 block w-full" />
@@ -289,7 +311,6 @@ Hormone Multi-Run Model Visualization
     <button class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded" on:click={fetchData}>Run</button>
 </div>
 
-
 <div class="chart-container">
     <canvas id="bodyConditionChart"></canvas>
     <canvas id="sensitivityChart"></canvas>
@@ -297,6 +318,53 @@ Hormone Multi-Run Model Visualization
     <canvas id="fitnessChart"></canvas>
     <canvas id="cumulativeFitnessChart"></canvas>
 </div>
+
+<style>
+    .dropbtn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+       .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+       .dropdown-content button {
+        background: none;
+        border: none;
+        color: black;
+        padding: 12px 16px;
+        text-align: left;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .dropdown-content button:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: bg-indigo-400;
+    }
+</style>
+
 
 
 
