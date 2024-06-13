@@ -3,6 +3,7 @@
     import axios from 'axios';
     import { writable, get } from 'svelte/store';
     import Chart from 'chart.js/auto';
+    import NavBar from './Nested/navigation.svelte';
 
     let Xhist = [];
     let Shist = [];
@@ -10,7 +11,7 @@
     let Whist = [];
     let Wcuml = [];
 
-    // Initialize writable stores with default values
+    //default values
     let gamma = writable("0.1,0.2,0.3");
     let G = writable(0.1);
     let Xmin = writable(1);
@@ -153,7 +154,7 @@
             }
         };
 
-        // Create Body Condition Chart
+        //create Body Condition Chart
         bodyConditionChartInstance = new Chart(document.getElementById('bodyConditionChart'), {
             type: 'line',
             data: {
@@ -163,7 +164,7 @@
             options: chartOptions
         });
 
-        // Create Sensitivity Chart
+        //create Sensitivity Chart
         sensitivityChartInstance = new Chart(document.getElementById('sensitivityChart'), {
             type: 'line',
             data: {
@@ -173,7 +174,7 @@
             options: chartOptions
         });
 
-        // Create Production Chart
+        //create Production Chart
         productionChartInstance = new Chart(document.getElementById('productionChart'), {
             type: 'line',
             data: {
@@ -183,7 +184,7 @@
             options: chartOptions
         });
 
-        // Create Fitness Chart
+        //create Fitness Chart
         fitnessChartInstance = new Chart(document.getElementById('fitnessChart'), {
             type: 'line',
             data: {
@@ -193,7 +194,7 @@
             options: chartOptions
         });
 
-        // Create Cumulative Fitness Chart
+        //create Cumulative Fitness Chart
         cumulativeFitnessChartInstance = new Chart(document.getElementById('cumulativeFitnessChart'), {
             type: 'line',
             data: {
@@ -256,23 +257,8 @@
 
 </script>
 
-<nav class="bg-gray-100 dark:bg-gray-100 shadow shadow-gray-300 w-full px-8 md:px-auto">
-    <div class="md:h-16 h-28 mx-auto md:px-4 container flex items-center justify-between flex-wrap md:flex-nowrap">
-        <div class="flex w-full justify-center md:justify-between items-center">
-            <div class="text-gray-500 order-2 md:order-1 w-full md:w-auto md:flex-1">
-                <ul class="flex font-semibold justify-center w-full">
-                    <li class="md:px-4 md:py-2 hover:text-indigo-500 text-xl">
-                        <a href="/">Home</a>
-                    </li>
-                    <li class="md:px-4 md:py-2 text-indigo-500 text-xl">
-                        <a href="/multimodel">Multimodel</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="flex flex-col justify-center ml-3"></div>
-        </div>
-    </div>
-</nav>
+<NavBar
+multiPage = "bruh"/>
 
 <h1 class="mb-4 text-center text-2xl font-extrabold md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo p-3">
     Hormone Multi-Run Model Visualization
