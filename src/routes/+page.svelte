@@ -35,6 +35,8 @@
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
 
+    const apiEndpoint = 'https://hormonal-pathways-api-a4dcfa854663.herokuapp.com'
+
     onMount(() => {
         fetchData();
     });
@@ -61,7 +63,7 @@
 
             const queryString = new URLSearchParams(params).toString();
             const response = await axios.get(
-                `http://127.0.0.1:5000/hormonemodel?${queryString}`,
+                `${apiEndpoint}/hormonemodel?${queryString}`,
             );
             const data = response.data;
 
