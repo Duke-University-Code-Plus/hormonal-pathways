@@ -40,6 +40,8 @@
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
 
+    const apiEndpoint = 'https://hormonal-pathways-api-a4dcfa854663.herokuapp.com'
+
     //state
     let initialRun = false
 
@@ -83,7 +85,8 @@
             };
 
             const queryString = new URLSearchParams(params).toString();
-            const response = await axios.get(`http://127.0.0.1:5000/multihormonemodel?${queryString}`);
+            const response = await axios.get(`${apiEndpoint}/multihormonemodel?${queryString}`);
+            
             const data = response.data;
 
             // Data from API
