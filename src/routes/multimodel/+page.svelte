@@ -26,10 +26,11 @@
     let foodShort = writable(0.4);
     let foodShortbegin = writable(8);
     let foodShortend = writable(20);
-    let variableName = writable('delSmax');
+    let variableName = writable('Choose a Variable');
     let variableRangeBegin = writable(1);
     let variableRangeEnd = writable(2);
     let numRuns = writable(2);
+    let showValidationMessage = writable(false);
 
     let bodyConditionChartInstance = null;
     let sensitivityChartInstance = null;
@@ -42,6 +43,15 @@
     });
 
     async function fetchData() {
+        if (get(variableName) === "Choose a Variable") {
+            document.getElementById('variableDropDown').classList.add('border-red-500');
+            showValidationMessage.set(true);
+            return;
+        } else {
+            document.getElementById('variableDropDown').classList.remove('border-red-500');
+            showValidationMessage.set(false);
+        }
+
         try {
             const params = {
                 gamma: get(gamma),
@@ -193,6 +203,57 @@
             options: chartOptions
         });
     }
+    function handleDropdownChange(){
+        if (get(variableName) === "Choose a Variable") {
+            document.getElementById('variableDropDown').classList.add('border-red-500');
+            showValidationMessage.set(true);
+            return;
+        } else {
+            document.getElementById('variableDropDown').classList.remove('border-red-500');
+            showValidationMessage.set(false);
+            switch($variableName){
+                case "K":
+                    variableRangeBegin.set($K)
+                    variableRangeEnd.set($K+1)
+                    break;
+                case "tau":
+                    variableRangeBegin.set($tau)
+                    variableRangeEnd.set($tau+1)
+                    break;
+                case "mu":
+                variableRangeBegin.set($mu)
+                variableRangeEnd.set($mu+0.001)
+                    break;
+                case "G":
+                variableRangeBegin.set($G)
+                    variableRangeEnd.set($G+0.1)
+                    break;
+                case "delSmax":
+                variableRangeBegin.set($delSmax)
+                    variableRangeEnd.set($delSmax+1)
+                    break;
+                case "delCmax":
+                variableRangeBegin.set($delCmax)
+                variableRangeEnd.set($delCmax+1)
+                    break;
+                case "alpha":
+                variableRangeBegin.set($alpha)
+                    variableRangeEnd.set($alpha+1)
+                    break;
+                case "beta":
+                variableRangeBegin.set($beta)
+                variableRangeEnd.set($beta+1)
+                    break;
+                case "Xmin":
+                variableRangeBegin.set($Xmin)
+                variableRangeEnd.set($Xmin+1)
+                    break;
+
+            }
+
+        }
+    }
+
 </script>
 
 <nav class="bg-gray-100 dark:bg-gray-100 shadow shadow-gray-300 w-full px-8 md:px-auto">
@@ -224,7 +285,7 @@
     </div>
     <div class="w-64 m-2">
         <label for="G" class="block text-gray-700">G</label>
-        <input id="G" type="number" min="0" max="1" placeholder="0.1" bind:value={$G} class="form-input mt-1 block w-full" />
+        <input id="G" type="number" min="0" max="1" placeholder="0.1" step = 0.1 bind:value={$G} class="form-input mt-1 block w-full" />
     </div>
     <div class="w-64 m-2">
         <label for="Xmin" class="block text-gray-700">Xmin</label>
@@ -256,7 +317,7 @@
     </div>
     <div class="w-64 m-2">
         <label for="mu" class="block text-gray-700">Mu</label>
-        <input id="mu" type="number" min="0" max="1" placeholder="0.5" bind:value={$mu} class="form-input mt-1 block w-full" />
+        <input id="mu" type="number" min="0" max="1" placeholder="0.01" step = 0.001 bind:value={$mu} class="form-input mt-1 block w-full" />
     </div>
     <div class="w-64 m-2">
         <label for="z" class="block text-gray-700">Z</label>
@@ -268,7 +329,7 @@
     </div>
     <div class="w-64 m-2">
         <label for="foodShort" class="block text-gray-700">Food Short</label>
-        <input id="foodShort" type="number" min="0" max="1" placeholder="0.4" bind:value={$foodShort} class="form-input mt-1 block w-full" />
+        <input id="foodShort" type="number" min="0" max="1" placeholder="0.4" step = 0.1 bind:value={$foodShort} class="form-input mt-1 block w-full" />
     </div>
     <div class="w-64 m-2">
         <label for="foodShortbegin" class="block text-gray-700">Food Short Begin</label>
@@ -278,20 +339,27 @@
         <label for="foodShortend" class="block text-gray-700">Food Short End</label>
         <input id="foodShortend" type="number" min={$foodShortbegin} max={$N} placeholder="20" bind:value={$foodShortend} class="form-input mt-1 block w-full" />
     </div>
-    <div class="dropdown">
-        <button class="dropbtn bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded">Select Variable to Experiment With</button>
-        <div class="dropdown-content">
-            <button on:click={() => variableName.set("G")}>G</button>
-            <button on:click={() => variableName.set("Xmin")}>Xmin</button>
-            <button on:click={() => variableName.set("delSmax")}>delSmax</button>
-            <button on:click={() => variableName.set("delCmax")}>delCmax</button>
-            <button on:click={() => variableName.set("tau")}>Tau</button>
-            <button on:click={() => variableName.set("K")}>K</button>
-            <button on:click={() => variableName.set("alpha")}>Alpha</button>
-            <button on:click={() => variableName.set("beta")}>Beta</button>
-            <button on:click={() => variableName.set("mu")}>Mu</button>
-        </div>
-    <h3>Variable You Chose: {$variableName}</h3>
+<div>
+  
+    <form class="w-64 m-2 invalid: iSum">
+        <label for="variableDropDown" class="block mb-2 text-gray-700 dark:text-white">Select an option</label>
+        <select id="variableDropDown" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" bind:value={$variableName} on:change={handleDropdownChange}>
+          <option selected>Choose a Variable</option>
+          <option value="alpha">alpha</option>
+          <option value="beta">beta</option>
+          <option value="delSmax">delSmax</option>
+          <option value="delCmax">delCmax</option>  
+          <option value="G">G</option>
+          <option value="K">K</option>
+          <option value="mu">mu</option>
+          <option value="tau">tau</option>
+          <option value="Xmin">Xmin</option>
+        </select>
+        {#if $showValidationMessage}
+                <p class="mt-2 text-red-500 text-sm">Please select a variable</p>
+           {/if}
+    </form>
+
 </div>
     <div class="w-64 m-2">
         <label for="variableRangeBegin" class="block text-gray-700">Variable Range Begin</label>
@@ -306,7 +374,6 @@
         <input id="numRuns" type="number" placeholder="20" bind:value={$numRuns} class="form-input mt-1 block w-full" />
     </div>
 </div>
-
 <div class="text-center mt-4">
     <button class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded" on:click={fetchData}>Run</button>
 </div>
@@ -319,51 +386,6 @@
     <canvas id="cumulativeFitnessChart"></canvas>
 </div>
 
-<style>
-    .dropbtn {
-        padding: 10px 20px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
-    }
-
-       .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        right: 0;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-    }
-       .dropdown-content button {
-        background: none;
-        border: none;
-        color: black;
-        padding: 12px 16px;
-        text-align: left;
-        width: 100%;
-        cursor: pointer;
-    }
-
-    .dropdown-content button:hover {
-        background-color: #f1f1f1;
-    }
-
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
-
-    .dropdown:hover .dropbtn {
-        background-color: bg-indigo-400;
-    }
-</style>
 
 
 
