@@ -40,8 +40,11 @@
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
 
+    //state
+    let initialRun = false
+
     onMount(() => {
-        fetchData();
+        //fetchData();
     });
 
     async function fetchData() {
@@ -55,6 +58,8 @@
         }
 
         try {
+            if (!initialRun) initialRun = true
+
             const params = {
                 gamma: get(gamma),
                 G: get(G),
@@ -258,15 +263,16 @@
 
 </script>
 
-<NavBar
-multiPage = "bruh"/>
+<NavBar multiPage='true'/>
 
-<h1 class="mb-4 text-center text-2xl font-extrabold md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo p-3">
+<h1 class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
     Hormone Multi-Run Model Visualization
 </h1>
 
-<div class="flex flex-wrap justify-center">
-    
+<div class="flex flex-col gap-2">
+
+    <div class="flex flex-wrap justify-center">
+        
         <!--input for gamma-->
         <FormInput
             id="Gamma"
@@ -310,7 +316,7 @@ multiPage = "bruh"/>
             min="0"
             max="10000"
             step="1"
-             bind:inputVar={$delCmax}
+                bind:inputVar={$delCmax}
         />
 
         <FormInput
@@ -329,27 +335,27 @@ multiPage = "bruh"/>
             max="10000"
             step="1"
             bind:inputVar={$K}
-         />
+        />
 
-         <FormInput
+        <FormInput
             id="Alpha"
             inputType="number"
             min="0"
             max="10000"
             step="1"
             bind:inputVar={$alpha}
-         />
+        />
 
-         <FormInput
+        <FormInput
             id="Beta"
             inputType="number"
             min="0"
             max="10000"
             step="1"
             bind:inputVar={$beta}
-         />
+        />
 
-         <!--input for mu-->
+            <!--input for mu-->
         <FormInput
             id="Mu"
             inputType="number"
@@ -357,9 +363,9 @@ multiPage = "bruh"/>
             max="1"
             step="0.001"
             bind:inputVar={$mu}
-         />
+            />
 
-         <FormInput
+            <FormInput
             id="Z"
             inputType="text"
             bind:inputVar={$z}
@@ -372,107 +378,142 @@ multiPage = "bruh"/>
             max="10000"
             step="1"
             bind:inputVar={$N}
-         />
+        />
 
-         <FormInput
+        <FormInput
             id="Food Short"
             inputType="number"
             min="0"
             max="1"
             step="0.1"
             bind:inputVar={$foodShort}
-         />
+        />
 
-         <FormInput
+        <FormInput
             id="Food Short Begin"
             inputType="number"
             min="0"
             max={$foodShortend}
             step="1"
             bind:inputVar={$foodShortbegin}
-         />
+        />
 
-         <FormInput
+        <FormInput
             id="Food Short End"
             inputType="number"
             min="0"
             max={$N}
             step="1"
             bind:inputVar={$foodShortend}
-         />
-   
-<div class="w-72 m-2" >
-  
-    <form class="relative w-full min-w-[200px] h-10 invalid: iSum">
-        <label for="variableDropDown" class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-      peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-      peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-      peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-      before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-      before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-      after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-      peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-      after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-      peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-      peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-      >Select an option</label>
-        <select id="variableDropDown" class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100" bind:value={$variableName} on:change={handleDropdownChange}>
-          <option selected>Choose a Variable</option>
-          <option value="alpha">alpha</option>
-          <option value="beta">beta</option>
-          <option value="delSmax">delSmax</option>
-          <option value="delCmax">delCmax</option>  
-          <option value="G">G</option>
-          <option value="K">K</option>
-          <option value="mu">mu</option>
-          <option value="tau">tau</option>
-          <option value="Xmin">Xmin</option>
-        </select>
-        {#if $showValidationMessage}
-                <p class="text-red-500 text-sm">Please select a variable</p>
-           {/if}
-    </form>
+        />
+
+    </div>
+
+
+    <hr class="m-auto w-[90%] h-px my-6 border-1 border-indigo-500 opacity-50">
+
+    <div class="flex flex-wrap justify-center">
+    
+        <div class="w-72 m-2" >
+        
+            <form class="relative w-full min-w-[200px] h-10 invalid: iSum">
+                <label for="variableDropDown" class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
+            peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
+            peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
+            peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
+            before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
+            before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
+            after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
+            peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
+            after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
+            peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
+            peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
+            >Select an option</label>
+                <select id="variableDropDown" class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100" bind:value={$variableName} on:change={handleDropdownChange}>
+                <option selected>Choose a Variable</option>
+                <option value="alpha">alpha</option>
+                <option value="beta">beta</option>
+                <option value="delSmax">delSmax</option>
+                <option value="delCmax">delCmax</option>  
+                <option value="G">G</option>
+                <option value="K">K</option>
+                <option value="mu">mu</option>
+                <option value="tau">tau</option>
+                <option value="Xmin">Xmin</option>
+                </select>
+                {#if $showValidationMessage}
+                        <p class="text-red-500 text-sm">Please select a variable</p>
+                {/if}
+            </form>
+
+        </div>
+
+        <FormInput
+            id="Variable Range Begin"
+            inputType="number"
+            min="0"
+            max={$variableRangeEnd}
+            step="1"
+            bind:inputVar={$variableRangeBegin}
+        /> 
+        <FormInput
+            id="Variable Range End"
+            inputType="number"
+            min="0"
+            max="1000000"
+            step="1"
+            bind:inputVar={$variableRangeEnd}
+        />
+        <FormInput
+            id="Number of Runs"
+            inputType="number"
+            min="0"
+            max="1000000"
+            step="1"
+            bind:inputVar={$numRuns}
+        />
+    </div>
 
 </div>
 
-    <FormInput
-        id="Variable Range Begin"
-        inputType="number"
-        min="0"
-        max={$variableRangeEnd}
-        step="1"
-        bind:inputVar={$variableRangeBegin}
-    /> 
-    <FormInput
-        id="Variable Range End"
-        inputType="number"
-        min="0"
-        max="1000000"
-        step="1"
-        bind:inputVar={$variableRangeEnd}
-    />
-    <FormInput
-        id="Number of Runs"
-        inputType="number"
-        min="0"
-        max="1000000"
-        step="1"
-        bind:inputVar={$numRuns}
-    />
-</div>
 <div class="text-center mt-4">
     <button class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded" on:click={fetchData}>Run</button>
 </div>
 
-<div class="chart-container">
-    <canvas id="bodyConditionChart"></canvas>
-    <canvas id="sensitivityChart"></canvas>
-    <canvas id="productionChart"></canvas>
-    <canvas id="fitnessChart"></canvas>
-    <canvas id="cumulativeFitnessChart"></canvas>
-</div>
+{#if initialRun}
 
+    <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Body Condition
+            </h2>
+            <canvas id="bodyConditionChart"></canvas>
+        </div>
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Sensitivity
+            </h2>
+            <canvas id="sensitivityChart"></canvas>
+        </div>
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Production
+            </h2>
+            <canvas id="productionChart"></canvas>
+        </div>
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
+            <canvas id="fitnessChart"></canvas>
+        </div>
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Cumulative Fitness
+            </h2>
+            <canvas id="cumulativeFitnessChart"></canvas>
+        </div>
+    </div>
 
+{/if}
 
 
 

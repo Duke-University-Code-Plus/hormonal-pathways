@@ -230,7 +230,7 @@ multiPage = "nope"/>
 </nav>-->
 
     <h1
-        class="mb-4 text-center text-2xl font-extrabold md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo p-3"
+        class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
     >
         Hormone Model Visualization
     </h1>
@@ -379,40 +379,38 @@ multiPage = "nope"/>
             on:click={fetchData}>Run</button
         >
     </div>
-    <div class="carousel-container">
-        <div class="carousel-button" id="prevButton">&#9664;</div>
-        <div class="carousel">
-            <div class="carousel-item bg-white shadow-md rounded-lg">
-                <h2 class="text-center text-xl font-semibold mb-4">
-                    Body Condition
-                </h2>
-                <canvas id="bodyConditionChart"></canvas>
-            </div>
-            <div class="carousel-item bg-white shadow-md rounded-lg">
-                <h2 class="text-center text-xl font-semibold mb-4">
-                    Sensitivity
-                </h2>
-                <canvas id="sensitivityChart"></canvas>
-            </div>
-            <div class="carousel-item bg-white shadow-md rounded-lg">
-                <h2 class="text-center text-xl font-semibold mb-4">
-                    Production
-                </h2>
-                <canvas id="productionChart"></canvas>
-            </div>
-            <div class="carousel-item bg-white shadow-md rounded-lg">
-                <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
-                <canvas id="fitnessChart"></canvas>
-            </div>
-            <div class="carousel-item bg-white shadow-md rounded-lg">
-                <h2 class="text-center text-xl font-semibold mb-4">
-                    Cumulative Fitness
-                </h2>
-                <canvas id="cumulativeFitnessChart"></canvas>
-            </div>
+
+    <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Body Condition
+            </h2>
+            <canvas id="bodyConditionChart"></canvas>
         </div>
-        <div class="carousel-button" id="nextButton">&#9654;</div>
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Sensitivity
+            </h2>
+            <canvas id="sensitivityChart"></canvas>
+        </div>
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Production
+            </h2>
+            <canvas id="productionChart"></canvas>
+        </div>
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
+            <canvas id="fitnessChart"></canvas>
+        </div>
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Cumulative Fitness
+            </h2>
+            <canvas id="cumulativeFitnessChart"></canvas>
+        </div>
     </div>
+
     <!-- <div class="chart-container">
         <canvas id="bodyConditionChart"></canvas>
         <canvas id="sensitivityChart"></canvas>
@@ -489,40 +487,3 @@ multiPage = "nope"/>
     }
 </style>-->
 
-<style>
-    .carousel {
-        scroll-snap-type: x mandatory;
-        overflow-x: auto;
-        display: flex;
-        scroll-behavior: smooth;
-        gap: 1rem;
-    }
-
-    .carousel-item {
-        scroll-snap-align: start;
-        flex: none;
-        width: 80%;
-        max-width: 600px;
-        padding: 1rem;
-    }
-
-    .carousel-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-    }
-
-    .carousel-button {
-        background-color: #4a5568;
-        color: #fff;
-        padding: 0.5rem 1rem;
-        border-radius: 0.25rem;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .carousel-button:hover {
-        background-color: #2d3748;
-    }
-</style>

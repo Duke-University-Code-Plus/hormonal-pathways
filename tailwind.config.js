@@ -8,6 +8,9 @@ export default {
         darkIndigo: '#312e81',
       }
     },
+    screens: {
+      'sm': '958px',
+    }
   },
   plugins: [],
 }

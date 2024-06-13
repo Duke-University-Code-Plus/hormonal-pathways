@@ -1,31 +1,16 @@
 <script>
-    import { onMount } from 'svelte';
     export let multiPage;
-    onMount(() => {
-        if (multiPage === "bruh") {
-            const element = document.getElementById("multiModelPage");
-        if (element) {
-            element.classList.add("text-indigo-500");
-         }}
-      else{
-        const element = document.getElementById("homePage");
-        if(element)
-        {
-            element.classList.add("text-indigo-500");
-        }
-      }
-    }
-    );
 </script>
+
 <nav class="bg-gray-100 dark:bg-gray-100 shadow shadow-gray-300 w-full px-8 md:px-auto">
-    <div class="md:h-16 h-28 mx-auto md:px-4 container flex items-center justify-between flex-wrap md:flex-nowrap">
+    <div class="md:h-16 h-20 mx-auto md:px-4 container flex items-center justify-between flex-wrap md:flex-nowrap">
         <div class="flex w-full justify-center md:justify-between items-center">
             <div class="text-gray-500 order-2 md:order-1 w-full md:w-auto md:flex-1">
-                <ul class="flex font-semibold justify-center w-full">
-                    <li id = "homePage"class="md:px-4 md:py-2 hover:text-indigo-500 text-xl">
+                <ul class="flex flex-row gap-8 font-semibold justify-center w-full">
+                    <li class="{multiPage != 'true' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-500 text-xl">
                         <a href="/">Home</a>
                     </li>
-                    <li id ="multiModelPage"class="md:px-4 md:py-2 hover:text-indigo-500 text-xl">
+                    <li class="{multiPage == 'true' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-500 text-xl">
                         <a href="/multimodel">Multimodel</a>
                     </li>
                 </ul>
