@@ -2,8 +2,9 @@
     import { onMount } from "svelte";
     import axios from "axios";
     import { writable, get } from "svelte/store";
-    import Chart from "chart.js/auto";
-    import FormInput from "./FormInput.svelte";
+    import Chart from 'chart.js/auto'
+    import FormInput from './multimodel/Nested/FormInput.svelte'
+    import NavBar from "./multimodel/Nested/navigation.svelte";
 
     let Xhist = [];
     let Shist = [];
@@ -34,6 +35,8 @@
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
 
+    const apiEndpoint = 'https://hormonal-pathways-api-a4dcfa854663.herokuapp.com'
+
     onMount(() => {
         fetchData();
     });
@@ -60,7 +63,7 @@
 
             const queryString = new URLSearchParams(params).toString();
             const response = await axios.get(
-                `http://127.0.0.1:5000/hormonemodel?${queryString}`,
+                `${apiEndpoint}/hormonemodel?${queryString}`,
             );
             const data = response.data;
 
@@ -183,628 +186,197 @@
     }
 </script>
 
-<nav
-    class="bg-gray-100 dark: bg-gray-100 shadow shadow-gray-300 w-full px-8 md:px-auto"
->
-    <div
-        class="md:h-16 h-28 mx-auto md:px-4 container flex items-center justify-between flex-wrap md:flex-nowrap"
-    >
-        <div class="flex w-full justify-center md:justify-between items-center">
-            <!-- links -->
-            <div
-                class="text-gray-500 order-2 md:order-1 w-full md:w-auto md:flex-1"
-            >
-                <ul class="flex font-semibold justify-center w-full">
-                    <!-- Active Link = text-indigo-500
-              Inactive Link = hover:text-indigo-500 -->
-                    <li class="md:px-4 md:py-2 text-indigo-500 text-xl">
-                        <a href="/">Home</a>
-                    </li>
-                    <li class="md:px-4 md:py-2 hover:text-indigo-500 text-xl">
-                        <a href="/multimodel">Multimodel</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- dark mode toggle button -->
-            <div class="flex flex-col justify-center ml-3"></div>
-        </div>
-    </div>
-</nav>
+<NavBar
+multiPage = "nope"/>
 
 <!-- <nav>
     <a href="/">home</a>
     <a href="/multimodel">multimodel</a>
 </nav>-->
 
-<h1
-    class="mb-4 text-center text-2xl font-extrabold md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo p-3"
->
-    Hormone Model Visualization
-</h1>
-
-<div class="flex flex-wrap justify-center">
-    <!-- Input fields for parameters with labels -->
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <label for="Gamma" class="form-label">Gamma</label>
-            <input id="Gamma" class="form-input" bind:value={$gamma} />
-        </div>
-    </div>
-
-    <!---<div class="input-group">
-            <label for="gamma">Gamma</label>
-            <input
-                id="gamma"
-                type="text"
-                placeholder="0.1,0.2,0.3"
-                bind:value={$gamma}
-            />
-        </div>-->
-
-    <FormInput id="G" type="number" min="0" max="1" step="0.1" />
-
-    <!-- <div class="w-72 m-2">
-            <div class="relative w-full min-w-[200px] h-10">
-                <input
-                    id="G"
-                    type="number"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                    bind:value={$G}
-                />
-                <label
-                    for="G"
-                    class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                    >G</label
-                >
-            </div>
-        </div> -->
-
-    <!--<div class="input-group">
-            <label for="G">G</label>
-            <input id="G" type="text" placeholder="0.1" bind:value={$G} />
-        </div>-->
-
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="Xmin"
-                type="number"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$Xmin}
-            />
-            <label
-                for="Xmin"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >Xmin</label
-            >
-        </div>
-    </div>
-
-    <!--<div class="input-group">
-            <label for="Xmin">Xmin</label>
-            <input id="Xmin" type="text" placeholder="1" bind:value={$Xmin} />
-        </div>-->
-
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="delSmax"
-                type="number"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$delSmax}
-            />
-            <label
-                for="delSmax"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >delSmax</label
-            >
-        </div>
-    </div>
-
-    <!--<div class="input-group">
-            <label for="delSmax">delSmax</label>
-            <input
-                id="delSmax"
-                type="text"
-                placeholder="1"
-                bind:value={$delSmax}
-            />
-        </div>-->
-
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="delCmax"
-                type="number"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$delCmax}
-            />
-            <label
-                for="delCmax"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >delCmax</label
-            >
-        </div>
-    </div>
-
-    <!-- <div class="input-group">
-            <label for="delCmax">delCmax</label>
-            <input
-                id="delCmax"
-                type="text"
-                placeholder="1"
-                bind:value={$delCmax}
-            />
-        </div> -->
-
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="tau"
-                type="number"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$tau}
-            />
-            <label
-                for="tau"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >Tau</label
-            >
-        </div>
-    </div>
-    <!-- <div class="input-group">
-            <label for="tau">Tau</label>
-            <input id="tau" type="text" placeholder="5" bind:value={$tau} />
-        </div> -->
-
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="K"
-                type="number"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$K}
-            />
-            <label
-                for="K"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >K</label
-            >
-        </div>
-    </div>
-    <!-- <div class="input-group">
-            <label for="K">K</label>
-            <input id="K" type="text" placeholder="1" bind:value={$K} />
-        </div> -->
-
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="alpha"
-                type="number"
-                min="0"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$alpha}
-            />
-            <label
-                for="alpha"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >Alpha</label
-            >
-        </div>
-    </div>
-
-    <!-- <div class="input-group">
-            <label for="alpha">Alpha</label>
-            <input id="alpha" type="text" placeholder="2" bind:value={$alpha} />
-        </div> -->
-
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="beta"
-                type="number"
-                min="0"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$beta}
-            />
-            <label
-                for="beta"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >Beta</label
-            >
-        </div>
-    </div>
-    <!-- <div class="input-group">
-            <label for="beta">Beta</label>
-            <input id="beta" type="text" placeholder="2" bind:value={$beta} />
-        </div> -->
-
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="mu"
-                type="number"
-                min="0"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$mu}
-            />
-            <label
-                for="mu"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >Mu</label
-            >
-        </div>
-    </div>
-
-    <!-- <div class="input-group">
-            <label for="mu">Mu</label>
-            <input id="mu" type="text" placeholder="0.5" bind:value={$mu} />
-        </div> -->
-
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="z"
-                type="text"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$z}
-            />
-            <label
-                for="z"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >Z</label
-            >
-        </div>
-    </div>
-    <!-- <div class="input-group">
-            <label for="z">Z</label>
-            <input
-                id="z"
-                type="text"
-                placeholder="0.2,0.3,0.3"
-                bind:value={$z}
-            />
-        </div> -->
-
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="N"
-                type="number"
-                min="0"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$N}
-            />
-            <label
-                for="N"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >N</label
-            >
-        </div>
-    </div>
-
-    <!-- <div class="input-group">
-            <label for="N">N</label>
-            <input id="N" type="text" placeholder="100" bind:value={$N} />
-        </div> -->
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="foodShort"
-                type="number"
-                min="0"
-                max="1"
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$foodShort}
-            />
-            <label
-                for="foodShort"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >Food Short</label
-            >
-        </div>
-    </div>
-
-    <!-- <div class="input-group">
-            <label for="foodShort">Food Short</label>
-            <input
-                id="foodShort"
-                type="text"
-                placeholder="0.4"
-                bind:value={$foodShort}
-            />
-        </div> -->
-
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="foodShortbegin"
-                type="number"
-                min="0"
-                max={$N}
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$foodShortbegin}
-            />
-            <label
-                for="foodShortbegin"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >Food Short Begin</label
-            >
-        </div>
-    </div>
-
-    <!-- <div class="input-group">
-            <label for="foodShortbegin">Food Short Begin</label>
-            <input
-                id="foodShortbegin"
-                type="text"
-                placeholder="8"
-                bind:value={$foodShortbegin}
-            />
-        </div> -->
-    <div class="w-72 m-2">
-        <div class="relative w-full min-w-[200px] h-10">
-            <input
-                id="foodShortend"
-                type="number"
-                min={$foodShortbegin}
-                max={$N}
-                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0
-                focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border
-                placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2
-                border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200
-                focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                bind:value={$foodShortend}
-            />
-            <label
-                for="foodShortend"
-                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-                peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-                peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-                peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-                before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-                before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-                after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-                peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-                after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-                peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-                peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                >Food Short End</label
-            >
-        </div>
-    </div>
-    <!-- <div class="input-group">
-            <label for="foodShortend">Food Short End</label>
-            <input
-                id="foodShortend"
-                type="text"
-                placeholder="20"
-                bind:value={$foodShortend}
-            />
-        </div> -->
-
-    <!-- Run button to fetch data -->
-</div>
-<div class="flex justify-center m-4">
-    <button
-        class="text-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-        on:click={fetchData}>Run</button
+    <h1
+        class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
     >
-</div>
-<div class="carousel-container">
-    <div class="carousel-button" id="prevButton">&#9664;</div>
-    <div class="carousel">
-        <div class="carousel-item bg-white shadow-md rounded-lg">
+        Hormone Model Visualization
+    </h1>
+
+    <div class="flex flex-wrap justify-center">
+        <!-- Input fields for parameters with labels -->
+
+        <!--input for gamma-->
+        <FormInput
+            id="Gamma"
+            inputType="text"
+            bind:inputVar={$gamma}
+        />
+
+
+        <!--input for G-->
+        <FormInput
+            id="G"
+            inputType="number"
+            min="0"
+            max="1"
+            step="0.1"
+            bind:inputVar={$G}
+        />
+
+        <!--input for Xmin-->
+        <FormInput
+            id="Xmin"
+            inputType="number"
+            min="0"
+            max="10000"
+            step="1"
+            bind:inputVar={$Xmin}
+        />
+
+        <FormInput
+            id="delSmax"
+            inputType="number"
+            min="0"
+            max="10000"
+            step="1"
+            bind:inputVar={$delSmax}
+        />
+
+        <FormInput
+            id="delCmax"
+            inputType="number"
+            min="0"
+            max="10000"
+            step="1"
+             bind:inputVar={$delCmax}
+        />
+
+        <FormInput
+            id="Tau"
+            inputType="number"
+            min="0"
+            max="10000"
+            step="1"
+            bind:inputVar={$tau}
+        />
+
+        <FormInput
+            id="K"
+            inputType="number"
+            min="0"
+            max="10000"
+            step="1"
+            bind:inputVar={$K}
+         />
+
+         <FormInput
+            id="Alpha"
+            inputType="number"
+            min="0"
+            max="10000"
+            step="1"
+            bind:inputVar={$alpha}
+         />
+
+         <FormInput
+            id="Beta"
+            inputType="number"
+            min="0"
+            max="10000"
+            step="1"
+            bind:inputVar={$beta}
+         />
+
+         <!--input for mu-->
+        <FormInput
+            id="Mu"
+            inputType="number"
+            min="0"
+            max="1"
+            step="0.001"
+            bind:inputVar={$mu}
+         />
+
+         <FormInput
+            id="Z"
+            inputType="text"
+            bind:inputVar={$z}
+        />
+
+        <FormInput
+            id="N"
+            inputType="number"
+            min="0"
+            max="10000"
+            step="1"
+            bind:inputVar={$N}
+         />
+
+         <FormInput
+            id="Food Short"
+            inputType="number"
+            min="0"
+            max="1"
+            step="0.1"
+            bind:inputVar={$foodShort}
+         />
+
+         <FormInput
+            id="Food Short Begin"
+            inputType="number"
+            min="0"
+            max={$foodShortend}
+            step="1"
+            bind:inputVar={$foodShortbegin}
+         />
+
+         <FormInput
+            id="Food Short End"
+            inputType="number"
+            min="0"
+            max={$N}
+            step="1"
+            bind:inputVar={$foodShortend}
+         />
+
+    </div>
+    <div class="flex justify-center m-4">
+        <button
+            class="text-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+            on:click={fetchData}>Run</button
+        >
+    </div>
+
+    <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
             <h2 class="text-center text-xl font-semibold mb-4">
                 Body Condition
             </h2>
             <canvas id="bodyConditionChart"></canvas>
         </div>
-        <div class="carousel-item bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">Sensitivity</h2>
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Sensitivity
+            </h2>
             <canvas id="sensitivityChart"></canvas>
         </div>
-        <div class="carousel-item bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">Production</h2>
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Production
+            </h2>
             <canvas id="productionChart"></canvas>
         </div>
-        <div class="carousel-item bg-white shadow-md rounded-lg">
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
             <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
             <canvas id="fitnessChart"></canvas>
         </div>
-        <div class="carousel-item bg-white shadow-md rounded-lg">
+        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
             <h2 class="text-center text-xl font-semibold mb-4">
                 Cumulative Fitness
             </h2>
             <canvas id="cumulativeFitnessChart"></canvas>
         </div>
     </div>
-    <div class="carousel-button" id="nextButton">&#9654;</div>
-</div>
 
-<!-- <div class="chart-container">
+    <!-- <div class="chart-container">
         <canvas id="bodyConditionChart"></canvas>
         <canvas id="sensitivityChart"></canvas>
         <canvas id="productionChart"></canvas>
@@ -880,40 +452,3 @@
     }
 </style>-->
 
-<style>
-    .carousel {
-        scroll-snap-type: x mandatory;
-        overflow-x: auto;
-        display: flex;
-        scroll-behavior: smooth;
-        gap: 1rem;
-    }
-
-    .carousel-item {
-        scroll-snap-align: start;
-        flex: none;
-        width: 80%;
-        max-width: 600px;
-        padding: 1rem;
-    }
-
-    .carousel-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-    }
-
-    .carousel-button {
-        background-color: #4a5568;
-        color: #fff;
-        padding: 0.5rem 1rem;
-        border-radius: 0.25rem;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .carousel-button:hover {
-        background-color: #2d3748;
-    }
-</style>
