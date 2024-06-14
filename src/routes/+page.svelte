@@ -222,7 +222,7 @@
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Gamma 1"
+                id="Cost of investing in first trait"
                 min="0"
                 max="1"
                 step="0.1"
@@ -230,7 +230,7 @@
             />
 
             <SliderInput
-                id="Gamma 2"
+                id="Cost of investing in second trait"
                 min="0"
                 max="1"
                 step="0.1"
@@ -238,7 +238,7 @@
             />
 
             <SliderInput
-                id="Gamma 3"
+                id="Cost of investing in third trait"
                 min="0"
                 max="1"
                 step="0.1"
@@ -249,7 +249,7 @@
         <!-- Container for Z sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Z 1"
+                id="Weight of first trait"
                 min="0"
                 max="1"
                 step="0.1"
@@ -257,7 +257,7 @@
             />
 
             <SliderInput
-                id="Z 2"
+                id="Weight of second trait"
                 min="0"
                 max="1"
                 step="0.1"
@@ -265,7 +265,7 @@
             />
 
             <SliderInput
-                id="Z 3"
+                id="Weight of third trait"
                 min="0"
                 max="1"
                 step="0.1"
@@ -276,7 +276,7 @@
         <!-- Container for food shortage sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Food Short"
+                id="Food Shortage"
                 min="0"
                 max="1"
                 step="0.1"
@@ -284,7 +284,7 @@
             />
 
             <SliderInput
-                id="Food Short Begin"
+                id="Food shortage begins"
                 min="0"
                 max={$foodShortend}
                 step="1"
@@ -292,7 +292,7 @@
             />
 
             <SliderInput
-                id="Food Short End"
+                id="Food shortage ends"
                 min="0"
                 max={$N}
                 step="1"
@@ -305,7 +305,7 @@
             <SliderInput id="G" min="0" max="1" step="0.1" bind:inputVar={$G} />
 
             <SliderInput
-                id="Mu"
+                id="Death probability"
                 min="0"
                 max="1"
                 step="0.001"
@@ -339,7 +339,7 @@
 
         <!--input for Xmin-->
         <FormInput
-            id="Xmin"
+            id="Min energy level for reproduction"
             inputType="number"
             min="0"
             max="10000"
@@ -348,7 +348,7 @@
         />
 
         <FormInput
-            id="delSmax"
+            id="Max change of sensitivity to hormone"
             inputType="number"
             min="0"
             max="10000"
@@ -357,7 +357,7 @@
         />
 
         <FormInput
-            id="delCmax"
+            id="Max change of circulating hormone"
             inputType="number"
             min="0"
             max="10000"
@@ -366,7 +366,7 @@
         />
 
         <FormInput
-            id="Tau"
+            id="Food availability"
             inputType="number"
             min="0"
             max="10000"
@@ -375,7 +375,7 @@
         />
 
         <FormInput
-            id="K"
+            id="Michaelis-Menten constant"
             inputType="number"
             min="0"
             max="10000"
@@ -384,7 +384,7 @@
         />
 
         <FormInput
-            id="Alpha"
+            id="First parameter of beta distribution"
             inputType="number"
             min="0"
             max="10000"
@@ -393,7 +393,7 @@
         />
 
         <FormInput
-            id="Beta"
+            id="Second parameter of beta distribution"
             inputType="number"
             min="0"
             max="10000"
@@ -422,7 +422,7 @@
         -->
 
         <FormInput
-            id="N"
+            id="Number of reproductive cycles"
             inputType="number"
             min="0"
             max="10000"
@@ -476,20 +476,20 @@
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
         <h2 class="text-center text-xl font-semibold mb-4">
-            Body Condition
+            Energy of Organism
         </h2>
         <canvas id="bodyConditionChart"></canvas>
     </div>
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <h2 class="text-center text-xl font-semibold mb-4">Sensitivity</h2>
+        <h2 class="text-center text-xl font-semibold mb-4">Sensitivity to Hormone</h2>
         <canvas id="sensitivityChart"></canvas>
     </div>
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <h2 class="text-center text-xl font-semibold mb-4">Production</h2>
+        <h2 class="text-center text-xl font-semibold mb-4">Circulating Level Of Hormone </h2>
         <canvas id="productionChart"></canvas>
     </div>
     <div
