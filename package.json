@@ -23,14 +23,14 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@sveltejs/adapter-node": "^5.0.1",
+		"@sveltejs/adapter-node": "^5.1.0",
 		"autoprefixer": "^10.4.19",
 		"axios": "^1.7.2",
 		"chart.js": "^4.4.3",
 		"cors": "^2.8.5"
 	},
 	"engines": {
-    "node": "20.10.0",
-		"npm": "10.2.3"
-  }
+		"node": ">=20.10.0",
+		"npm": ">=10.2.3"
+	}
 }

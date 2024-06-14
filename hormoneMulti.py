@@ -80,9 +80,9 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
         N = params['N']
 
         while alive and i < N - 1:
-            # find beta for this timestep:
+            #find beta for this timestep:
             beta_t = beta_dist.rvs(alpha, beta)
-            # define food availability
+            #define food availability
             if foodShortbegin < i < foodShortend:
                 F_t = foodShort
             else:
