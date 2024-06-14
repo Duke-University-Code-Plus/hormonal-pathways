@@ -4,7 +4,8 @@
     import { writable, get } from "svelte/store";
     import Chart from 'chart.js/auto'
     import FormInput from './multimodel/Nested/FormInput.svelte'
-    import NavBar from "./multimodel/Nested/navigation.svelte";
+    import NavBar from './multimodel/Nested/navigation.svelte'
+    import SliderInput from './multimodel/Nested/SliderInput.svelte' 
 
     let Xhist = [];
     let Shist = [];
@@ -13,7 +14,9 @@
     let Wcuml = [];
 
     // Initialize writable stores with default values
-    let gamma = writable([0.1, 0.2, 0.3]);
+    let gamma1 = writable(0.1);
+    let gamma2 = writable(0.2);
+    let gamma3 = writable(0.3);
     let G = writable(0.1);
     let Xmin = writable(1);
     let delSmax = writable(1);
@@ -23,11 +26,16 @@
     let alpha = writable(4);
     let beta = writable(2);
     let mu = writable(0.01);
-    let z = writable([0.2, 0.3, 0.3]);
+    let z1 = writable(0.2)
+    let z2 = writable(0.3)
+    let z3 = writable(0.3)
     let N = writable(100);
     let foodShort = writable(0.4);
     let foodShortbegin = writable(8);
     let foodShortend = writable(20);
+
+    let gamma = writable([get(gamma1), get(gamma2), get(gamma3)]);
+    let z = writable([get(z1), get(z2), get(z3)]);
 
     let bodyConditionChartInstance = null;
     let sensitivityChartInstance = null;
@@ -237,18 +245,136 @@ multiPage = "nope"/>
         Hormone Model Visualization
     </h1>
 
-    <div class="flex flex-wrap justify-center">
-        <!-- Input fields for parameters with labels -->
+<!--Input Parameters -->
+<div class="flex flex-wrap justify-center">
+    <div class="grid grid-cols-2 gap-6"> 
 
+        <!-- Container for Gamma Sliders-->
+        <div> 
+            <SliderInput
+            id="Gamma 1"
+            min= "0"
+            max= "1"
+            step= "0.1"
+            bind:inputVar={$gamma1}
+            />
+
+
+            <SliderInput
+            id="Gamma 2"
+            min= "0"
+            max= "1"
+            step= "0.1"
+            bind:inputVar={$gamma2}
+            />
+
+
+            <SliderInput
+            id="Gamma 3"
+            min= "0"
+            max= "1"
+            step= "0.1"
+            bind:inputVar={$gamma3}
+            />
+
+        </div>
+
+        <!-- Container for Z sliders-->
+        <div  > 
+            <SliderInput
+            id="Z 1"
+            min= "0"
+            max= "1"
+            step= "0.1"
+            bind:inputVar={$z1}
+            />
+
+            <SliderInput
+            id="Z 2"
+            min= "0"
+            max= "1"
+            step= "0.1"
+            bind:inputVar={$z2}
+            />
+
+            <SliderInput
+            id="Z 3"
+            min= "0"
+            max= "1"
+            step= "0.1"
+            bind:inputVar={$z3}
+            />
+
+        </div>
+
+        <!-- Container for food shortage sliders-->
+        <div> 
+            <SliderInput
+            id="Food Short"
+            min="0"
+            max="1"
+            step="0.1"
+            bind:inputVar={$foodShort}
+            />
+
+         <SliderInput
+            id="Food Short Begin"
+            min="0"
+            max={$foodShortend}
+            step="1"
+            bind:inputVar={$foodShortbegin}
+         />
+
+         <SliderInput
+            id="Food Short End"
+            min="0"
+            max={$N}
+            step="1"
+            bind:inputVar={$foodShortend}
+         />
+        
+     </div>
+
+
+     <!-- Container for G and mu sliders-->
+     <div> 
+
+        <SliderInput
+            id="G"
+            min="0"
+            max="1"
+            step="0.1"
+            bind:inputVar={$G}
+        />
+
+
+        <SliderInput
+            id="Mu"
+            min="0"
+            max="1"
+            step="0.001"
+            bind:inputVar={$mu}
+         />
+
+     </div>
+     
+    </div>
+
+
+
+     <div  class="flex flex-wrap justify-center"> 
         <!--input for gamma-->
+        <!--
         <FormInput
             id="Gamma"
             inputType="text"
             bind:inputVar={$gamma}
         />
+        -->
 
 
         <!--input for G-->
+        <!--
         <FormInput
             id="G"
             inputType="number"
@@ -257,6 +383,7 @@ multiPage = "nope"/>
             step="0.1"
             bind:inputVar={$G}
         />
+        -->
 
         <!--input for Xmin-->
         <FormInput
@@ -323,6 +450,7 @@ multiPage = "nope"/>
          />
 
          <!--input for mu-->
+         <!--
         <FormInput
             id="Mu"
             inputType="number"
@@ -331,12 +459,15 @@ multiPage = "nope"/>
             step="0.001"
             bind:inputVar={$mu}
          />
+         -->
 
+         <!--
          <FormInput
             id="Z"
             inputType="text"
             bind:inputVar={$z}
         />
+        -->
 
         <FormInput
             id="N"
@@ -346,6 +477,8 @@ multiPage = "nope"/>
             step="1"
             bind:inputVar={$N}
          />
+
+         <!--
 
          <FormInput
             id="Food Short"
@@ -373,16 +506,23 @@ multiPage = "nope"/>
             step="1"
             bind:inputVar={$foodShortend}
          />
-
+         -->
     </div>
-    <div class="flex justify-center m-4">
+
+</div>
+
+
+<!-- Run Simulation Button-->
+<div class="flex justify-center m-4">
         <button
             class="text-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 border-b-4 border-blue-700 hover:border-blue-500 rounded"
             on:click={fetchData}>Run</button
         >
-    </div>
+</div>
 
-    <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
+
+<!-- Creating Charts-->
+<div class="flex flex-row flex-wrap gap-6 items-center justify-center">
         <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
             <h2 class="text-center text-xl font-semibold mb-4">
                 Body Condition
@@ -411,7 +551,7 @@ multiPage = "nope"/>
             </h2>
             <canvas id="cumulativeFitnessChart"></canvas>
         </div>
-    </div>
+</div>
 
     <!-- <div class="chart-container">
         <canvas id="bodyConditionChart"></canvas>
