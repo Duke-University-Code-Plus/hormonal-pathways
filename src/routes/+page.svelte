@@ -128,7 +128,7 @@
         }
 
         let ctx = document.getElementById(canvas);
-        new Chart(ctx, {
+        return new Chart(ctx, {
             type: "line",
             data: chartData,
             options: chartOptions,
