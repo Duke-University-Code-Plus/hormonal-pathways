@@ -158,9 +158,15 @@
 
         const chartOptions = {
             scales: {
-                x: { beginAtZero: true },
-                y: { beginAtZero: true }
-            }
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Reproductive Cycle" },
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: "y label" },
+                },
+            },
         };
 
         //create Body Condition Chart

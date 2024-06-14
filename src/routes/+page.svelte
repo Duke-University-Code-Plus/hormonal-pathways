@@ -2,8 +2,8 @@
     import { onMount } from "svelte";
     import axios from "axios";
     import { writable, get } from "svelte/store";
-    import Chart from 'chart.js/auto'
-    import FormInput from './multimodel/Nested/FormInput.svelte'
+    import Chart from "chart.js/auto";
+    import FormInput from "./multimodel/Nested/FormInput.svelte";
     import NavBar from "./multimodel/Nested/navigation.svelte";
 
     let Xhist = [];
@@ -35,7 +35,8 @@
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
 
-    const apiEndpoint = 'https://hormonal-pathways-api-a4dcfa854663.herokuapp.com'
+    const apiEndpoint =
+        "https://hormonal-pathways-api-a4dcfa854663.herokuapp.com";
 
     onMount(() => {
         fetchData();
@@ -83,8 +84,14 @@
     function makeChart(canvas, title, y, color) {
         const chartOptions = {
             scales: {
-                x: { beginAtZero: true },
-                y: { beginAtZero: true },
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Reproductive Cycle" },
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: "y label" },
+                },
             },
         };
 
@@ -137,13 +144,6 @@
         if (cumulativeFitnessChartInstance)
             cumulativeFitnessChartInstance.destroy();
 
-        const chartOptions = {
-            scales: {
-                x: { beginAtZero: true },
-                y: { beginAtZero: true },
-            },
-        };
-
         // Create Body Condition Chart
         bodyConditionChartInstance = makeChart(
             "bodyConditionChart",
@@ -186,197 +186,194 @@
     }
 </script>
 
-<NavBar
-multiPage = "nope"/>
+<NavBar multiPage="nope" />
 
 <!-- <nav>
     <a href="/">home</a>
     <a href="/multimodel">multimodel</a>
 </nav>-->
 
-    <h1
-        class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
+<h1
+    class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
+>
+    Hormone Model Visualization
+</h1>
+
+<div class="flex flex-wrap justify-center">
+    <!-- Input fields for parameters with labels -->
+
+    <!--input for gamma-->
+    <FormInput id="Gamma" inputType="text" bind:inputVar={$gamma} />
+
+    <!--input for G-->
+    <FormInput
+        id="G"
+        inputType="number"
+        min="0"
+        max="1"
+        step="0.1"
+        bind:inputVar={$G}
+    />
+
+    <!--input for Xmin-->
+    <FormInput
+        id="Xmin"
+        inputType="number"
+        min="0"
+        max="10000"
+        step="1"
+        bind:inputVar={$Xmin}
+    />
+
+    <FormInput
+        id="delSmax"
+        inputType="number"
+        min="0"
+        max="10000"
+        step="1"
+        bind:inputVar={$delSmax}
+    />
+
+    <FormInput
+        id="delCmax"
+        inputType="number"
+        min="0"
+        max="10000"
+        step="1"
+        bind:inputVar={$delCmax}
+    />
+
+    <FormInput
+        id="Tau"
+        inputType="number"
+        min="0"
+        max="10000"
+        step="1"
+        bind:inputVar={$tau}
+    />
+
+    <FormInput
+        id="K"
+        inputType="number"
+        min="0"
+        max="10000"
+        step="1"
+        bind:inputVar={$K}
+    />
+
+    <FormInput
+        id="Alpha"
+        inputType="number"
+        min="0"
+        max="10000"
+        step="1"
+        bind:inputVar={$alpha}
+    />
+
+    <FormInput
+        id="Beta"
+        inputType="number"
+        min="0"
+        max="10000"
+        step="1"
+        bind:inputVar={$beta}
+    />
+
+    <!--input for mu-->
+    <FormInput
+        id="Mu"
+        inputType="number"
+        min="0"
+        max="1"
+        step="0.001"
+        bind:inputVar={$mu}
+    />
+
+    <FormInput id="Z" inputType="text" bind:inputVar={$z} />
+
+    <FormInput
+        id="N"
+        inputType="number"
+        min="0"
+        max="10000"
+        step="1"
+        bind:inputVar={$N}
+    />
+
+    <FormInput
+        id="Food Short"
+        inputType="number"
+        min="0"
+        max="1"
+        step="0.1"
+        bind:inputVar={$foodShort}
+    />
+
+    <FormInput
+        id="Food Short Begin"
+        inputType="number"
+        min="0"
+        max={$foodShortend}
+        step="1"
+        bind:inputVar={$foodShortbegin}
+    />
+
+    <FormInput
+        id="Food Short End"
+        inputType="number"
+        min="0"
+        max={$N}
+        step="1"
+        bind:inputVar={$foodShortend}
+    />
+</div>
+<div class="flex justify-center m-4">
+    <button
+        class="text-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+        on:click={fetchData}>Run</button
     >
-        Hormone Model Visualization
-    </h1>
+</div>
 
-    <div class="flex flex-wrap justify-center">
-        <!-- Input fields for parameters with labels -->
-
-        <!--input for gamma-->
-        <FormInput
-            id="Gamma"
-            inputType="text"
-            bind:inputVar={$gamma}
-        />
-
-
-        <!--input for G-->
-        <FormInput
-            id="G"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$G}
-        />
-
-        <!--input for Xmin-->
-        <FormInput
-            id="Xmin"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$Xmin}
-        />
-
-        <FormInput
-            id="delSmax"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$delSmax}
-        />
-
-        <FormInput
-            id="delCmax"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-             bind:inputVar={$delCmax}
-        />
-
-        <FormInput
-            id="Tau"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$tau}
-        />
-
-        <FormInput
-            id="K"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$K}
-         />
-
-         <FormInput
-            id="Alpha"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$alpha}
-         />
-
-         <FormInput
-            id="Beta"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$beta}
-         />
-
-         <!--input for mu-->
-        <FormInput
-            id="Mu"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.001"
-            bind:inputVar={$mu}
-         />
-
-         <FormInput
-            id="Z"
-            inputType="text"
-            bind:inputVar={$z}
-        />
-
-        <FormInput
-            id="N"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$N}
-         />
-
-         <FormInput
-            id="Food Short"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$foodShort}
-         />
-
-         <FormInput
-            id="Food Short Begin"
-            inputType="number"
-            min="0"
-            max={$foodShortend}
-            step="1"
-            bind:inputVar={$foodShortbegin}
-         />
-
-         <FormInput
-            id="Food Short End"
-            inputType="number"
-            min="0"
-            max={$N}
-            step="1"
-            bind:inputVar={$foodShortend}
-         />
-
-    </div>
-    <div class="flex justify-center m-4">
-        <button
-            class="text-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-            on:click={fetchData}>Run</button
-        >
+<div class="flex flex-row flex-wrap gap-6 items-center justify-center">
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">Body Condition</h2>
+        <canvas id="bodyConditionChart"></canvas>
     </div>
 
-    <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
-        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Body Condition
-            </h2>
-            <canvas id="bodyConditionChart"></canvas>
-        </div>
-        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Sensitivity
-            </h2>
-            <canvas id="sensitivityChart"></canvas>
-        </div>
-        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Production
-            </h2>
-            <canvas id="productionChart"></canvas>
-        </div>
-        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
-            <canvas id="fitnessChart"></canvas>
-        </div>
-        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Cumulative Fitness
-            </h2>
-            <canvas id="cumulativeFitnessChart"></canvas>
-        </div>
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">Sensitivity</h2>
+        <canvas id="sensitivityChart"></canvas>
     </div>
 
-    <!-- <div class="chart-container">
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">Production</h2>
+        <canvas id="productionChart"></canvas>
+    </div>
+
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
+        <canvas id="fitnessChart"></canvas>
+    </div>
+
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Cumulative Fitness
+        </h2>
+        <canvas id="cumulativeFitnessChart"></canvas>
+    </div>
+</div>
+
+<!-- <div class="chart-container">
         <canvas id="bodyConditionChart"></canvas>
         <canvas id="sensitivityChart"></canvas>
         <canvas id="productionChart"></canvas>
@@ -451,4 +448,3 @@ multiPage = "nope"/>
         margin: 20px 0;
     }
 </style>-->
-
