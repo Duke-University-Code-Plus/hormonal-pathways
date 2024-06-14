@@ -2,10 +2,10 @@
     import { onMount } from "svelte";
     import axios from "axios";
     import { writable, get } from "svelte/store";
-    import Chart from 'chart.js/auto'
-    import FormInput from './multimodel/Nested/FormInput.svelte'
-    import NavBar from './multimodel/Nested/navigation.svelte'
-    import SliderInput from './multimodel/Nested/SliderInput.svelte' 
+    import Chart from "chart.js/auto";
+    import FormInput from "./multimodel/Nested/FormInput.svelte";
+    import NavBar from "./multimodel/Nested/navigation.svelte";
+    import SliderInput from "./multimodel/Nested/SliderInput.svelte";
 
     let Xhist = [];
     let Shist = [];
@@ -26,9 +26,9 @@
     let alpha = writable(4);
     let beta = writable(2);
     let mu = writable(0.01);
-    let z1 = writable(0.2)
-    let z2 = writable(0.3)
-    let z3 = writable(0.3)
+    let z1 = writable(0.2);
+    let z2 = writable(0.3);
+    let z3 = writable(0.3);
     let N = writable(100);
     let foodShort = writable(0.4);
     let foodShortbegin = writable(8);
@@ -43,7 +43,8 @@
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
 
-    const apiEndpoint = 'https://hormonal-pathways-api-a4dcfa854663.herokuapp.com'
+    const apiEndpoint =
+        "https://hormonal-pathways-api-a4dcfa854663.herokuapp.com";
 
     onMount(() => {
         fetchData();
@@ -98,11 +99,11 @@
             cumulativeFitnessChartInstance.destroy();
 
         const chartOptions = {
-                    scales: {
-                        x: { beginAtZero: true },
-                        y: { beginAtZero: true },
-                    },
-                }
+            scales: {
+                x: { beginAtZero: true },
+                y: { beginAtZero: true },
+            },
+        };
 
         // Create Body Condition Chart
         bodyConditionChartInstance = new Chart(
@@ -228,141 +229,121 @@
     }
 </script>
 
-
-
-<NavBar
-multiPage = "nope"/>
-
+<NavBar multiPage="nope" />
 
 <!-- <nav>
     <a href="/">home</a>
     <a href="/multimodel">multimodel</a>
 </nav>-->
 
-    <h1
-        class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
-    >
-        Hormone Model Visualization
-    </h1>
+<h1
+    class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
+>
+    Hormone Model Visualization
+</h1>
 
 <!--Input Parameters -->
-<div class="flex flex-wrap justify-center">
-    <div class="grid grid-cols-2 gap-6"> 
+<div class="flex flex-wrap justify-center ">
+    <div class="flex flex-wrap justify-center grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6">
 
         <!-- Container for Gamma Sliders-->
-        <div> 
+        <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-            id="Gamma 1"
-            min= "0"
-            max= "1"
-            step= "0.1"
-            bind:inputVar={$gamma1}
+                id="Gamma 1"
+                min="0"
+                max="1"
+                step="0.1"
+                bind:inputVar={$gamma1}
             />
 
-
             <SliderInput
-            id="Gamma 2"
-            min= "0"
-            max= "1"
-            step= "0.1"
-            bind:inputVar={$gamma2}
+                id="Gamma 2"
+                min="0"
+                max="1"
+                step="0.1"
+                bind:inputVar={$gamma2}
             />
 
-
             <SliderInput
-            id="Gamma 3"
-            min= "0"
-            max= "1"
-            step= "0.1"
-            bind:inputVar={$gamma3}
+                id="Gamma 3"
+                min="0"
+                max="1"
+                step="0.1"
+                bind:inputVar={$gamma3}
             />
-
         </div>
 
         <!-- Container for Z sliders-->
-        <div  > 
+        <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-            id="Z 1"
-            min= "0"
-            max= "1"
-            step= "0.1"
-            bind:inputVar={$z1}
+                id="Z 1"
+                min="0"
+                max="1"
+                step="0.1"
+                bind:inputVar={$z1}
             />
 
             <SliderInput
-            id="Z 2"
-            min= "0"
-            max= "1"
-            step= "0.1"
-            bind:inputVar={$z2}
+                id="Z 2"
+                min="0"
+                max="1"
+                step="0.1"
+                bind:inputVar={$z2}
             />
 
             <SliderInput
-            id="Z 3"
-            min= "0"
-            max= "1"
-            step= "0.1"
-            bind:inputVar={$z3}
+                id="Z 3"
+                min="0"
+                max="1"
+                step="0.1"
+                bind:inputVar={$z3}
             />
-
         </div>
 
         <!-- Container for food shortage sliders-->
-        <div> 
+        <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-            id="Food Short"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$foodShort}
+                id="Food Short"
+                min="0"
+                max="1"
+                step="0.1"
+                bind:inputVar={$foodShort}
             />
 
-         <SliderInput
-            id="Food Short Begin"
-            min="0"
-            max={$foodShortend}
-            step="1"
-            bind:inputVar={$foodShortbegin}
-         />
+            <SliderInput
+                id="Food Short Begin"
+                min="0"
+                max={$foodShortend}
+                step="1"
+                bind:inputVar={$foodShortbegin}
+            />
 
-         <SliderInput
-            id="Food Short End"
-            min="0"
-            max={$N}
-            step="1"
-            bind:inputVar={$foodShortend}
-         />
-        
-     </div>
+            <SliderInput
+                id="Food Short End"
+                min="0"
+                max={$N}
+                step="1"
+                bind:inputVar={$foodShortend}
+            />
+        </div>
 
+        <!-- Container for G and mu sliders-->
+        <div class="flex flex-wrap justify-center w-full">
+            <SliderInput id="G" min="0" max="1" step="0.1" bind:inputVar={$G} />
 
-     <!-- Container for G and mu sliders-->
-     <div> 
+            <SliderInput
+                id="Mu"
+                min="0"
+                max="1"
+                step="0.001"
+                bind:inputVar={$mu}
+            />
+        </div>
 
-        <SliderInput
-            id="G"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$G}
-        />
-
-
-        <SliderInput
-            id="Mu"
-            min="0"
-            max="1"
-            step="0.001"
-            bind:inputVar={$mu}
-         />
-
-     </div>
-     
     </div>
 
-
     <!-- Form Inputs-->
-     <div  class="flex flex-wrap justify-center"> 
+    <div class="flex flex-wrap justify-center">
         <!--input for gamma-->
         <!--
         <FormInput
@@ -371,7 +352,6 @@ multiPage = "nope"/>
             bind:inputVar={$gamma}
         />
         -->
-
 
         <!--input for G-->
         <!--
@@ -410,7 +390,7 @@ multiPage = "nope"/>
             min="0"
             max="10000"
             step="1"
-             bind:inputVar={$delCmax}
+            bind:inputVar={$delCmax}
         />
 
         <FormInput
@@ -429,28 +409,28 @@ multiPage = "nope"/>
             max="10000"
             step="1"
             bind:inputVar={$K}
-         />
+        />
 
-         <FormInput
+        <FormInput
             id="Alpha"
             inputType="number"
             min="0"
             max="10000"
             step="1"
             bind:inputVar={$alpha}
-         />
+        />
 
-         <FormInput
+        <FormInput
             id="Beta"
             inputType="number"
             min="0"
             max="10000"
             step="1"
             bind:inputVar={$beta}
-         />
+        />
 
-         <!--input for mu-->
-         <!--
+        <!--input for mu-->
+        <!--
         <FormInput
             id="Mu"
             inputType="number"
@@ -461,7 +441,7 @@ multiPage = "nope"/>
          />
          -->
 
-         <!--
+        <!--
          <FormInput
             id="Z"
             inputType="text"
@@ -476,9 +456,9 @@ multiPage = "nope"/>
             max="10000"
             step="1"
             bind:inputVar={$N}
-         />
+        />
 
-         <!--
+        <!--
 
          <FormInput
             id="Food Short"
@@ -508,52 +488,53 @@ multiPage = "nope"/>
          />
          -->
     </div>
-
 </div>
-
 
 <!-- Run Simulation Button-->
 <div class="flex justify-center m-4">
-        <button
-            class="text-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-            on:click={fetchData}>Run</button
-        >
+    <button
+        class="text-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+        on:click={fetchData}>Run</button
+    >
 </div>
-
 
 <!-- Creating Charts-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
-        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Body Condition
-            </h2>
-            <canvas id="bodyConditionChart"></canvas>
-        </div>
-        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Sensitivity
-            </h2>
-            <canvas id="sensitivityChart"></canvas>
-        </div>
-        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Production
-            </h2>
-            <canvas id="productionChart"></canvas>
-        </div>
-        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
-            <canvas id="fitnessChart"></canvas>
-        </div>
-        <div class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Cumulative Fitness
-            </h2>
-            <canvas id="cumulativeFitnessChart"></canvas>
-        </div>
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">Body Condition</h2>
+        <canvas id="bodyConditionChart"></canvas>
+    </div>
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">Sensitivity</h2>
+        <canvas id="sensitivityChart"></canvas>
+    </div>
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">Production</h2>
+        <canvas id="productionChart"></canvas>
+    </div>
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
+        <canvas id="fitnessChart"></canvas>
+    </div>
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Cumulative Fitness
+        </h2>
+        <canvas id="cumulativeFitnessChart"></canvas>
+    </div>
 </div>
 
-    <!-- <div class="chart-container">
+<!-- <div class="chart-container">
         <canvas id="bodyConditionChart"></canvas>
         <canvas id="sensitivityChart"></canvas>
         <canvas id="productionChart"></canvas>
@@ -628,4 +609,3 @@ multiPage = "nope"/>
         margin: 20px 0;
     }
 </style>-->
-

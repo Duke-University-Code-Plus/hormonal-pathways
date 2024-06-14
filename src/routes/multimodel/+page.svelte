@@ -319,9 +319,9 @@
 
 <div class="flex flex-wrap justify-center">
     <!-- Sliders -->
-    <div class="grid grid-cols-2 gap-6 ">
+    <div class="flex flex-wrap grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6">
         <!-- Container for Gamma Sliders-->
-        <div>
+        <div class="flex flex-wrap justify-center w-full ">
             <SliderInput
                 id="Gamma 1"
                 min="0"
@@ -348,7 +348,7 @@
         </div>
 
         <!-- Container for Z sliders-->
-        <div>
+        <div class="flex flex-wrap justify-center w-full">
             <SliderInput
                 id="Z 1"
                 min="0"
@@ -375,7 +375,7 @@
         </div>
 
         <!-- Container for food shortage sliders-->
-        <div>
+        <div class="flex flex-wrap justify-center w-full">
             <SliderInput
                 id="Food Short"
                 min="0"
@@ -402,7 +402,7 @@
         </div>
 
         <!-- Container for G and mu sliders-->
-        <div>
+        <div class="flex flex-wrap justify-center w-full">
             <SliderInput id="G" min="0" max="1" step="0.1" bind:inputVar={$G} />
 
             <SliderInput

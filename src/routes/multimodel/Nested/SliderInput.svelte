@@ -7,7 +7,7 @@
 </script>
 
 <div class="w-72 m-2">
-    <div class="relative w-full min-w-[200px] h-10">
+    <div class="relative w-full min-w-[200px] h-10 ">
         <input
             {id}
             type="range"
