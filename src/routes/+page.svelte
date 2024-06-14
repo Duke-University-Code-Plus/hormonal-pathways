@@ -99,6 +99,11 @@
             cumulativeFitnessChartInstance.destroy();
 
         const chartOptions = {
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
             scales: {
                 x: { beginAtZero: true },
                 y: { beginAtZero: true },
@@ -243,9 +248,10 @@
 </h1>
 
 <!--Input Parameters -->
-<div class="flex flex-wrap justify-center ">
-    <div class="flex flex-wrap justify-center grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6">
-
+<div class="flex flex-wrap justify-center">
+    <div
+        class="flex flex-wrap justify-center grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-1"
+    >
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
@@ -339,7 +345,6 @@
                 bind:inputVar={$mu}
             />
         </div>
-
     </div>
 
     <!-- Form Inputs-->
