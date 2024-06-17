@@ -302,7 +302,12 @@
 
         <!-- Container for G and mu sliders-->
         <div class="flex flex-wrap justify-center w-full">
-            <SliderInput id="G" min="0" max="1" step="0.1" bind:inputVar={$G} />
+            <SliderInput 
+                id="Min hormone level for gamete maturation" 
+                min="0" 
+                max="1" 
+                step="0.1" 
+                bind:inputVar={$G} />
 
             <SliderInput
                 id="Death probability"
