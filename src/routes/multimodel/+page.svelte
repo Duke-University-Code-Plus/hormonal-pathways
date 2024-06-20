@@ -326,8 +326,7 @@
 <NavBar multiPage="true" />
 
 <h1
-    class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
->
+    class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
     Hormone Multi-Run Model Visualization
 </h1>
 

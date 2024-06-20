@@ -64,13 +64,15 @@
 
   <Modal bind:showModal>
     <h2 
-      class="text-blue-gray-500" 
+      class="m-top-5 mt-3 text-blue-gray-500" 
       slot="header">
       {id}
     </h2>
-    <p class="font-sans text-sm font-normal text-blue-gray-500">
-      {modalMessage}
-    </p>
+    <div class="flex ms-auto inline-flex m-8">
+      <p class="font-sans text-sm font-normal text-blue-gray-500">
+        {modalMessage}
+      </p>
+    </div>
   </Modal>
 </div>
 
