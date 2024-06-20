@@ -5,7 +5,7 @@
   export let max;
   export let step = 1;
   export let inputVar; 
-  import Modal from './Nested/Modal.svelte';
+  import Modal from './Modal.svelte';
 
 	let showModal = false;
 
