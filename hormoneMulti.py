@@ -84,7 +84,7 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
             beta_t = beta_dist.rvs(alpha, beta)
             #define food availability
             if foodShortbegin < i < foodShortend:
-                F_t = foodShort
+                tau *= foodShort
             else:
                 F_t = 1
 
