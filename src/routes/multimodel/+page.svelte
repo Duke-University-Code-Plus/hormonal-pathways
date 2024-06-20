@@ -339,7 +339,7 @@
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Cost of investing in first trait"
+                id="Selection against effort in each trait i (γ_i,t)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -347,7 +347,7 @@
             />
 
             <SliderInput
-                id="Cost of investing in second trait"
+                id="Selection against effort in each trait j (γ_j,t)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -355,7 +355,7 @@
             />
 
             <SliderInput
-                id="Cost of investing in third trait"
+                id="Selection against effort in each trait k (γ_k,t)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -366,7 +366,7 @@
         <!-- Container for Z sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Weight of first Trait"
+                id="Weight of first Trait (z_i)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -374,7 +374,7 @@
             />
 
             <SliderInput
-                id="Weight of second trait"
+                id="Weight of second trait (z_j)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -382,7 +382,7 @@
             />
 
             <SliderInput
-                id="Weight of third trait"
+                id="Weight of third trait (z_k)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -420,14 +420,14 @@
         <!-- Container for G and mu sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput 
-                id="Min hormone level for gamete maturation" 
+                id="Min hormone level for gamete maturation (G)" 
                 min="0" 
                 max="1"
                 step="0.1" 
                 bind:inputVar={$G} />
 
             <SliderInput
-                id="Death probability"
+                id="Death probability (µ)"
                 min="0"
                 max="1"
                 step="0.001"
@@ -457,7 +457,7 @@
 
         <!--input for Xmin-->
         <FormInput
-            id="Min energy level for reproduction"
+            id="Min energy level for reproduction (x_rep)"
             inputType="number"
             min="0"
             max="10000"
@@ -466,7 +466,7 @@
         />
 
         <FormInput
-            id="Max change of sensitivity to hormone"
+            id="Max change of sensitivity to hormone (|ΔS_i,max|)"
             inputType="number"
             min="0"
             max="10000"
@@ -475,7 +475,7 @@
         />
 
         <FormInput
-            id="Max change of circulating hormone"
+            id="Max change of circulating hormone (|ΔC_max|)"
             inputType="number"
             min="0"
             max="10000"
@@ -484,7 +484,7 @@
         />
 
         <FormInput
-            id="Food availability"
+            id="Food availability (τ)"
             inputType="number"
             min="0"
             max="10000"
@@ -493,7 +493,7 @@
         />
 
         <FormInput
-            id="Michaelis-Menten constant"
+            id="Michaelis-Menten constant (K)"
             inputType="number"
             min="0"
             max="10000"
@@ -502,7 +502,7 @@
         />
 
         <FormInput
-            id="First parameter of beta distribution"
+            id="First parameter of beta distribution (A)"
             inputType="number"
             min="0"
             max="10000"
@@ -511,7 +511,7 @@
         />
 
         <FormInput
-            id="Second parameter of beta distribution"
+            id="Second parameter of beta distribution (B)"
             inputType="number"
             min="0"
             max="10000"
@@ -536,7 +536,7 @@
         -->
 
         <FormInput
-            id="Number of reproductive cycles"
+            id="Number of reproductive cycles (N)"
             inputType="number"
             min="0"
             max="10000"
@@ -605,15 +605,15 @@
                     on:change={handleDropdownChange}
                 >
                     <option selected>Choose a Variable</option>
-                    <option value="alpha">First parameter of beta distribution</option>
-                    <option value="beta">Second parameter of beta distribution</option>
-                    <option value="delSmax">Max change of sensitivity to hormone</option>
-                    <option value="delCmax">Max change of circulating hormone</option>
-                    <option value="G">Min hormone level for gamete maturation</option>
-                    <option value="K">Michaelis-Menten constant</option>
-                    <option value="mu">Death probability</option>
-                    <option value="tau">Food availability</option>
-                    <option value="Xmin">Min energy level for reproduction</option>
+                    <option value="alpha">First parameter of beta distribution (A)</option>
+                    <option value="beta">Second parameter of beta distribution (B)</option>
+                    <option value="delSmax">Max change of sensitivity to hormone (|ΔS_i,max|)</option>
+                    <option value="delCmax">Max change of circulating hormone (|ΔC_max|)</option>
+                    <option value="G">Min hormone level for gamete maturation (G)</option>
+                    <option value="K">Michaelis-Menten constant (K)</option>
+                    <option value="mu">Death probability (µ)</option>
+                    <option value="tau">Food availability (τ)</option>
+                    <option value="Xmin">Min energy level for reproduction (x_rep)</option>
                 </select>
                 {#if $showValidationMessage}
                     <p class="text-red-500 text-sm">Please select a variable</p>
