@@ -5,6 +5,7 @@
   export let max;
   export let step = 1;
   export let inputVar; 
+  export let modalMessage;
   import Modal from './Modal.svelte';
 
 	let showModal = false;
@@ -49,7 +50,7 @@
       peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"-->
     <label
       for={id}
-      class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-gray-500 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-gray-500 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-purple-500 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-purple-500 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-purple-500 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:after:border-t-transparent peerpeer-disabled:peer-placeholder-shown:text-blue-gray-500"
+      class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-900 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-gray-500 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-gray-500 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-purple-500 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-purple-500 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-purple-500 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:after:border-t-transparent peerpeer-disabled:peer-placeholder-shown:text-blue-gray-500"
     >{id}</label>
   </div>
   <button on:click={() => (showModal = true)}> 
@@ -62,27 +63,14 @@
   </button>
 
   <Modal bind:showModal>
-    <h2 slot="header">
-      modal
-      <small><em>adjective</em> mod·al \ˈmō-dəl\</small>
+    <h2 
+      class="text-blue-gray-500" 
+      slot="header">
+      {id}
     </h2>
-  
-    <ol class="definition-list">
-      <li>of or relating to modality in logic</li>
-      <li>
-        containing provisions as to the mode of procedure or the manner of taking effect —used of a
-        contract or legacy
-      </li>
-      <li>of or relating to a musical mode</li>
-      <li>of or relating to structure as opposed to substance</li>
-      <li>
-        of, relating to, or constituting a grammatical form or category characteristically indicating
-        predication
-      </li>
-      <li>of or relating to a statistical mode</li>
-    </ol>
-  
-    <a href="https://www.merriam-webster.com/dictionary/modal">merriam-webster.com</a>
+    <p class="font-sans text-sm font-normal text-blue-gray-500">
+      {modalMessage}
+    </p>
   </Modal>
 </div>
 

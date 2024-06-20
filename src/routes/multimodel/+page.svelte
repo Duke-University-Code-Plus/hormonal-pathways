@@ -462,6 +462,7 @@
             min="0"
             max="10000"
             step="1"
+            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by energy function"
             bind:inputVar={$Xmin}
         />
 
@@ -471,6 +472,7 @@
             min="0"
             max="10000"
             step="1"
+            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues"
             bind:inputVar={$delSmax}
         />
 
@@ -480,6 +482,7 @@
             min="0"
             max="10000"
             step="1"
+            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism"
             bind:inputVar={$delCmax}
         />
 
@@ -489,6 +492,7 @@
             min="0"
             max="10000"
             step="1"
+            modalMessage="Determines the food availible in the environment for the organism. "
             bind:inputVar={$tau}
         />
 
@@ -498,6 +502,7 @@
             min="0"
             max="10000"
             step="1"
+            modalMessage="A constant used by the Michaelis-Menten Equation. Equal across all tissues."
             bind:inputVar={$K}
         />
 
@@ -507,6 +512,7 @@
             min="0"
             max="10000"
             step="1"
+            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
             bind:inputVar={$alpha}
         />
 
@@ -516,6 +522,7 @@
             min="0"
             max="10000"
             step="1"
+            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
             bind:inputVar={$beta}
         />
 
@@ -541,6 +548,7 @@
             min="0"
             max="10000"
             step="1"
+            modalMessage="Number of reproductive cycles the simulation goes through. Once reached, the organism dies."
             bind:inputVar={$N}
         />
 
@@ -627,6 +635,7 @@
             min="0"
             max={$variableRangeEnd}
             step="1"
+            modalMessage="Sets the starting value for the chosen variable at the beginning of the number of runs."
             bind:inputVar={$variableRangeBegin}
         />
         <FormInput
@@ -635,6 +644,7 @@
             min="0"
             max="1000000"
             step="1"
+            modalMessage="Sets the ending value for the variable at the end of the number of runs."
             bind:inputVar={$variableRangeEnd}
         />
         <FormInput
@@ -643,6 +653,7 @@
             min="0"
             max="1000000"
             step="1"
+            modalMessage="Variable that runs the model multiple times. It overlays all simulations onto one graph."
             bind:inputVar={$numRuns}
         />
     </div>
