@@ -222,7 +222,7 @@
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Selection against effort in trait i (γ_i,t)"
+                id="Selection against effort in trait i (γᵢ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -230,7 +230,7 @@
             />
 
             <SliderInput
-                id="Selection against effort in trait j (γ_j,t)"
+                id="Selection against effort in trait j (γⱼ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -238,7 +238,7 @@
             />
 
             <SliderInput
-                id="Selection against effort in each trait k (γ_k,t)"
+                id="Selection against effort in each trait k (γₖ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -249,7 +249,7 @@
         <!-- Container for Z sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Weight of first trait (z_i)" 
+                id="Weight of first trait (zᵢ)" 
                 min="0"
                 max="1"
                 step="0.1"
@@ -257,7 +257,7 @@
             />
 
             <SliderInput
-                id="Weight of second trait (z_j)"
+                id="Weight of second trait (zⱼ)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -265,7 +265,7 @@
             />
 
             <SliderInput
-                id="Weight of third trait (z_k)"
+                id="Weight of third trait (zₖ)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -344,7 +344,7 @@
 
         <!--input for Xmin-->
         <FormInput
-            id="Min energy level for reproduction (x_rep)"
+            id="Min energy level for reproduction (xᵣₑₚ)"
             inputType="number"
             min="0"
             max="10000"
@@ -354,7 +354,7 @@
         />
 
         <FormInput
-            id="Max change of sensitivity to hormone (|ΔS_i,max|)"
+            id="Max change of sensitivity to hormone (|ΔSᵢ, ₘₐₓ|)"
             inputType="number"
             min="0"
             max="10000"
@@ -364,7 +364,7 @@
         />
 
         <FormInput
-            id="Max change of circulating hormone (|ΔCmax|)"
+            id="Max change of circulating hormone (|ΔCₘₐₓ|)"
             inputType="number"
             min="0"
             max="10000"
@@ -476,7 +476,7 @@
 </div>
 
 <!-- Run Simulation Button-->
-<div class="text-center mt-4">
+<div class="text-center my-4">
     <button
         class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded"
         on:click={fetchData}>Run</button
