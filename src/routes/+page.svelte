@@ -135,6 +135,7 @@
                 borderColor: color,
                 borderWidth: 1,
                 fill: false,
+                lineTension: .5,
             };
             chartData = {
                 labels: Array.from({ length: y.length }, (_, i) => i),

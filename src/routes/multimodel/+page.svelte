@@ -210,6 +210,7 @@
                     labels: Array.from({ length: Xhist.length }, (_, i) => i),
                     datasets: createDatasets(Xhist, "Body Condition"),
                 },
+                lineTension: .5,
                 options: chartOptions,
             },
         );
@@ -226,6 +227,7 @@
                     ),
                     datasets: createSensitivityDatasets(Shist, "Sensitivity"),
                 },
+                lineTension: .5,
                 options: chartOptions,
             },
         );
@@ -239,6 +241,7 @@
                     labels: Array.from({ length: Chist.length }, (_, i) => i),
                     datasets: createDatasets(Chist, "Production"),
                 },
+                lineTension: .5,
                 options: chartOptions,
             },
         );
@@ -252,6 +255,7 @@
                     labels: Array.from({ length: Whist.length }, (_, i) => i),
                     datasets: createDatasets(Whist, "Fitness"),
                 },
+                lineTension: .5,
                 options: chartOptions,
             },
         );
@@ -265,6 +269,7 @@
                     labels: Array.from({ length: Wcuml.length }, (_, i) => i),
                     datasets: createDatasets(Wcuml, "Cumulative Fitness"),
                 },
+                lineTension: .5,
                 options: chartOptions,
             },
         );
