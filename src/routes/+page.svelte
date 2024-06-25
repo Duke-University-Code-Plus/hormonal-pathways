@@ -205,7 +205,7 @@
         );
 
         traitChartInstance = makeChart(
-            "traitChartInstance",
+            "traitChart",
             "Trait Value",
             Vhist,
             "rgba(210, 155, 90, 1)",
@@ -537,6 +537,6 @@
         <h2 class="text-center text-xl font-semibold mb-4">
             Trait Values
         </h2>
-        <canvas id="cumulativeFitnessChart"></canvas>
+        <canvas id="traitChart"></canvas>
     </div>
 </div>
