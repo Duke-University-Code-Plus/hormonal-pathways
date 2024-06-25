@@ -12,6 +12,7 @@
     let Chist = [];
     let Whist = [];
     let Wcuml = [];
+    let Vhist = [];
 
     // Initialize writable stores with default values
     let gamma1 = writable(0.1);
@@ -42,9 +43,10 @@
     let productionChartInstance = null;
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
+    let traitChartInstance = null;
 
-    const apiEndpoint =
-        "https://hormonal-pathways-api-a4dcfa854663.herokuapp.com";
+    const apiEndpoint = "http://127.0.0.1:5000"
+    //const apiEndpoint = "https://hormonal-pathways-api-a4dcfa854663.herokuapp.com";
 
     onMount(() => {
         fetchData();
@@ -84,6 +86,7 @@
             Chist = data.Chist;
             Whist = data.Whist;
             Wcuml = data.Wcuml;
+            Vhist = data.Vhist;
 
             createCharts();
         } catch (error) {
@@ -159,6 +162,7 @@
         if (fitnessChartInstance) fitnessChartInstance.destroy();
         if (cumulativeFitnessChartInstance)
             cumulativeFitnessChartInstance.destroy();
+        if (traitChartInstance) traitChartInstance.destroy();
 
         // Create Body Condition Chart
         bodyConditionChartInstance = makeChart(
@@ -199,6 +203,13 @@
             Wcuml,
             "rgba(255, 206, 86, 1)",
         );
+
+        traitChartInstance = makeChart(
+            "traitChartInstance",
+            "Trait Value",
+            Vhist,
+            "rgba(210, 155, 90, 1)",
+        )
     }
 </script>
 
@@ -517,6 +528,14 @@
     >
         <h2 class="text-center text-xl font-semibold mb-4">
             Cumulative Fitness
+        </h2>
+        <canvas id="cumulativeFitnessChart"></canvas>
+    </div>
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Trait Values
         </h2>
         <canvas id="cumulativeFitnessChart"></canvas>
     </div>
