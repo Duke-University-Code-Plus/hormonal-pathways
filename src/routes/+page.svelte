@@ -122,6 +122,7 @@
                     label: title + " " + i,
                     data: y[i],
                     borderColor: color,
+                    pointStyle,
                     borderWidth: 1,
                     fill: false,
                 };
@@ -136,6 +137,7 @@
                 label: title,
                 data: y,
                 borderColor: color,
+                radius: 0,
                 borderWidth: 1,
                 fill: false,
                 lineTension: .5,
