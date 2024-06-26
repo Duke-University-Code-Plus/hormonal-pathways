@@ -122,7 +122,7 @@
                     label: title + " " + i,
                     data: y[i],
                     borderColor: color,
-                    pointStyle,
+                    radius: 0,
                     borderWidth: 1,
                     fill: false,
                 };
