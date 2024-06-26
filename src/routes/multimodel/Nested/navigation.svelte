@@ -8,7 +8,7 @@
             <div class="text-gray-500 order-2 md:order-1 w-full md:w-auto md:flex-1">
                 <ul class="flex flex-row gap-8 font-semibold justify-center w-full">
                     <li class="{multiPage != 'true' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-500 text-xl">
-                        <a href="/">Home</a>
+                        <a href="/">SingleModel</a>
                     </li>
                     <li class="{multiPage == 'true' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-500 text-xl">
                         <a href="/multimodel">Multimodel</a>
