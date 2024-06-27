@@ -7,7 +7,7 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]),
                  GIn : float = 0.1, XminIn : float = 1, delSmaxIn : float = 1, 
                  delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, 
                  alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, 
-                 zIn : np.array = np.array([0.1, 0.5, 0.9]), NIn : int = 100, 
+                 zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100,
                  foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20):
     
     # define constants:
@@ -85,9 +85,10 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]),
             alive = False
         
         Wcuml[i + 1] = Wcuml[i] + W_t1
-        i += 1
 
         Vhist[:, i + 1] = V_t
+
+        i += 1
     
     results = {
         'Xhist': Xhist.tolist(),
