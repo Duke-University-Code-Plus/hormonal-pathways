@@ -29,6 +29,7 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]),
     
     # Food availability
     tau = tauIn
+    percentAvail = 1
     
     # Michaelis-Menten Constant
     K = KIn
@@ -68,11 +69,13 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]),
         beta_t = beta_dist.rvs(alpha, beta)
         # define food availability
         if foodShortbegin < i < foodShortend:
-            F_t = foodShort
+            percentAvail = foodShort
         else:
-            F_t = 1
+            percentAvail = 1
         
-        E_t = tau * F_t
+        F_t = 1
+
+        E_t = tau * F_t * percentAvail
         
         X_t1, S_t1, C_t1, W_t1, V_t = forwardModel(Xhist[i], beta_t, z, Shist[:, i], Chist[i], K, E_t, gamma, delCmax, delSmax, Xmin, G)
         Xhist[i + 1] = X_t1
