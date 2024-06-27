@@ -1,11 +1,31 @@
 <script>
     import { onMount } from "svelte";
     import axios from "axios";
-    import { writable, get } from "svelte/store";
     import Chart from "chart.js/auto";
     import FormInput from "./multimodel/Nested/FormInput.svelte";
     import NavBar from "./multimodel/Nested/navigation.svelte";
     import SliderInput from "./multimodel/Nested/SliderInput.svelte";
+    import {
+        gamma1,
+        gamma2,
+        gamma3,
+        G,
+        Xmin,
+        delSmax,
+        delCmax,
+        tau,
+        K,
+        alpha,
+        beta,
+        mu,
+        z1,
+        z2,
+        z3,
+        N,
+        foodShort,
+        foodShortbegin,
+        foodShortend
+    } from "./data_store.js";
 
     let Xhist = [];
     let Shist = [];
@@ -14,29 +34,8 @@
     let Wcuml = [];
     let Vhist = [];
 
-    // Initialize writable stores with default values
-    let gamma1 = writable(0.1);
-    let gamma2 = writable(0.2);
-    let gamma3 = writable(0.3);
-    let G = writable(0.1);
-    let Xmin = writable(1);
-    let delSmax = writable(1);
-    let delCmax = writable(1);
-    let tau = writable(5);
-    let K = writable(1);
-    let alpha = writable(4);
-    let beta = writable(2);
-    let mu = writable(0.01);
-    let z1 = writable(0.2);
-    let z2 = writable(0.3);
-    let z3 = writable(0.3);
-    let N = writable(100);
-    let foodShort = writable(0.4);
-    let foodShortbegin = writable(8);
-    let foodShortend = writable(20);
-
-    let gamma = writable([get(gamma1), get(gamma2), get(gamma3)]);
-    let z = writable([get(z1), get(z2), get(z3)]);
+    let gamma = [$gamma1, $gamma2, $gamma3];
+    let z = [$z1, $z2, $z3];
 
     let bodyConditionChartInstance = null;
     let sensitivityChartInstance = null;
@@ -54,24 +53,24 @@
 
     async function fetchData() {
         try {
-            gamma = writable([get(gamma1), get(gamma2), get(gamma3)]);
-            z = writable([get(z1), get(z2), get(z3)]);
+            gamma = [$gamma1, $gamma2, $gamma3];
+            z = [$z1, $z2, $z3];
             const params = {
-                gamma: get(gamma).join(","), // Convert array to comma-separated string
-                G: get(G),
-                Xmin: get(Xmin),
-                delSmax: get(delSmax),
-                delCmax: get(delCmax),
-                tau: get(tau),
-                K: get(K),
-                alpha: get(alpha),
-                beta: get(beta),
-                mu: get(mu),
-                z: get(z).join(","), // Convert array to comma-separated string
-                N: get(N),
-                foodShort: get(foodShort),
-                foodShortbegin: get(foodShortbegin),
-                foodShortend: get(foodShortend),
+                gamma: gamma.join(","), // Convert array to comma-separated string
+                G: $G,
+                Xmin: $Xmin,
+                delSmax: $delSmax,
+                delCmax: $delCmax,
+                tau: $tau,
+                K: $K,
+                alpha: $alpha,
+                beta: $beta,
+                mu: $mu,
+                z: z.join(","), // Convert array to comma-separated string
+                N: $N,
+                foodShort: $foodShort,
+                foodShortbegin: $foodShortbegin,
+                foodShortend: $foodShortend
             };
 
             const queryString = new URLSearchParams(params).toString();
