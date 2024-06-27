@@ -7,11 +7,14 @@
         <div class="flex w-full justify-center md:justify-between items-center">
             <div class="text-gray-500 order-2 md:order-1 w-full md:w-auto md:flex-1">
                 <ul class="flex flex-row gap-8 font-semibold justify-center w-full">
-                    <li class="{multiPage != 'true' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-500 text-xl">
+                    <li class="{multiPage == 'Single' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
                         <a href="/">SingleModel</a>
                     </li>
-                    <li class="{multiPage == 'true' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-500 text-xl">
+                    <li class="{multiPage == 'Multi' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
                         <a href="/multimodel">Multimodel</a>
+                    </li>
+                    <li class="{multiPage == 'about-us' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
+                        <a href="/about-us">About Us</a>
                     </li>
                 </ul>
             </div>

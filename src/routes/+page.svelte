@@ -215,7 +215,7 @@
     }
 </script>
 
-<NavBar multiPage="nope" />
+<NavBar multiPage="Single" />
 
 <!-- <nav>
     <a href="/">home</a>

@@ -328,7 +328,7 @@
     }
 </script>
 
-<NavBar multiPage="true" />
+<NavBar multiPage="Multi" />
 
 <h1
     class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
