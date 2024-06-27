@@ -188,26 +188,24 @@
     window.requestAnimationFrame(animationLoop);
   });
 </script>
-
-<div class="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
-  <div class="text-center z-20 pointer-events-auto mb-4">
+<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+  <div class="text-center pointer-events-auto mb-4">
     <div class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-darkIndigo">
       The Hormonal Pathways <br> and Trait Expression Simulator Project
     </div>
   </div>
-  <div class="z-20 pointer-event-auto">
+  <div class="pointer-event-auto z-30">
     <ul class="flex flex-row gap-8 font-semibold justify-center w-full">
-      <li class="m-5 bg-gray-200 text-indigo-700 md:px-4 md:py-2 hover:text-indigo-700 text-3xl border border-gray-100 rounded">
-        ENTER
+      <li class="m-5 bg-gray-200 text-indigo-700 md:px-4 md:py-2 hover:text-indigo-700 text-3xl border border-gray-100 rounded hover:text-Indigo-600">
+        <a href="/about-us">Enter</a>
       </li>
     </ul>
-
   </div>
 </div>
-<canvas id="boids" width="250" height="250" class="absolute inset-0"></canvas>
+<canvas id="boids" width="250" height="250" class="absolute inset-0 z-0"></canvas>
 
 <style>
-  :global(body) {
+  body{
     @apply m-0 overflow-hidden;
   }
 </style>
