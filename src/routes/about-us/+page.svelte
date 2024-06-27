@@ -1,6 +1,6 @@
 <script>
-import FormInput from "../multimodel/Nested/FormInput.svelte";
-import NavBar from "../multimodel/Nested/navigation.svelte"
+import FormInput from "../Nested/FormInput.svelte";
+import NavBar from "../Nested/navigation.svelte"
 
 </script>
 

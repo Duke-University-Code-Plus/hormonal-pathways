@@ -3,9 +3,9 @@
     import axios from "axios";
     import { writable, get } from "svelte/store";
     import Chart from "chart.js/auto";
-    import FormInput from "./Nested/FormInput.svelte";
-    import NavBar from "./Nested/navigation.svelte";
-    import SliderInput from "./Nested/SliderInput.svelte";
+    import FormInput from "../Nested/FormInput.svelte";
+    import NavBar from "../Nested/navigation.svelte";
+    import SliderInput from "../Nested/SliderInput.svelte";
 
     let Xhist = [];
     let Shist = [];
@@ -332,7 +332,7 @@
 
 <h1
     class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
-    Hormone Multi-Run Model Visualization
+    Hormone Model - Multi Run
 </h1>
 
 <div class="flex flex-wrap justify-center">
