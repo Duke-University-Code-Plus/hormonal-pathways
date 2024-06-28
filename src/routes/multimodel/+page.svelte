@@ -1,7 +1,6 @@
 <script>
     import { onMount } from "svelte";
     import axios from "axios";
-    import { writable, get } from "svelte/store";
     import Chart from "chart.js/auto";
     import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
@@ -144,6 +143,7 @@
                 data: data.map((point) => point[runIndex]),
                 borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
                 borderWidth: 1,
+                radius: 0,
                 fill: false,
             };
         });
@@ -167,6 +167,7 @@
                     data: data[i].map((point) => point[runIndex]),
                     borderColor: `rgba(${colors[i][0]}, ${colors[i][1]}, ${colors[i][2]}, 1)`,
                     borderWidth: 1,
+                    radius: 0,
                     fill: false,
                 })),
             );
