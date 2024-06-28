@@ -5,6 +5,7 @@
     import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
+    import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
     import {
         gamma1,
         gamma2,
@@ -311,6 +312,15 @@
                 step="1"
                 bind:inputVar={$foodShortend}
             />
+            <SliderTwoInput
+                bind:inputVarHigh={$foodShortend}
+                bind:maxForVarHigh={$N}
+                bind:inputVarLow={$foodShortbegin}
+                inputVarHighName="Food Shortage End"
+                inputVarLowName="Food Shortage Begin"
+                minForVarLow=0
+                step=1
+            />
         </div>
 
         <!-- Container for G and mu sliders-->
@@ -532,12 +542,12 @@
         </h2>
         <canvas id="cumulativeFitnessChart"></canvas>
     </div>
-    <div
+    <!-- <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
         <h2 class="text-center text-xl font-semibold mb-4">
             Trait Values
         </h2>
         <canvas id="traitChart"></canvas>
-    </div>
+    </div> -->
 </div>

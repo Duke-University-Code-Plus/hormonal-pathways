@@ -147,7 +147,7 @@
       ctx.setTransform(1, 0, 0, 1, 0, 0);
   
       if (DRAW_TRAIL) {
-        ctx.strokeStyle = "#558cf466";
+        ctx.strokeStyle = "#558cf66";
         ctx.beginPath();
         ctx.moveTo(boid.history[0][0], boid.history[0][1]);
         for (const point of boid.history) {
