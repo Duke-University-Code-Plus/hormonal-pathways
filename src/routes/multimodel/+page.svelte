@@ -6,6 +6,32 @@
     import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
+    import {
+        gamma1,
+        gamma2,
+        gamma3,
+        G,
+        Xmin,
+        delSmax,
+        delCmax,
+        tau,
+        K,
+        alpha,
+        beta,
+        mu,
+        z1,
+        z2,
+        z3,
+        N,
+        foodShort,
+        foodShortbegin,
+        foodShortend,
+        variableName,
+        variableRangeBegin,
+        variableRangeEnd,
+        numRuns,
+        showValidationMessage
+    } from "../data3_store.js";
 
     let Xhist = [];
     let Shist = [];
@@ -13,34 +39,8 @@
     let Whist = [];
     let Wcuml = [];
 
-    //default values
-    let gamma1 = writable(0.1);
-    let gamma2 = writable(0.2);
-    let gamma3 = writable(0.3);
-    let G = writable(0.1);
-    let Xmin = writable(1);
-    let delSmax = writable(1);
-    let delCmax = writable(1);
-    let tau = writable(5);
-    let K = writable(1);
-    let alpha = writable(4);
-    let beta = writable(2);
-    let mu = writable(0.01);
-    let z1 = writable(0.2);
-    let z2 = writable(0.3);
-    let z3 = writable(0.3);
-    let N = writable(100);
-    let foodShort = writable(0.4);
-    let foodShortbegin = writable(8);
-    let foodShortend = writable(20);
-    let variableName = writable("Choose a Variable");
-    let variableRangeBegin = writable(1);
-    let variableRangeEnd = writable(2);
-    let numRuns = writable(2);
-    let showValidationMessage = writable(false);
-
-    let gamma = writable([get(gamma1), get(gamma2), get(gamma3)]);
-    let z = writable([get(z1), get(z2), get(z3)]);
+    let gamma = [$gamma1, $gamma2, $gamma3];
+    let z = [$z1, $z2, $z3]
 
     let bodyConditionChartInstance = null;
     let sensitivityChartInstance = null;
@@ -75,29 +75,29 @@
         try {
             if (!initialRun) initialRun = true;
 
-            gamma = writable([get(gamma1), get(gamma2), get(gamma3)]);
-            z = writable([get(z1), get(z2), get(z3)]);
-
+            gamma = [$gamma1, $gamma2, $gamma3];
+            z = [$z1, $z2, $z3];
             const params = {
-                gamma: get(gamma),
-                G: get(G),
-                Xmin: get(Xmin),
-                delSmax: get(delSmax),
-                delCmax: get(delCmax),
-                tau: get(tau),
-                K: get(K),
-                alpha: get(alpha),
-                beta: get(beta),
-                mu: get(mu),
-                z: get(z),
-                N: get(N),
-                foodShort: get(foodShort),
-                foodShortbegin: get(foodShortbegin),
-                foodShortend: get(foodShortend),
-                variableName: get(variableName),
-                variableRangeBegin: get(variableRangeBegin),
-                variableRangeEnd: get(variableRangeEnd),
-                numRuns: get(numRuns),
+                gamma: gamma.join(","), // Convert array to comma-separated string
+                G: $G,
+                Xmin: $Xmin,
+                delSmax: $delSmax,
+                delCmax: $delCmax,
+                tau: $tau,
+                K: $K,
+                alpha: $alpha,
+                beta: $beta,
+                mu: $mu,
+                z: z.join(","), // Convert array to comma-separated string
+                N: $N,
+                foodShort: $foodShort,
+                foodShortbegin: $foodShortbegin,
+                foodShortend: $foodShortend,
+                variableName: $variableName,
+                variableRangeBegin: $variableRangeBegin,
+                variableRangeEnd: $variableRangeEnd,
+                numRuns: $numRuns,
+                showValidationMessage: $showValidationMessage,
             };
 
             const queryString = new URLSearchParams(params).toString();
