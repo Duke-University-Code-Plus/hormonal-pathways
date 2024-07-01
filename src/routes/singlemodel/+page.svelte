@@ -146,7 +146,7 @@
             render.push({x: i, y: y[i]});
         }
 
-        const totalDuration = 10000;
+        const totalDuration = canvas == 'sensitivityChart' ? 20 : 200;
         const delayBetweenPoints = totalDuration / render.length;
 
         const previousY = (ctx) => ctx.index === 0 
