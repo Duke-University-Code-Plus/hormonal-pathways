@@ -94,25 +94,9 @@
         }
     }
 
+    
     function makeChart(canvas, title, y, color) {
-        const chartOptions = {
-            plugins: {
-                legend: {
-                    display: false,
-                },
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    title: { display: true, text: "Reproductive Cycle" },
-                },
-                y: {
-                    beginAtZero: true,
-                    title: { display: true, text: "y label" },
-                },
-            },
-        };
-
+        // <block:data:3>
         let chartData = {};
         const is2dArray = (array) => array.every((item) => Array.isArray(item));
         if (is2dArray(y)) {
@@ -148,12 +132,89 @@
             };
         }
 
-        let ctx = document.getElementById(canvas);
-        return new Chart(ctx, {
-            type: "line",
+        let ctx = document.getElementById(canvas).getContext("2d");
+        if (!ctx) {
+            console.error(`Canvas element with ID ${canvas} not found`)
+        }
+        // </block:data>
+
+
+        // <block:animation:2>
+        const render = [];
+
+        for (let i = 0; i < y.length; i++) {
+            render.push({x: i, y: y[i]});
+        }
+
+        const totalDuration = 10000;
+        const delayBetweenPoints = totalDuration / render.length;
+
+        const previousY = (ctx) => ctx.index === 0 
+                ? ctx.chart.scales.y.getPixelForValue(100) 
+                : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+
+        const animation = {
+        x: {
+            type: 'number',
+            easing: 'linear',
+            duration: delayBetweenPoints,
+            from: NaN, // the point is initially skipped
+            delay(ctx) {
+            if (ctx.type !== 'data' || ctx.xStarted) {
+                return 0;
+            }
+            ctx.xStarted = true;
+            return ctx.index * delayBetweenPoints;
+            }
+        },
+        y: {
+            type: 'number',
+            easing: 'linear',
+            duration: delayBetweenPoints,
+            from: previousY,
+            delay(ctx) {
+            if (ctx.type !== 'data' || ctx.yStarted) {
+                return 0;
+            }
+            ctx.yStarted = true;
+            return ctx.index * delayBetweenPoints;
+            }
+        }
+        };
+        // </block:animation>
+
+        // <block:chartOptions:1>
+        const chartOptions = {
+            animation,
+            interaction: {
+                intersect: false
+            },
+            plugins: {
+                legend: false
+            },
+            scales: {
+                x: {
+                    type: 'linear',
+                    beginAtZero: true,
+                    title: { display: true, text: "Reproductive Cycle" },
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: "y label" },
+                },
+            },
+        };
+        // </block:chartOptions>
+
+        // <block:config:0>
+        const config = {
+            type: 'line',
             data: chartData,
-            options: chartOptions,
-        });
+            options: chartOptions
+        };
+    // </block:config>
+
+        return new Chart(ctx, config);
     }
 
     function createCharts() {

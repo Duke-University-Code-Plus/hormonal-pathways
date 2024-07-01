@@ -75,7 +75,7 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]),
         
         F_t = 1
 
-        E_t = tau * F_t * percentAvail
+        E_t = tau * percentAvail * F_t
         
         X_t1, S_t1, C_t1, W_t1, V_t = forwardModel(Xhist[i], beta_t, z, Shist[:, i], Chist[i], K, E_t, gamma, delCmax, delSmax, Xmin, G)
         Xhist[i + 1] = X_t1
