@@ -146,7 +146,7 @@
             render.push({x: i, y: y[i]});
         }
 
-        const totalDuration = 10000;
+        const totalDuration = canvas == 'sensitivityChart' ? 20 : 200;
         const delayBetweenPoints = totalDuration / render.length;
 
         const previousY = (ctx) => ctx.index === 0 
@@ -358,21 +358,6 @@
                 bind:inputVar={$foodShort}
             />
 
-            <SliderInput
-                id="Food shortage begins"
-                min="0"
-                max={$foodShortend}
-                step="1"
-                bind:inputVar={$foodShortbegin}
-            />
-
-            <SliderInput
-                id="Food shortage ends"
-                min="0"
-                max={$N}
-                step="1"
-                bind:inputVar={$foodShortend}
-            />
             <SliderTwoInput
                 bind:inputVarHigh={$foodShortend}
                 bind:maxForVarHigh={$N}
