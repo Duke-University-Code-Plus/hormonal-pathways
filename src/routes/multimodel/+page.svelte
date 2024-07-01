@@ -377,6 +377,7 @@
                 step="0.1"
                 bind:inputVar={$z1}
             />
+            
 
             <SliderInput
                 id="Weight of second trait (zⱼ)"
