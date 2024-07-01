@@ -297,21 +297,6 @@
                 bind:inputVar={$foodShort}
             />
 
-            <SliderInput
-                id="Food shortage begins"
-                min="0"
-                max={$foodShortend}
-                step="1"
-                bind:inputVar={$foodShortbegin}
-            />
-
-            <SliderInput
-                id="Food shortage ends"
-                min="0"
-                max={$N}
-                step="1"
-                bind:inputVar={$foodShortend}
-            />
             <SliderTwoInput
                 bind:inputVarHigh={$foodShortend}
                 bind:maxForVarHigh={$N}

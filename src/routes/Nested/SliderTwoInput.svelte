@@ -77,20 +77,24 @@
         setToggleAccessible();
     });
 </script>
-
-<div class="range_container flex flex-col w-4/5 mx-auto mt-36">
+<!-- container -->
+<div class="range_container flex flex-col w-1/5">
     <div class="sliders_control relative min-h-12">
-        <input id="fromSlider" type="range" step={step} bind:value={inputVarLow} min={minForVarLow}  max={maxForVarHigh} class="absolute w-full h-1 appearance-none bg-gray-300 pointer-events-none z-10" on:input={controlFromSlider} />
-        <input id="toSlider" type="range" step={step} bind:value={inputVarHigh} min={minForVarLow}  max={maxForVarHigh} class="absolute w-full h-1 appearance-none bg-gray-300 pointer-events-none" on:input={controlToSlider} />
+        <input id="fromSlider" type="range" step={step} bind:value={inputVarLow} min={minForVarLow}  max={maxForVarHigh} class="absolute w-full h-3 rounded-full appearance-none bg-gray-100 pointer-events-none z-10" on:input={controlFromSlider} />
+        <input id="toSlider" type="range" step={step} bind:value={inputVarHigh} min={minForVarLow}  max={maxForVarHigh} class="absolute w-full h-3 rounded-full appearance-none bg-gray-100 pointer-events-none " on:input={controlToSlider} />
     </div>
-    <div class="form_control flex justify-between text-xl text-gray-600 mt-4">
-        <div class="form_control_container flex flex-col items-center">
+
+<!-- input boxes and text -->
+    <div class="form_control flex justify-between text-sm text-blue-gray-700 font-sans ">
+        <div class="form_control_container flex flex-wrap items-center">
             <div>{inputVarLowName}</div>
-            <input type="number" bind:value={inputVarLow} min={minForVarLow}  max={maxForVarHigh}  class="w-12 h-8 text-lg border-none text-gray-700" on:input={controlFromInput} />
+            <input type="number" bind:value={inputVarLow} min={minForVarLow}  max={maxForVarHigh}  class="peer  bg-transparent text-blue-gray-700 font-sans l outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200
+            border focus:border-2 text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100 text-[11px] w-12 h-8" on:input={controlFromInput} />
         </div>
-        <div class="form_control_container flex flex-col items-center">
+        <div class="form_control_container flex flex-wrap items-center z-10">
             <div>{inputVarHighName}</div>
-            <input type="number" bind:value={inputVarHigh} min={minForVarLow} max={maxForVarHigh}  class="w-12 h-8 text-lg border-none text-gray-700" on:input={controlToInput} />
+            <input type="number" bind:value={inputVarHigh} min={minForVarLow} max={maxForVarHigh}  class="peer  bg-transparent text-blue-gray-700 font-sans outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200
+            border focus:border-2 text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100 text-[11px] w-12 h-8" on:input={controlToInput} />
         </div>
     </div>
 </div>
@@ -99,11 +103,10 @@
     input[type=range]::-webkit-slider-thumb {
         -webkit-appearance: none;
         pointer-events: all;
-        width: 24px;
-        height: 24px;
-        background-color: #fff;
+        width: 20px;
+        height: 20px;
+        background-color:#a855f7;
         border-radius: 50%;
-        box-shadow: 0 0 0 1px #C6C6C6;
         cursor: pointer;
     }
 
@@ -115,14 +118,6 @@
         border-radius: 50%;
         box-shadow: 0 0 0 1px #C6C6C6;
         cursor: pointer;
-    }
-
-    input[type=range]::-webkit-slider-thumb:hover {
-        background: #f7f7f7;
-    }
-
-    input[type=range]::-webkit-slider-thumb:active {
-        box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
     }
 </style>
 
