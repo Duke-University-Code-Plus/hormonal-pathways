@@ -7,14 +7,14 @@
         <div class="flex w-full justify-center md:justify-between items-center">
             <div class="text-gray-500 order-2 md:order-1 w-full md:w-auto md:flex-1">
                 <ul class="flex flex-row gap-8 font-semibold justify-center w-full">
+                    <li class="{$page.url.pathname == '/about-us' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
+                        <a href="/about-us">About Us</a>
+                    </li>
                     <li class="{$page.url.pathname == '/singlemodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
                         <a href="/singlemodel">Single Run</a>
                     </li>
                     <li class="{$page.url.pathname == '/multimodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
                         <a href="/multimodel">Multi Run</a>
-                    </li>
-                    <li class="{$page.url.pathname == '/about-us' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
-                        <a href="/about-us">About Us</a>
                     </li>
                 </ul>
             </div>
