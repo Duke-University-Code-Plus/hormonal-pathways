@@ -95,7 +95,7 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]),
     
     results = {
         'Xhist': Xhist.tolist(),
-        'Shist': Shist.tolist(),
+        'Shist': Shist[0][:].tolist(),
         'Chist': Chist.tolist(),
         'Whist': Whist.tolist(),
         'Wcuml': Wcuml.tolist(),

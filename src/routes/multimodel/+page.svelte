@@ -47,8 +47,9 @@
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
 
-    const apiEndpoint =
-        "https://hormonal-pathways-api-a4dcfa854663.herokuapp.com";
+    const apiEndpoint = "http://127.0.0.1:5000"
+    //const apiEndpoint =
+    //    "https://hormonal-pathways-api-a4dcfa854663.herokuapp.com";
 
     //state
     let initialRun = false;
@@ -58,7 +59,7 @@
     });
 
     async function fetchData() {
-        if (get(variableName) === "Choose a Variable") {
+        if ($variableName === "Choose a Variable") {
             document
                 .getElementById("variableDropDown")
                 .classList.add("border-red-500");
@@ -120,7 +121,7 @@
     }
 
     function createDatasets(data, labelPrefix) {
-        const numRunsValue = get(numRuns); // Number of lines
+        const numRunsValue = $numRuns; // Number of lines
 
         function interpolateColor(startColor, endColor, factor) {
             const result = startColor.slice();
@@ -152,7 +153,7 @@
     }
 
     function createSensitivityDatasets(data, labelPrefix) {
-        const numRunsValue = get(numRuns);
+        const numRunsValue = $numRuns;
         const colors = [
             [255, 99, 132],
             [75, 192, 192],
@@ -276,7 +277,7 @@
         );
     }
     function handleDropdownChange() {
-        if (get(variableName) === "Choose a Variable") {
+        if ($variableName === "Choose a Variable") {
             document
                 .getElementById("variableDropDown")
                 .classList.add("border-red-500");
