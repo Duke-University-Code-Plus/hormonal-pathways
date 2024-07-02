@@ -3,14 +3,12 @@ from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 import json
 
-def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]), 
+def hormoneModelStatRun(gammaIn: np.array = np.array([.1, 2, .3]), 
                 GIn: float = 0.1, XminIn: float = 1, delSmaxIn: float = 1,
                 delCmaxIn: float = 1, tauIn: float = 5, KIn: float = 1, 
                 alphaIn: float = 2, betaIn: float = 2, muIn: float = 0.0001, 
                 zIn: np.array = np.array([0.2, 0.3, 0.3]), NIn: int = 100, 
                 foodShort: float = 0.5, foodShortbegin: int = 8, foodShortend: int = 20, numRuns: int = 3,
-                variableName: str = 'delSmax',
-                variableRangeBegin: float = 1, variableRangeEnd: float = 2,
                 outputFileName: str = 'results.txt'):
 
     # define constants:
@@ -41,19 +39,12 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
         'N': N,
     }
 
-
-    if variableName in params:
-        variable_values = np.linspace(variableRangeBegin, variableRangeEnd, numRuns)
-    else:
-
-        variable_values = np.array([params[variableName]] * numRuns)
-
     # states being tracked
-    Xhist = np.zeros((N, numRuns))
-    Shist = np.zeros((3, N, numRuns))
-    Chist = np.zeros((N, numRuns))
-    Whist = np.zeros((N, numRuns))
-    Wcuml = np.zeros((N, numRuns))
+    Xhist = np.zeros((N, 1))
+    Shist = np.zeros((3, N))
+    Chist = np.zeros((N, 1))
+    Whist = np.zeros((N, 1))
+    Wcuml = np.zeros((N, 1))
 
     for j in range(numRuns):
 
@@ -65,9 +56,6 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
 
         alive = True
         i = 0
-
-        if variableName in params:
-            params[variableName] = variable_values[j]
 
         delSmax = params['delSmax']
         delCmax = params['delCmax']
