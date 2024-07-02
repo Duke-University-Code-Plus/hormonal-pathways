@@ -146,7 +146,8 @@
             render.push({x: i, y: y[i]});
         }
 
-        const totalDuration = canvas == 'sensitivityChart' ? 20 : 800;
+        //const totalDuration = 2800;
+        const totalDuration = canvas == 'sensitivityChart' ? 20 : 2800;
         const delayBetweenPoints = totalDuration / render.length;
 
         const previousY = (ctx) => ctx.index === 0 
@@ -190,7 +191,9 @@
                 intersect: false
             },
             plugins: {
-                legend: false
+                display:{
+                    legend: true
+                },
             },
             scales: {
                 x: {
