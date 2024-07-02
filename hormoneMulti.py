@@ -84,13 +84,13 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
             beta_t = beta_dist.rvs(alpha, beta)
             #define food availability
             if foodShortbegin < i < foodShortend:
-                foodShortage = foodShort
+                percentAvail = foodShort
             else:
-                foodShortage = 1
-            
+                percentAvail = 1
+        
             F_t = 1
-            E_t = tau * F_t * foodShortage
 
+            E_t = tau * percentAvail * F_t
 
             X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[i, j], beta_t, z, Shist[:, i, j], Chist[i, j], K, E_t, gamma, delCmax, delSmax, Xmin, G)
             Xhist[i + 1, j] = X_t1
