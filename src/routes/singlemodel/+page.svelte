@@ -109,6 +109,7 @@
                     radius: 0,
                     borderWidth: 1,
                     fill: false,
+                    lineTension: .5,
                 };
                 chartDatasets.push(data);
             }
@@ -145,9 +146,9 @@
         for (let i = 0; i < y.length; i++) {
             render.push({x: i, y: y[i]});
         }
-
+        //ratio for sensitvity graphs is ? 1 : 32.78
         //const totalDuration = 2800;
-        const totalDuration = canvas == 'sensitivityChart' ? 20 : 2800;
+        const totalDuration = canvas == 'sensitivityChart' ? 122 : 4000;
         const delayBetweenPoints = totalDuration / render.length;
 
         const previousY = (ctx) => ctx.index === 0 
