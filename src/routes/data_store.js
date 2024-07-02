@@ -20,3 +20,4 @@ export const N = writable(100);
 export const foodShort = writable(0.4);
 export const foodShortbegin = writable(8);
 export const foodShortend = writable(20);
+export const statRun = writable(False)

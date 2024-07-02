@@ -7,9 +7,9 @@ import pandas as pd
 def hormoneModelStatRun(gammaIn: np.array = np.array([.1, 2, .3]), 
                 GIn: float = 0.1, XminIn: float = 1, delSmaxIn: float = 1,
                 delCmaxIn: float = 1, tauIn: float = 5, KIn: float = 1, 
-                alphaIn: float = 2, betaIn: float = 2, muIn: float = 0.0001, 
+                alphaIn: float = 2, betaIn: float = 2, muIn: float = 0.0, 
                 zIn: np.array = np.array([0.2, 0.3, 0.3]), NIn: int = 100, 
-                foodShort: float = 0.5, foodShortbegin: int = 8, foodShortend: int = 20, numRuns: int = 3,
+                foodShort: float = 1, foodShortbegin: int = 8, foodShortend: int = 20, numRuns: int = 20,
                 outputFileName: str = 'results.txt'):
 
     # define constants:
@@ -25,6 +25,7 @@ def hormoneModelStatRun(gammaIn: np.array = np.array([.1, 2, .3]),
     mu = muIn
     z = zIn
     N = NIn
+    foodShortage = 1
 
     params = {
         'G': G,
@@ -68,17 +69,28 @@ def hormoneModelStatRun(gammaIn: np.array = np.array([.1, 2, .3]),
         alive = True
         i = 0
 
+        delSmax = params['delSmax']
+        delCmax = params['delCmax']
+        tau = params['tau']
+        K = params['K']
+        alpha = params['alpha']
+        beta = params['beta']
+        mu = params['mu']
+        z = params['z']
+        N = params['N']
+
 
         while alive and i < N - 1:
             #find beta for this timestep:
             beta_t = beta_dist.rvs(alpha, beta)
             #define food availability
             if foodShortbegin < i < foodShortend:
-                tau *= foodShort
+                foodShortage = foodShort
             else:
-                F_t = 1
+                foodShortage = 1
 
-            E_t = tau * F_t
+            F_t = 1
+            E_t = tau * F_t * foodShortage
 
             X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[i, j], beta_t, z, Shist[:, i, j], Chist[i, j], K, E_t, gamma, delCmax, delSmax, Xmin, G)
             Xhist[i + 1, j] = X_t1
@@ -99,7 +111,7 @@ def hormoneModelStatRun(gammaIn: np.array = np.array([.1, 2, .3]),
     Wcuml, WcumlCon = convertToAverage(Wcuml.tolist())
 
     results = {
-        'Xhist': XhistCon,
+        'Xhist': Xhist,
         'XhistCon': XhistCon,
         'Shist': Shist,
         'ShistCon': ShistCon,
@@ -108,8 +120,11 @@ def hormoneModelStatRun(gammaIn: np.array = np.array([.1, 2, .3]),
         'Whist': Whist,
         'WhistCon': WhistCon,
         'Wcuml': Wcuml,
-        'WcumlCon': WcumlCon
+        'WcumlCon': WcumlCon,
     }
+    with open(outputFileName, "w") as f:
+         json.dump(results, f)
+    # Write the JSON data to the file
 
     return results
 
@@ -161,12 +176,14 @@ def fitness_function(beta, z, S, C, K, X_t, E_t1, gamma, delCS, Xmin, G):
     return -((W_t1**1) * (X_t1**3))
 
 def convertToAverage(DataSet:list):
-    DataSet = list(zip(*DataSet))
-    confidenceInterval = []
+    confidenceInterval = [0] * len(DataSet)
     for i, row in enumerate(DataSet):
-        confidenceInterval += [2 * np.std(row)]
-        DataSet[i] = np.mean(row)
+        print(row)
+        confidenceInterval[i] += 2 * np.std(row)
+        DataSet[i] = np.average(row)
     
     return DataSet, confidenceInterval
 
 hormoneModelStatRun()
+
+

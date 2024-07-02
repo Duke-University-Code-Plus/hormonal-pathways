@@ -25,3 +25,4 @@ export const variableRangeBegin = writable(1);
 export const variableRangeEnd = writable(2);
 export const numRuns = writable(2);
 export const showValidationMessage = writable(false);
+export const statRun = writable(true)
