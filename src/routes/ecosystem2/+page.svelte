@@ -5,5 +5,5 @@
   <!-- link p5.play.js -->
   <script src="/p5.play.js" type="text/javascript"></script>
   <!-- link your javascript sketch -->
-  <script src="empty3.js" type="text/javascript"></script>
+  <script src="ecosystem3.js" type="text/javascript"></script>
 </svelte:head>
