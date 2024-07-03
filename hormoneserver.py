@@ -39,33 +39,6 @@ def get_arrays():
         return jsonify(results)
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-    
-@app.route('/hormonesimulation', methods=['GET'])
-def get_sim_arrays():
-    try:
-        gamma = parse_array_param(request.args.get('gamma'))
-        z = parse_array_param(request.args.get('z'))
-
-        results = hormoneSimulation(
-            gammaIn=gamma, 
-            GIn=float(request.args.get('G', 0)), 
-            XminIn=float(request.args.get('Xmin', 0)), 
-            delSmaxIn=float(request.args.get('delSmax', 0)), 
-            delCmaxIn=float(request.args.get('delCmax', 0)), 
-            tauIn=float(request.args.get('tau', 0)), 
-            KIn=float(request.args.get('K', 0)), 
-            alphaIn=float(request.args.get('alpha', 0)), 
-            betaIn=float(request.args.get('beta', 0)), 
-            muIn=float(request.args.get('mu', 0)), 
-            zIn=z, 
-            NIn=int(request.args.get('N', 0)), 
-            foodShort=float(request.args.get('foodShort', 0)), 
-            foodShortbegin=int(request.args.get('foodShortbegin', 0)), 
-            foodShortend=int(request.args.get('foodShortend', 0))
-        )
-        return jsonify(results)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 400
 
 @app.route('/multihormonemodel', methods=['GET'])
 def get_multi_arrays():

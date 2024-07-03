@@ -9,6 +9,7 @@
     import {
         gamma1,
         gamma2,
+        gamma3,
         G,
         Xmin,
         delSmax,
@@ -20,6 +21,7 @@
         mu,
         z1,
         z2,
+        z3,
         N,
         foodShort,
         foodShortbegin,
@@ -33,8 +35,8 @@
     let Wcuml = [];
     let Vhist = [];
 
-    let gamma = [$gamma1, $gamma2];
-    let z = [$z1, $z2];
+    let gamma = [$gamma1, $gamma2, $gamma3];
+    let z = [$z1, $z2, $z3];
 
     let bodyConditionChartInstance = null;
     let sensitivityChartInstance = null;
@@ -52,8 +54,8 @@
 
     async function fetchData() {
         try {
-            gamma = [$gamma1, $gamma2];
-            z = [$z1, $z2];
+            gamma = [$gamma1, $gamma2, $gamma3];
+            z = [$z1, $z2, $z3];
             const params = {
                 gamma: gamma.join(","), // Convert array to comma-separated string
                 G: $G,
@@ -74,7 +76,7 @@
 
             const queryString = new URLSearchParams(params).toString();
             const response = await axios.get(
-                `${apiEndpoint}/hormonesimulation?${queryString}`,
+                `${apiEndpoint}/hormonemodel?${queryString}`,
             );
             const data = response.data;
 
@@ -131,7 +133,7 @@
             };
         }
 
-        let ctx = document.getElementById(canvas).getContext("2d");
+        let ctx = document.getElementById(canvas) //.getContext("2d");
         if (!ctx) {
             console.error(`Canvas element with ID ${canvas} not found`)
         }
@@ -232,49 +234,49 @@
         if (traitChartInstance) traitChartInstance.destroy();
 
         // Create Body Condition Chart
-        bodyConditionChartInstance = makeChart(
-            "bodyConditionChart",
-            "Body Condition",
-            Xhist,
-            "rgba(75, 192, 192, 1)",
-            3.5
-        );
+        // bodyConditionChartInstance = makeChart(
+        //     "bodyConditionChart",
+        //     "Body Condition",
+        //     Xhist,
+        //     "rgba(75, 192, 192, 1)",
+        //     3.5
+        // );
 
         // Create Sensitivity Chart
-        sensitivityChartInstance = makeChart(
-            "sensitivityChart",
-            "Sensitivity",
-            Shist,
-            "rgba(255, 99, 132, 1)",
-            2.5
-        );
+        // sensitivityChartInstance = makeChart(
+        //     "sensitivityChart",
+        //     "Sensitivity",
+        //     Shist,
+        //     "rgba(255, 99, 132, 1)",
+        //     2.5
+        // );
 
         // Create Production Chart
-        productionChartInstance = makeChart(
-            "productionChart",
-            "Production",
-            Chist,
-            "rgba(153, 102, 255, 1)",
-            10
-        );
+        // productionChartInstance = makeChart(
+        //     "productionChart",
+        //     "Production",
+        //     Chist,
+        //     "rgba(153, 102, 255, 1)",
+        //     10
+        // );
 
         // Create Fitness Chart
-        fitnessChartInstance = makeChart(
-            "fitnessChart",
-            "Fitness",
-            Whist,
-            "rgba(255, 159, 64, 1)",
-            1.2
-        );
+        // fitnessChartInstance = makeChart(
+        //     "fitnessChart",
+        //     "Fitness",
+        //     Whist,
+        //     "rgba(255, 159, 64, 1)",
+        //     1.2
+        // );
 
         // Create Cumulative Fitness Chart
-        cumulativeFitnessChartInstance = makeChart(
-            "cumulativeFitnessChart",
-            "Cumulative Fitness",
-            Wcuml,
-            "rgba(255, 206, 86, 1)",
-            20
-        );
+        // cumulativeFitnessChartInstance = makeChart(
+        //     "cumulativeFitnessChart",
+        //     "Cumulative Fitness",
+        //     Wcuml,
+        //     "rgba(255, 206, 86, 1)",
+        //     20
+        // );
 
         traitChartInstance = makeChart(
             "traitChart",
@@ -382,14 +384,15 @@
         </div>
 
         <!-- Container for G and mu sliders-->
-        <!--
         <div class="flex flex-wrap justify-center w-full">
+            <!--
             <SliderInput 
                 id="Min hormone level for gamete maturation (G)" 
                 min="0" 
                 max="1" 
                 step="0.1" 
                 bind:inputVar={$G} />
+            -->
 
             <SliderInput
                 id="Death probability (µ)"
@@ -399,7 +402,6 @@
                 bind:inputVar={$mu}
             />
         </div>
-        -->
     </div>
 
     <!-- Form Inputs-->
@@ -571,6 +573,7 @@
 
 <!-- Creating Charts-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
+    <!--
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -605,6 +608,7 @@
         </h2>
         <canvas id="cumulativeFitnessChart"></canvas>
     </div>
+    -->
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
