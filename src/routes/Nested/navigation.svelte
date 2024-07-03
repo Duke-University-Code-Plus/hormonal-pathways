@@ -16,6 +16,9 @@
                     <li class="{$page.url.pathname == '/multimodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
                         <a href="/multimodel">Multi Run</a>
                     </li>
+                    <li class="{$page.url.pathname == '/simulationmodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
+                        <a href="/simulationmodel">Simulation Model</a>
+                    </li>
                 </ul>
             </div>
             <div class="flex flex-col justify-center ml-3"></div>
