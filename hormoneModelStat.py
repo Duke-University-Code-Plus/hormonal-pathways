@@ -105,22 +105,29 @@ def hormoneModelStatRun(gammaIn: np.array = np.array([.1, 2, .3]),
             i += 1
 
     Xhist, XhistCon = convertToAverage(Xhist.tolist())
-    Shist, ShistCon = convertToAverage(Shist[0].tolist())
     Chist, ChistCon = convertToAverage(Chist.tolist())
     Whist, WhistCon = convertToAverage(Whist.tolist())
     Wcuml, WcumlCon = convertToAverage(Wcuml.tolist())
+    ShistI, ShistConI = convertToAverage(Shist[0].tolist())
+    ShistK, ShistConK = convertToAverage(Shist[1].tolist())
+    ShistJ, ShistConJ = convertToAverage(Shist[2].tolist())
 
     results = {
         'Xhist': Xhist,
         'XhistCon': XhistCon,
-        'Shist': Shist,
-        'ShistCon': ShistCon,
         'Chist': Chist,
         'ChistCon': ChistCon,
         'Whist': Whist,
         'WhistCon': WhistCon,
         'Wcuml': Wcuml,
         'WcumlCon': WcumlCon,
+        # Shist Graphs
+        'ShistI': ShistI,
+        'ShistConI': ShistConI,
+        'ShistK': ShistK,
+        'ShistConK': ShistConK,
+        'ShistJ': ShistJ,
+        'ShistConJ': ShistConJ,
     }
     with open(outputFileName, "w") as f:
          json.dump(results, f)
