@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import axios from "axios";
-    import Chart from "chart.js/auto";
+    import Chart, { registerables } from "chart.js/auto";
     import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
@@ -105,7 +105,7 @@
                 let data = {
                     label: title + " " + i,
                     data: y[i],
-                    borderColor: color,
+                    borderColor: rgba(255/i, 99/i, 132/i, 1),
                     radius: 0,
                     borderWidth: 1,
                     fill: false,

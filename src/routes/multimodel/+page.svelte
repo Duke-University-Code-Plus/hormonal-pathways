@@ -5,6 +5,8 @@
     import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
+    import Dropdown from "../Nested/Dropdown.svelte";
+    
     import {
         gamma1,
         gamma2,
@@ -29,7 +31,8 @@
         variableRangeBegin,
         variableRangeEnd,
         numRuns,
-        showValidationMessage
+        showValidationMessage,
+        statRun
     } from "../data3_store.js";
 
     let Xhist = [];
@@ -37,7 +40,18 @@
     let Chist = [];
     let Whist = [];
     let Wcuml = [];
-
+    let XhistCon = [];
+    let ChistCon = [];
+    let WhistCon = [];
+    let WcumlCon = [];
+    let ShistI = [];
+    let ShistJ = [];
+    let ShistK = [];
+    let ShistConI = [];
+    let ShistConJ = [];
+    let ShistConK = [];
+    let ChosenTrait = 'I';
+    
     let gamma = [$gamma1, $gamma2, $gamma3];
     let z = [$z1, $z2, $z3]
 
@@ -93,35 +107,82 @@
                 foodShort: $foodShort,
                 foodShortbegin: $foodShortbegin,
                 foodShortend: $foodShortend,
-                variableName: $variableName,
-                variableRangeBegin: $variableRangeBegin,
-                variableRangeEnd: $variableRangeEnd,
                 numRuns: $numRuns,
-                showValidationMessage: $showValidationMessage,
+            };
+
+            if (!$statRun) {
+                params.variableName = $variableName;
+                params.variableRangeBegin = $variableRangeBegin;
+                params.variableRangeEnd = $variableRangeEnd;
             };
 
             const queryString = new URLSearchParams(params).toString();
-            const response = await axios.get(
-                `${apiEndpoint}/multihormonemodel?${queryString}`,
-            );
+            let response;
+            // change query given which model you want to use
+            if($statRun){
+                 response = await axios.get(
+                `${apiEndpoint}/statModel?${queryString}`,
+                 );
+            }
+            else{
+                response = await axios.get(
+                    `${apiEndpoint}/multihormonemodel?${queryString}`,
+                );
+            }
 
             const data = response.data;
 
             // Data from API
             Xhist = data.Xhist;
-            Shist = data.Shist;
             Chist = data.Chist;
             Whist = data.Whist;
             Wcuml = data.Wcuml;
+            if($statRun){
+                XhistCon = data.XhistCon;
+                ChistCon = data.ChistCon;
+                WhistCon = data.WhistCon;
+                WcumlCon = data.WcumlCon;
+                // Shist DataSets
+                ShistI = data.ShistI;
+                ShistJ = data.ShistJ;
+                ShistK = data.ShistK;
+                ShistConI = data.ShistConI;
+                ShistConJ = data.ShistConJ;
+                ShistConK = data.ShistConK;
+            }
+            else{
+                Shist = data.Shist;
+            }
 
             createCharts();
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     }
+    // definechartOptions to higher scope
+    const chartOptions = {
+            plugins: {
+                legend: {
+                    display: false, // no legend
+                },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Reproductive Cycle" },
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: "y label" },
+                },
+            },
+        };
 
     function createDatasets(data, labelPrefix) {
-        const numRunsValue = $numRuns; // Number of lines
+        let numRunsValue = $numRuns; //Number of lines
+        if ($statRun){
+            numRunsValue = 1
+        }
 
         function interpolateColor(startColor, endColor, factor) {
             const result = startColor.slice();
@@ -135,20 +196,28 @@
 
         const startColor = [0, 0, 255]; // Blue
         const endColor = [255, 0, 0]; // Red
+        let color = startColor;
+        let dataSetRet;
 
         const datasets = Array.from({ length: numRunsValue }, (_, runIndex) => {
             const factor = runIndex / (numRunsValue - 1);
-            const color = interpolateColor(startColor, endColor, factor);
+            if (!$statRun){
+            color = interpolateColor(startColor, endColor, factor);
+            dataSetRet = data.map((point) => point[runIndex])
+            }
+            else{
+                dataSetRet = data
+            }
             return {
                 label: `${labelPrefix} ${runIndex + 1}`,
-                data: data.map((point) => point[runIndex]),
+                data: dataSetRet,
                 borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
                 borderWidth: 1,
                 radius: 0,
                 fill: false,
             };
         });
-
+        console.log(datasets)
         return datasets;
     }
 
@@ -185,24 +254,6 @@
         if (cumulativeFitnessChartInstance)
             cumulativeFitnessChartInstance.destroy();
 
-        const chartOptions = {
-            plugins: {
-                legend: {
-                    display: false, // no legend
-                },
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    title: { display: true, text: "Reproductive Cycle" },
-                },
-                y: {
-                    beginAtZero: true,
-                    title: { display: true, text: "y label" },
-                },
-            },
-        };
-
         //create Body Condition Chart
         bodyConditionChartInstance = new Chart(
             document.getElementById("bodyConditionChart"),
@@ -217,22 +268,27 @@
             },
         );
 
-        //create Sensitivity Chart
-        sensitivityChartInstance = new Chart(
-            document.getElementById("sensitivityChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from(
-                        { length: Shist[0].length },
-                        (_, i) => i,
-                    ),
-                    datasets: createSensitivityDatasets(Shist, "Sensitivity"),
+        //createSensitivityChart if we are doing mutliRun else go to stat run sensitivity
+        if ($statRun){
+            switchSensitivityGraphs()
+        }
+        else{
+            sensitivityChartInstance = new Chart(
+                document.getElementById("sensitivityChart"),
+                {
+                    type: "line",
+                    data: {
+                        labels: Array.from(
+                            { length: Shist[0].length },
+                            (_, i) => i,
+                        ),
+                        datasets: createSensitivityDatasets(Shist, "Sensitivity"),
+                    },
+                    lineTension: .5,
+                    options: chartOptions,
                 },
-                lineTension: .5,
-                options: chartOptions,
-            },
-        );
+            );
+        }
 
         //create Production Chart
         productionChartInstance = new Chart(
@@ -275,6 +331,34 @@
                 options: chartOptions,
             },
         );
+    }
+    function switchSensitivityGraphs(ChosenTrait){
+        if (sensitivityChartInstance) sensitivityChartInstance.destroy();
+        if(ChosenTrait = 'I'){
+            Shist = ShistI
+        }
+        else if(ChosenTrait = 'J'){
+            Shist = ShistJ
+        }
+        else{
+            Shist = ShistK
+        }
+        sensitivityChartInstance = new Chart(
+            document.getElementById("sensitivityChart"),
+            {
+                type: "line",
+                data: {
+                    labels: Array.from(
+                        { length: Shist.length },
+                        (_, i) => i,
+                    ),
+                    datasets: createDatasets(Shist, "Sensitivity"),
+                },
+                lineTension: .5,
+                options: chartOptions,
+            },
+        );
+
     }
     function handleDropdownChange() {
         if ($variableName === "Choose a Variable") {
@@ -328,6 +412,13 @@
             }
         }
     }
+
+
+    const SenseChartoptions = [
+        { value: 'I', label: 'Trait I' },
+        { value: 'J', label: 'Trait J' },
+        { value: 'K', label: 'Trait K' }
+    ];
 </script>
 
 <NavBar multiPage="Multi" />
@@ -602,7 +693,18 @@
     <hr
         class="m-auto w-[90%] h-px my-6 border-1 border-indigo-500 opacity-50"
     />
-
+    <div class="flex flex-wrap justify-center">
+           
+        
+    <!-- Trait for Sensitivity DropDown (temporary)-->
+    <!-- To change options refer to the senseChartoptions Variable-->
+    <Dropdown
+    bind:ValueToChange={ChosenTrait}
+    optionList = {SenseChartoptions}
+    changeFunction={handleDropdownChange,switchSensitivityGraphs}
+    showValidationMessage = {$showValidationMessage}
+    messageForValidation = "Please select a Trait For the SensitivityGraph"
+    />
     <!-- Choose variable drop down -->
     <div class="flex flex-wrap justify-center">
         <div class="w-72 m-2">
@@ -633,6 +735,8 @@
                 </label>
             </div>
         </div>
+    </div>
+
 
         <FormInput
             id="Variable Range Begin"

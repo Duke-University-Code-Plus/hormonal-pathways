@@ -6,9 +6,9 @@ import json
 def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]), 
                 GIn: float = 0.1, XminIn: float = 1, delSmaxIn: float = 1,
                 delCmaxIn: float = 1, tauIn: float = 5, KIn: float = 1, 
-                alphaIn: float = 2, betaIn: float = 2, muIn: float = 0.0001, 
+                alphaIn: float = 2, betaIn: float = 2, muIn: float = 0.000000, 
                 zIn: np.array = np.array([0.2, 0.3, 0.3]), NIn: int = 100, 
-                foodShort: float = 0.5, foodShortbegin: int = 8, foodShortend: int = 20, numRuns: int = 3,
+                foodShort: float = 0.5, foodShortbegin: int = 8, foodShortend: int = 20, numRuns: int = 2,
                 variableName: str = 'delSmax',
                 variableRangeBegin: float = 1, variableRangeEnd: float = 2,
                 outputFileName: str = 'results.txt'):
@@ -112,6 +112,9 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
         'Wcuml': Wcuml.tolist()
     }
 
+    with open(outputFileName, "w") as f:
+         json.dump(results, f)
+
     return results
 
 def forwardModel(X_t, beta_t, z_t, S_t, C_t, K, E_t1, gamma_t, delCmax, delSmax, Xmin, G):
@@ -160,6 +163,8 @@ def fitness_function(beta, z, S, C, K, X_t, E_t1, gamma, delCS, Xmin, G):
         W_t1 = 0
 
     return -((W_t1**1) * (X_t1**3))
+
+runMultiRun()
 
 
 
