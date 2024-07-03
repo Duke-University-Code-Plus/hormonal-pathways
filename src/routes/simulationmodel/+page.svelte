@@ -314,6 +314,7 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma1}
+                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
             />
 
             <SliderInput
@@ -322,6 +323,7 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma2}
+                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the second trait."
             />
             <!--
             <SliderInput
@@ -342,6 +344,7 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$z1}
+                modalMessage="The weight of the first trait in the role of the fitness function."
             />
 
             <SliderInput
@@ -350,6 +353,7 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$z2}
+                modalMessage="The weight of the second trait in the role of the fitness function."
             />
             <!--
             <SliderInput
@@ -370,6 +374,7 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$foodShort}
+                modalMessage="A multiplier of current food."
             />
 
             <SliderTwoInput
@@ -400,6 +405,7 @@
                 max="1"
                 step="0.001"
                 bind:inputVar={$mu}
+                modalMessage="A fixed chance that the bird will die randomly."
             />
         </div>
     </div>
