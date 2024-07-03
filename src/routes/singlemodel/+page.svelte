@@ -95,7 +95,7 @@
     }
 
     
-    function makeChart(canvas, title, y, color) {
+    function makeChart(canvas, title, y, color, maxValue) {
         // <block:data:3>
         let chartData = {};
         const is2dArray = (array) => array.every((item) => Array.isArray(item));
@@ -201,10 +201,12 @@
                     type: 'linear',
                     beginAtZero: true,
                     title: { display: true, text: "Reproductive Cycle" },
+                    max: $N
                 },
                 y: {
                     beginAtZero: true,
                     title: { display: true, text: "y label" },
+                    max: maxValue
                 },
             },
         };
@@ -237,6 +239,7 @@
             "Body Condition",
             Xhist,
             "rgba(75, 192, 192, 1)",
+            3.5
         );
 
         // Create Sensitivity Chart
@@ -245,6 +248,7 @@
             "Sensitivity",
             Shist,
             "rgba(255, 99, 132, 1)",
+            2.5
         );
 
         // Create Production Chart
@@ -253,6 +257,7 @@
             "Production",
             Chist,
             "rgba(153, 102, 255, 1)",
+            10
         );
 
         // Create Fitness Chart
@@ -261,6 +266,7 @@
             "Fitness",
             Whist,
             "rgba(255, 159, 64, 1)",
+            1.2
         );
 
         // Create Cumulative Fitness Chart
@@ -269,6 +275,7 @@
             "Cumulative Fitness",
             Wcuml,
             "rgba(255, 206, 86, 1)",
+            20
         );
 
         traitChartInstance = makeChart(
@@ -276,6 +283,7 @@
             "Trait Value",
             Vhist,
             "rgba(210, 155, 90, 1)",
+            2.5
         )
     }
 </script>
