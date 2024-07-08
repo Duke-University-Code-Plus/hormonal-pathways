@@ -23,6 +23,8 @@ var dirt;
 //spritesheets
 var tile_sprite_sheet;
 var malebird_fly_spritesheet;
+var malebird_food_fly_spritesheet;
+var femalebird_fly_spritesheet;
 
 //frames
 var time = 0; 
@@ -37,7 +39,10 @@ var caughtPrey = false;
 var mortalityCheckbox; 
 var mortalityCondition = false; 
 var imagePath = '/sprites_haruta/';
-var foodAvailability = 3; 
+var foodAvailability; 
+var shortageSlider; 
+var matingCheckbox; 
+var matingCondition = false; 
 
 //load JSON files and Spritesheets 
 function preload() {
@@ -50,6 +55,11 @@ function preload() {
   loadJSON(imagePath + 'malebird_food_fly.json', function(malebird_food_fly_frames) {
     // Load tiles sprite sheet from frames array once frames array is ready
     malebird_food_fly_spritesheet = loadSpriteSheet(imagePath + 'malebird_food_fly_spritesheet.png', malebird_food_fly_frames);
+  });
+
+  loadJSON(imagePath + 'femalebird_fly.json', function(femalebird_fly_frames) {
+    // Load tiles sprite sheet from frames array once frames array is ready
+    femalebird_fly_spritesheet = loadSpriteSheet(imagePath + 'femalebird_fly_spritesheet.png', femalebird_fly_frames);
   });
 
   // Load the json for the tiles sprite sheet
@@ -72,7 +82,7 @@ function draw() {
   background(135, 206, 250);
 
   time = millis();  
-  
+  updateInputs();
   //bird trait 
   if (player_sprite.velocity.x > 0) {
     player_sprite.mirrorX(-1);
@@ -92,6 +102,9 @@ function draw() {
     }
     birdScavenge(); 
   }
+  else if (matingCondition) { 
+
+  }
   //bird animation in death
   else if (mortalityCondition) { 
     if (predator == null)
@@ -109,16 +122,26 @@ function draw() {
 //create inputs
 function createInputs() {
   foodCheckbox = createCheckbox("Scavenge Food", false); 
-  foodCheckbox.position(100, 0); 
+  foodCheckbox.position(0, 0); 
   foodCheckbox.changed(() => {
     foodCondition = true; 
   });
 
   mortalityCheckbox = createCheckbox("End Simulation", false); 
-  mortalityCheckbox.position(100, 30); 
+  mortalityCheckbox.position(0, 30); 
   mortalityCheckbox.changed(() => {
     mortalityCondition = true; 
   });
+
+  matingCheckbox = createCheckbox("Mating Behavior", false); 
+  matingCheckbox.position(0, 60); 
+  matingCheckbox.changed(() => {
+    matingCondition = true; 
+  });
+  
+  shortageSlider = createSlider(0, 10, 5, 0);
+  shortageSlider.position(10, 90);
+  shortageSlider.size(80);
 }
 
 // create environment  
@@ -170,6 +193,10 @@ function createAnimals() {
   player_sprite.scale = 0.15; 
 }
 
+function updateInputs() {
+  text(floor(shortageSlider.value()), 100, 100);
+}
+
 function createPredator() { 
   //create predator sprite and add animation
   var predatorLocation = random(["left", "top", "right"]); 
@@ -188,6 +215,32 @@ function createPredator() {
     predatorY = 0 - 64;
   }
   predator = createSprite(predatorX, predatorY);
+  predator.addAnimation('normal', imagePath + 'cloud_breathing0001.png', imagePath + 'cloud_breathing0002.png');
+  predator.attractionPoint (0.1, player_sprite.position.x,  player_sprite.position.y);
+  predator.debug = true;
+  predator.friction = 0.1;
+  predator.depth = 25;
+  predator.scale = 0.5; 
+}
+
+function creatFemalebird() { 
+  //create predator sprite and add animation
+  var femalebirdLocation = random(["left", "top", "right"]); 
+  var femalebirdX; 
+  var femalebirdY;
+  if (femalebirdLocation == "left") { 
+    femalebirdX = 0 - 64; 
+    femalebirdY = random(0, height / 4);
+  }
+  else if (femalebirdLocation == "right") { 
+    femalebirdX = width + 64; 
+    femalebirdY = random(0, height / 4);
+  }
+  else {
+    femalebirdX = random(0, width); 
+    femalebirdY = 0 - 64;
+  }
+  predator = createSprite(femalebirdX, femalebirdY);
   predator.addAnimation('normal', imagePath + 'cloud_breathing0001.png', imagePath + 'cloud_breathing0002.png');
   predator.attractionPoint (0.1, player_sprite.position.x,  player_sprite.position.y);
   predator.debug = true;
@@ -258,6 +311,7 @@ function birdScavenge() {
 
   //scavenge
   if (groundHeight && !caughtPrey) { 
+    foodAvailability = floor(shortageSlider.value()); 
     if (scavengeFrameCount <= peckFrameCycle * foodAvailability + peckFrameCycle / 2) { 
       player_sprite.changeAnimation('peck');
     }
@@ -289,9 +343,9 @@ function birdScavenge() {
   //enter nest
   if (nestVicinity && caughtPrey) {
     if (searchDirection == "left") 
-      player_sprite.velocity.x = 0.5; 
+      player_sprite.velocity.x = 0.75; 
     if (searchDirection == "right") 
-      player_sprite.velocity.x = -0.5; 
+      player_sprite.velocity.x = -0.75; 
     player_sprite.velocity.x /= 2; 
     player_sprite.velocity.y = 1; 
     player_sprite.attractionPoint(0.1, nest.position.x, nest.position.y);
@@ -312,47 +366,10 @@ function birdScavenge() {
       player_sprite.changeAnimation('peck');
     }
     else { 
+      scavengeFrameCount = 0; 
       caughtPrey = false; 
+      scavengeChange = false; 
       foodCondition = false; 
     }
   }
 }
-
-// function catchPrey() {
-//   var counter = preys.length - 1;
-//   var deadPrey = false; 
-//   while (counter >= 0 && deadPrey == false) { 
-//     if (preys[counter].overlap(player_sprite)) { 
-//       preys[counter].changeAnimation('dead');
-//       caughtPrey = preys[counter]; 
-//       preys.remove(caughtPrey);
-//       deadPrey = true; 
-//     }
-//     counter--; 
-//   }
-// }
-/*
-// food shortage code
-  //slider for food
-  foodSlider = createSlider(0, 15, 5, 0);
-  foodSlider.position(10, 10);
-  foodSlider.size(80);
-
-  //display inputs
-function displayInputs() { 
-  //slider for food
-  text(floor(foodSlider.value()), 100, 15);
-}
-  
-function updateInputs() { 
-  //slider for food
-  foodSliderCurrent = foodSlider.value();
-  if (foodSliderCurrent != foodSliderSet) { 
-    foodSliderSet = foodSliderCurrent; 
-    foodSliderChange = true; 
-  }
-  else { 
-    foodSliderChange = false; 
-  }
-}
-*/
