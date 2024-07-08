@@ -330,7 +330,7 @@
             />
 
             <SliderInput
-                id="Selection against effort in each trait k (γₖ, ₜ)"
+                id="Selection against effort in trait k (γₖ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"

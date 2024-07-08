@@ -437,7 +437,7 @@ const SenseChartoptions = [
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Selection against effort in each trait i (γᵢ, ₜ)"
+                id="Selection against effort in trait i (γᵢ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -446,7 +446,7 @@ const SenseChartoptions = [
             />
 
             <SliderInput
-                id="Selection against effort in each trait j (γⱼ, ₜ)"
+                id="Selection against effort in trait j (γⱼ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -455,7 +455,7 @@ const SenseChartoptions = [
             />
 
             <SliderInput
-                id="Selection against effort in each trait k (γₖ, ₜ)"
+                id="Selection against effort in trait k (γₖ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
