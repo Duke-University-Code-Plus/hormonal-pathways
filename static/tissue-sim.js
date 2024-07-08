@@ -9,6 +9,7 @@ var cell;
 var inv1;
 var inv2;
 var dna_strand, midDNA, leftDNA, rightDNA;
+const particles = [];
 
 function setup() {
     createCanvas(960, 672);
@@ -35,6 +36,7 @@ function setup() {
     circles = new Group();
     boxes = new Group();
     proteins = new Group();
+    particle = new Group();
 
     function sliderchange() {
         console.log(slider.value())
@@ -88,6 +90,9 @@ function draw() {
     // Circles bounce against each other
     circles.bounce(circles);
 
+
+    //circles.bounce(inv1);
+
     // Circles absorb boxes
     circles.overlap(boxes, absorb);
 
@@ -114,6 +119,19 @@ function draw() {
     }
 
     drawSprites();
+
+
+     // Draw and update particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].show();
+        if (particles[i].finished()) {
+            particles.splice(i, 1);
+        }
+    }
+
+
+   
 }
 
 function absorb(circle, box) {
@@ -124,17 +142,19 @@ function absorb(circle, box) {
     if (circle != box.circle) {
         return
     }
-
+    
     circle.attractionPoint(15, box.position.x, box.position.y - 20);
     circle.maxSpeed = 5;
+    
     circle.absorbed = true;
     box.absorbed = true;
 
-    toDNA(box)
+
+    toDNA(box,circle)
 
 }
 
-function toDNA(box) {
+function toDNA(box,circle) {
     if (!dna_strand) {
         console.error('DNA strand is not defined');
         return;
@@ -144,7 +164,7 @@ function toDNA(box) {
         box.framesAtDNA = 0;
     }
 
-    if (box.framesAtDNA < 100) {
+    if (box.framesAtDNA < 30) {
         if (box.dnaPos == null) {
             let coors = findDNACoors();
             if (coors != null) {
@@ -165,23 +185,62 @@ function toDNA(box) {
         if (xDiff <= 3 && yDiff <= 3) {
             box.framesAtDNA++;
         }
-    } else {
-        box.velocity.y = -5; // Move the receptor up
-        box.velocity.x = 0;
-        x = box.dnaPos[0];
-        y = box.dnaPos[1];
-        if(x = midDNA.pos.x && y == midDNA.pos.y){
-            midDNA.full = false;
-        }
-        else if(x = leftDNA.pos.x && y == leftDNA.pos.y){
-            leftDNA.full = false;
-        } 
-        else if(x = rightDNA.pos.x && y == rightDNA.pos.y){
-            rightDNA.full = false;
-        } 
+     } else {
+        
+    //     createrna(box.position.x, box.position.y);
+    box.velocity.y = -12; // Move the receptor up
+    box.velocity.x = 0;
 
+    // Generate particles
+    for (let i = 0; i < 100; i++) {
+        let p = new Particle(box.position.x, box.position.y);
+        particles.push(p);
+    }
+
+    // Reset DNA coordinates
+  
+    resetDNACoors(box.dnaPos);
+ 
+    box.remove();
+
+    circle.remove();
+    
+
+    console.log("Particles created at:", box.position.x, box.position.y); // Debug log
+    console.log("Number of particles:", particles.length); 
+
+
+     }
+    //      if (circle.overlap(inv2)) {
+    //          circle.velocity(0,0);
+
+
+    //      };
+    
+
+
+    // function createrna() {
+    //         var circle = createSprite(box.position.x,box.position.y);
+    //         circle.addImage(hormone);
+    //         circle.setSpeed(5, 270);
+            
+    //     }
+
+}
+
+
+function resetDNACoors(coors) {
+   if(coors[0] == midDNA.pos.x && coors[1] == midDNA.pos.y){
+        midDNA.full = false;
+    } else if(coors[0] == leftDNA.pos.x && coors[1] == leftDNA.pos.y){
+        leftDNA.full = false;
+     } else if(coors[0] == rightDNA.pos.x && coors[1] == rightDNA.pos.y){
+        rightDNA.full = false;
     }
 }
+
+
+
 
 function findDNACoors() {
     // console.log('midDNA:', midDNA);
@@ -349,6 +408,7 @@ function invisibleSprites() {
     inv1.draw = function () { ellipse(10, 672, 30, 30) }
     inv1.setCollider('circle', 10, 672, 500);
     inv1.visible = false;
+    inv1.immovable = true; 
 
 
 }
@@ -361,4 +421,33 @@ function checkReceptorLocation(box) {
 
 
     return withinCell && !inNucleus;
+}
+
+
+class Particle {
+
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = random(-1, 1);
+        this.vy = random(-8, 0);
+        this.alpha = 255;
+    }
+
+    finished() {
+        return this.alpha < 0;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= 3;
+    }
+
+    show() {
+        noStroke();
+        fill(355, 100, 0 ,this.alpha);
+        ellipse(this.x, this.y, 16);
+    }
+
 }
