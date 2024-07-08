@@ -50,6 +50,7 @@
     let ShistConI = [];
     let ShistConJ = [];
     let ShistConK = [];
+    let ShistTemp = [];
     let ChosenTrait = 'I';
     
     let gamma = [$gamma1, $gamma2, $gamma3];
@@ -279,7 +280,7 @@
                     type: "line",
                     data: {
                         labels: Array.from(
-                            { length: Shist[0].length },
+                            { length: Shis[0].length },
                             (_, i) => i,
                         ),
                         datasets: createSensitivityDatasets(Shist, "Sensitivity"),
@@ -332,34 +333,34 @@
             },
         );
     }
-    function switchSensitivityGraphs(ChosenTrait){
-        if (sensitivityChartInstance) sensitivityChartInstance.destroy();
-        if(ChosenTrait = 'I'){
-            Shist = ShistI
-        }
-        else if(ChosenTrait = 'J'){
-            Shist = ShistJ
-        }
-        else{
-            Shist = ShistK
-        }
-        sensitivityChartInstance = new Chart(
-            document.getElementById("sensitivityChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from(
-                        { length: Shist.length },
-                        (_, i) => i,
-                    ),
-                    datasets: createDatasets(Shist, "Sensitivity"),
-                },
-                lineTension: .5,
-                options: chartOptions,
-            },
-        );
+    
+    function switchSensitivityGraphs(ChosenTrait) {
+    if (sensitivityChartInstance) sensitivityChartInstance.destroy();
 
+    if (ChosenTrait === 'I') {
+        ShistTemp = ShistI;
+    } else if (ChosenTrait === 'J') {
+        ShistTemp = ShistJ;
+    } else {
+        ShistTemp = ShistK;
     }
+
+    sensitivityChartInstance = new Chart(
+        document.getElementById("sensitivityChart"),
+        {
+            type: "line",
+            data: {
+                labels: Array.from(
+                    { length: ShistTemp.length },
+                    (_, i) => i
+                ),
+                datasets: createDatasets(ShistTemp, "Sensitivity"),
+            },
+            lineTension: 0.5,
+            options: chartOptions,
+        }
+    );
+}
     function handleDropdownChange() {
         if ($variableName === "Choose a Variable") {
             document
@@ -414,11 +415,11 @@
     }
 
 
-    const SenseChartoptions = [
-        { value: 'I', label: 'Trait I' },
-        { value: 'J', label: 'Trait J' },
-        { value: 'K', label: 'Trait K' }
-    ];
+const SenseChartoptions = [
+    { value: 'I', label: 'Trait I' },
+    { value: 'J', label: 'Trait J' },
+    { value: 'K', label: 'Trait K' }
+];
 </script>
 
 <NavBar multiPage="Multi" />
@@ -700,8 +701,11 @@
     <!-- To change options refer to the senseChartoptions Variable-->
     <Dropdown
     bind:ValueToChange={ChosenTrait}
-    optionList = {SenseChartoptions}
-    changeFunction={handleDropdownChange,switchSensitivityGraphs}
+    optionList={SenseChartoptions}
+    changeFunction={(event) => {
+        handleDropdownChange(event);
+        switchSensitivityGraphs(event.target.value);
+    }}
     showValidationMessage = {$showValidationMessage}
     messageForValidation = "Please select a Trait For the SensitivityGraph"
     />
