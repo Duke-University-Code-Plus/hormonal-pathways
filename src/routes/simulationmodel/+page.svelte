@@ -147,8 +147,8 @@
             render.push({x: i, y: y[i]});
         }
         //ratio for sensitvity graphs is ? 1 : 32.78
-        //const totalDuration = 2800;
-        const totalDuration = canvas == 'sensitivityChart' ? 122 : 4000;
+        const totalDuration = 2800;
+        //const totalDuration = canvas == 'sensitivityChart' ? 122 : 4000;
         const delayBetweenPoints = totalDuration / render.length;
 
         const previousY = (ctx) => ctx.index === 0 
@@ -243,22 +243,22 @@
         // );
 
         // Create Sensitivity Chart
-        // sensitivityChartInstance = makeChart(
-        //     "sensitivityChart",
-        //     "Sensitivity",
-        //     Shist,
-        //     "rgba(255, 99, 132, 1)",
-        //     2.5
-        // );
+        sensitivityChartInstance = makeChart(
+            "sensitivityChart",
+            "Sensitivity",
+            Shist,
+            "rgba(255, 99, 132, 1)",
+            2.5
+        );
 
         // Create Production Chart
-        // productionChartInstance = makeChart(
-        //     "productionChart",
-        //     "Production",
-        //     Chist,
-        //     "rgba(153, 102, 255, 1)",
-        //     10
-        // );
+        productionChartInstance = makeChart(
+            "productionChart",
+            "Production",
+            Chist,
+            "rgba(153, 102, 255, 1)",
+            10
+        );
 
         // Create Fitness Chart
         // fitnessChartInstance = makeChart(
@@ -308,6 +308,7 @@
     >
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
+            <!--
             <SliderInput
                 id="Selection against effort in trait i (γᵢ, ₜ)"
                 min="0"
@@ -325,7 +326,7 @@
                 bind:inputVar={$gamma2}
                 modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the second trait."
             />
-            <!--
+        
             <SliderInput
                 id="Selection against effort in each trait k (γₖ, ₜ)"
                 min="0"
@@ -338,6 +339,7 @@
 
         <!-- Container for Z sliders-->
         <div class="flex flex-wrap justify-center w-full">
+            <!--
             <SliderInput
                 id="Weight of first trait (zᵢ)" 
                 min="0"
@@ -355,7 +357,7 @@
                 bind:inputVar={$z2}
                 modalMessage="The weight of the second trait in the role of the fitness function."
             />
-            <!--
+            
             <SliderInput
                 id="Weight of third trait (zₖ)"
                 min="0"
@@ -485,7 +487,7 @@
             modalMessage="A constant used by the Michaelis-Menten Equation. Equal across all tissues."
             bind:inputVar={$K}
         />
-        -->
+        
 
         <FormInput
             id="First parameter of beta distribution (A)"
@@ -506,9 +508,8 @@
             modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
             bind:inputVar={$beta}
         />
-
-        <!--input for mu-->
-        <!--
+        -->
+        <!--input for mu
         <FormInput
             id="Mu"
             inputType="number"
@@ -517,9 +518,7 @@
             step="0.001"
             bind:inputVar={$mu}
          />
-         -->
 
-        <!--
          <FormInput
             id="Z"
             inputType="text"
@@ -588,6 +587,7 @@
         </h2>
         <canvas id="bodyConditionChart"></canvas>
     </div>
+    -->
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -600,6 +600,7 @@
         <h2 class="text-center text-xl font-semibold mb-4">Circulating Level Of Hormone </h2>
         <canvas id="productionChart"></canvas>
     </div>
+    <!--
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
