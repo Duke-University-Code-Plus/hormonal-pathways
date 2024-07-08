@@ -26,14 +26,14 @@
         foodShort,
         foodShortbegin,
         foodShortend
-    } from "../data_store.js";
+    } from "../data2_store.js";
 
     let Xhist = [];
     let Shist = [];
     let Chist = [];
     let Whist = [];
     let Wcuml = [];
-    let Vhist = [];
+    //let Vhist = [];
 
     let gamma = [$gamma1, $gamma2, $gamma3];
     let z = [$z1, $z2, $z3];
@@ -43,7 +43,7 @@
     let productionChartInstance = null;
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
-    let traitChartInstance = null;
+    //let traitChartInstance = null;
 
     const apiEndpoint = "http://127.0.0.1:5000"
     //const apiEndpoint = "https://hormonal-pathways-api-a4dcfa854663.herokuapp.com";
@@ -86,7 +86,7 @@
             Chist = data.Chist;
             Whist = data.Whist;
             Wcuml = data.Wcuml;
-            Vhist = data.Vhist;
+            //Vhist = data.Vhist;
 
             createCharts();
         } catch (error) {
@@ -231,7 +231,7 @@
         if (fitnessChartInstance) fitnessChartInstance.destroy();
         if (cumulativeFitnessChartInstance)
             cumulativeFitnessChartInstance.destroy();
-        if (traitChartInstance) traitChartInstance.destroy();
+        //if (traitChartInstance) traitChartInstance.destroy();
 
         // Create Body Condition Chart
         bodyConditionChartInstance = makeChart(
@@ -278,13 +278,13 @@
             20
         );
 
-        traitChartInstance = makeChart(
-            "traitChart",
-            "Trait Value",
-            Vhist,
-            "rgba(210, 155, 90, 1)",
-            2.5
-        )
+        // traitChartInstance = makeChart(
+        //     "traitChart",
+        //     "Trait Value",
+        //     Vhist,
+        //     "rgba(210, 155, 90, 1)",
+        //     2.5
+        // )
     }
 </script>
 
