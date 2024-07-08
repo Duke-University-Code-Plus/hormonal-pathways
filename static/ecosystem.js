@@ -1,10 +1,12 @@
 //animals
 var predator;
 var player_sprite;
+var femalebird; 
 
 //animation
 var peck; 
 var food_peck;
+var sing; 
 
 //scavenge 
 var searchDirection; 
@@ -14,22 +16,31 @@ var preyLocation;
 var groundHeight;
 var nestVicinity;
 var effcientScavenge; 
+var matesVicinity; 
 
 //environment
 var nest; 
 var trunk; 
 var dirt; 
+var loveImage;
+var love; 
 
 //spritesheets
 var tile_sprite_sheet;
 var malebird_fly_spritesheet;
 var malebird_food_fly_spritesheet;
+var malebird_sing_spritesheet; 
 var femalebird_fly_spritesheet;
 
 //frames
 var time = 0; 
 var scavengeFrameCount = 0; 
 var peckFrameCycle; 
+var singFrameCycle; 
+var singFrameCount = 0; 
+var fade = 0; 
+var fadeCondition = true; 
+var fadeComplete = false; 
 
 //inputs
 var foodCheckbox; 
@@ -57,6 +68,11 @@ function preload() {
     malebird_food_fly_spritesheet = loadSpriteSheet(imagePath + 'malebird_food_fly_spritesheet.png', malebird_food_fly_frames);
   });
 
+  loadJSON(imagePath + 'malebird_sing.json', function(malebird_sing_frames) {
+    // Load tiles sprite sheet from frames array once frames array is ready
+    malebird_sing_spritesheet = loadSpriteSheet(imagePath + 'malebird_sing_spritesheet.png', malebird_sing_frames);
+  });
+
   loadJSON(imagePath + 'femalebird_fly.json', function(femalebird_fly_frames) {
     // Load tiles sprite sheet from frames array once frames array is ready
     femalebird_fly_spritesheet = loadSpriteSheet(imagePath + 'femalebird_fly_spritesheet.png', femalebird_fly_frames);
@@ -67,6 +83,7 @@ function preload() {
     // Load tiles sprite sheet from frames array once frames array is ready
     tile_sprite_sheet = loadSpriteSheet(imagePath + 'tiles_spritesheet.png', tile_frames);
   });
+  loveImage = loadImage(imagePath + 'hearts.png');
 }
 
 //load sprites 
@@ -84,12 +101,11 @@ function draw() {
   time = millis();  
   updateInputs();
   //bird trait 
-  if (player_sprite.velocity.x > 0) {
+  if (player_sprite.velocity.x > 0) 
     player_sprite.mirrorX(-1);
-  }
-  if (player_sprite.velocity.x < 0) {
+  if (player_sprite.velocity.x < 0) 
     player_sprite.mirrorX(1);
-  }
+
   //bird animation to scavenge
   if (foodCondition) { 
     if (!scavengeChange) { 
@@ -103,7 +119,10 @@ function draw() {
     birdScavenge(); 
   }
   else if (matingCondition) { 
-
+    if (femalebird == null)
+      createFemalebird();
+    femalebirdMovement()
+    birdMate();
   }
   //bird animation in death
   else if (mortalityCondition) { 
@@ -172,19 +191,24 @@ function createEnvironment() {
 function createAnimals() {
   malebird_fly = loadAnimation(malebird_fly_spritesheet);
   malebird_food_fly = loadAnimation(malebird_food_fly_spritesheet);
-
+  malebird_sing = loadAnimation(malebird_sing_spritesheet);
+  femalebird_fly = loadAnimation(femalebird_fly_spritesheet);
+  
   //create player sprite and add animations
   player_sprite = createSprite(width / 2 + 100, 160);
   player_sprite.addAnimation('walk', malebird_fly);
   player_sprite.addAnimation('stand', imagePath + 'malebird_stand.png');
   player_sprite.addAnimation('food_walk', malebird_food_fly);
+  sing = player_sprite.addAnimation('sing', malebird_sing);
   peck = player_sprite.addAnimation('peck', imagePath + 'malebird_peck0001.png', imagePath + 'malebird_peck0002.png');
   player_sprite.addAnimation('transformed', imagePath + 'malebird_death.png');
   food_peck = player_sprite.addAnimation('peck_food', imagePath + 'malebird_food_peck0001.png', imagePath + 'malebird_food_peck0002.png');
 
   peckFrameCycle = 20; 
+  singFrameCycle = 60; 
   peck.frameDelay = peckFrameCycle / 2;
   food_peck.frameDelay = peckFrameCycle / 2; 
+  sing.frameDelay = singFrameCycle / 4; 
   // create collider for player 
   player_sprite.setCollider('circle', 0, 0, 150);
   player_sprite.debug = false;
@@ -217,15 +241,16 @@ function createPredator() {
   predator = createSprite(predatorX, predatorY);
   predator.addAnimation('normal', imagePath + 'cloud_breathing0001.png', imagePath + 'cloud_breathing0002.png');
   predator.attractionPoint (0.1, player_sprite.position.x,  player_sprite.position.y);
-  predator.debug = true;
+  predator.debug = false;
   predator.friction = 0.1;
   predator.depth = 25;
   predator.scale = 0.5; 
 }
 
-function creatFemalebird() { 
+function createFemalebird() { 
   //create predator sprite and add animation
-  var femalebirdLocation = random(["left", "top", "right"]); 
+  var femalebirdLocation = random(["left", "right"]); 
+
   var femalebirdX; 
   var femalebirdY;
   if (femalebirdLocation == "left") { 
@@ -236,19 +261,89 @@ function creatFemalebird() {
     femalebirdX = width + 64; 
     femalebirdY = random(0, height / 4);
   }
-  else {
-    femalebirdX = random(0, width); 
-    femalebirdY = 0 - 64;
-  }
-  predator = createSprite(femalebirdX, femalebirdY);
-  predator.addAnimation('normal', imagePath + 'cloud_breathing0001.png', imagePath + 'cloud_breathing0002.png');
-  predator.attractionPoint (0.1, player_sprite.position.x,  player_sprite.position.y);
-  predator.debug = true;
-  predator.friction = 0.1;
-  predator.depth = 25;
-  predator.scale = 0.5; 
+  femalebird = createSprite(femalebirdX, femalebirdY);
+  femalebird.addAnimation('normal', femalebird_fly);
+  femalebird.addAnimation('stand', imagePath + 'femalebird_stand.png');
+  femalebird.debug = false;
+  femalebird.friction = 0.1;
+  femalebird.depth = 20;
+  femalebird.scale = 0.15; 
 }
 
+function femalebirdMovement() { 
+  if (femalebird.velocity.x > 0) 
+    femalebird.mirrorX(-1);
+  if (femalebird.velocity.x < 0) 
+    femalebird.mirrorX(1);
+  femalebird.attractionPoint (0.1, player_sprite.position.x,  player_sprite.position.y + player_sprite.originalHeight / 2);
+}
+
+function createLove() { 
+  midpointX = abs(femalebird.position.x - player_sprite.position.x) / 2; 
+  midpointY = abs(femalebird.position.y - player_sprite.position.y) / 2; 
+  if (femalebird.position.x > player_sprite.position.x)
+    love = createSprite(player_sprite.position.x + midpointX, femalebird.position.y + midpointY);
+  else 
+    love = createSprite(femalebird.position.x + midpointX, femalebird.position.y + midpointY);
+  love.addImage('normal' ,loveImage);
+  love.scale = 0.15;
+  love.depth = 25; 
+  love.tint = color(255, 255, 255, fade);
+}
+
+function fadeLove() { 
+  if (fadeCondition) { 
+    fade++; 
+    if (fade >= 255) { 
+      fade = 255; 
+      fadeCondition = false;
+    }
+  }
+  else {
+    fade--;
+    if (fade <=0) { 
+      fade = 0; 
+      fadeCondition = true; 
+      fadeComplete = true; 
+    }
+  }
+  love.tint = color(255, 255, 255, fade);
+}
+
+function birdMate(){  
+  if (1.5 * nest.originalWidth > abs(femalebird.position.x - player_sprite.position.x)
+  && abs(femalebird.position.y - player_sprite.position.y) < player_sprite.originalHeight / 4) 
+    matesVicinity = true; 
+  else 
+    matesVicinity = false; 
+
+  if (matesVicinity) { 
+    player_sprite.changeAnimation('sing');
+    singFrameCount++;  
+    femalebird.changeAnimation('stand'); 
+    femalebird.velocity.x = 0;
+    femalebird.velocity.y = 0;
+  }
+  if (singFrameCount >= singFrameCycle * 1) {
+    player_sprite.changeAnimation('stand'); 
+    if (love == null)  
+      createLove();
+    else if (!fadeComplete) 
+      fadeLove();
+    else 
+      createBabybird(); 
+  }
+}
+
+function createBabybird() { 
+  femalebird = createSprite(nest.position.x, nest.position.y);
+  femalebird.addAnimation('normal', femalebird_fly);
+  femalebird.addAnimation('stand', imagePath + 'femalebird_stand.png');
+  femalebird.debug = false;
+  femalebird.friction = 0.1;
+  femalebird.depth = 20;
+  femalebird.scale = 0.1; 
+}
 function predatorMovement() { 
   //accounts for predator 
   predator.attractionPoint (0.1, player_sprite.position.x,  player_sprite.position.y);
@@ -353,7 +448,7 @@ function birdScavenge() {
     }
 
   //feed
-  if (nestVicinity && player_sprite.position.y >= nest.position.y - nest.originalWidth / 4
+  if (nestVicinity && player_sprite.position.y >= nest.position.y - 30
     && caughtPrey) {
 
     scavengeFrameCount++; 
