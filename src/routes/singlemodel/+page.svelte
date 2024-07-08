@@ -102,10 +102,13 @@
         if (is2dArray(y)) {
             let chartDatasets = [];
             for (let i = 0; i < y.length; i++) {
+                let r = 255 / i;
+                let g = 99 / i;
+                let b = 132 / i;
                 let data = {
                     label: title + " " + i,
                     data: y[i],
-                    borderColor: rgba(255/i, 99/i, 132/i, 1),
+                    borderColor: "rgba(" + r + ", " + g + ", " + b + ", 1)",
                     radius: 0,
                     borderWidth: 1,
                     fill: false,
