@@ -147,8 +147,8 @@
             render.push({x: i, y: y[i]});
         }
         //ratio for sensitvity graphs is ? 1 : 32.78
-        const totalDuration = 2800;
-        //const totalDuration = canvas == 'sensitivityChart' ? 122 : 4000;
+        //const totalDuration = 2800;
+        const totalDuration = canvas == 'sensitivityChart' || canvas == 'traitChart' ? 122 : 4000;
         const delayBetweenPoints = totalDuration / render.length;
 
         const previousY = (ctx) => ctx.index === 0 
