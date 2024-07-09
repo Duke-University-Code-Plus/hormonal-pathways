@@ -250,7 +250,7 @@ function updateCircles() {
         let circle = circles[i];
         if (!circle.enteredScreen && circle.overlap(inv2)) {
             circle.enteredScreen = true;
-            circle.setSpeed(random(2, 3), random(0, 360)); // Change to random movement
+            //circle.setSpeed(random(2, 3), random(0, 360)); // Change to random movement
         }
         if (circle.enteredScreen && !circle.leaving) {
             keepWithinCell(circle);
@@ -266,22 +266,19 @@ function updateCircles() {
 }
 
 function keepWithinCell(circle) {
-    // Check if within cell (inv2) but not in nucleus (inv1)
-    let withinCell = circle.overlap(inv3);
-    let inNucleus = circle.overlap(inv1);
-
-    if ((!withinCell || inNucleus) && !circle.leaving) {
-        // Reverse direction if it tries to leave the cell or enter the nucleus
-        circle.velocity.x = -circle.velocity.x;
-        circle.velocity.y = -circle.velocity.y;
+    if (nucleus.overlapPixel(circle.position.x, circle.position.y) || outer.overlapPixel(circle.position.x, circle.position.y)) {
+        // Reverse the velocity
+        circle.velocity.y = -circle.velocity.y
+        circle.velocity.x = -circle.velocity.x
     }
+
 }
 
 function circleLeaveScreen(circle) {
     circle.velocity.y += 0.02;
 
     if (circle.position.x < 0 || circle.position.y < 0 || circle.position.y > height) {
-        circle.remove(); 
+        circle.remove();
     }
 
 }
