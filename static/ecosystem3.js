@@ -12,21 +12,23 @@ let branch2Animation;
 let branch3Animation;
 
 var bird1_matingx = 200
-var bird1_matingy = 200
+var bird1_matingy = 250
 
-var bird2_matingx = 600
-var bird2_matingy = 500
+var bird2_matingx = 800
+var bird2_matingy = 470
 
 var bird3_matingx = 300
-var bird3_matingy= 800;
+var bird3_matingy= 850;
+var mating_slider;
+var parent_slider;
 
-var gamma_slider;
+var imagePath = 'eco-pics/'
 
 function preload() {
 
   // Tree
   branch = createSprite(300, 700, 50, 100);
-  branchAnimation = branch.addAnimation('tree', 'eco-pics/branch0001.png');
+  branchAnimation = branch.addAnimation('tree', imagePath + 'branch0001.png');
 
   branch2 = createSprite(250, 200, 50, 100);
   branch2Animation = branch2.addAnimation('tree', 'eco-pics/branch0002.png');
@@ -55,10 +57,14 @@ function preload() {
 
 function setup() {
   // Create the slider 
-  gamma_slider = createSlider(0, 1, 0.1, 0.1); 
-      
+  mating_slider = createSlider(0, 1, 0.1, 0.1); 
   // Set the position of slider on the canvas 
-  gamma_slider.position(850, 20); 
+  mating_slider.position(850, 20); 
+
+  // Create the slider 
+  parent_slider = createSlider(0, 1, 0.1, 0.1); 
+  // Set the position of slider on the canvas 
+  parent_slider.position(850, 40); 
 
   createCanvas(1000, 1000);
   bird.setSpeed(speed, 0);
@@ -85,6 +91,12 @@ function setup() {
 }
 
 function draw() {
+  if (mating_slider.value() / parent_slider.value() > 1) {
+    mating = true;
+  } else {
+    mating = false;
+  }
+
   background(134, 210, 235);
 
   //Turn around at edges of canvas
@@ -140,20 +152,22 @@ function birdMoveToTree() {
     } else {
       bird.mirrorX(1);
     }
+
     if (bird2.position.x > bird2_matingx) {
       bird2.mirrorX(-1);
     } else {
       bird2.mirrorX(1);
     }
 
-
     if (bird3.position.x > bird3_matingx) {
       bird3.mirrorX(-1);
     } else {
       bird3.mirrorX(1);
     }
+
+
     bird.attractionPoint(0.8, bird1_matingx, bird1_matingy)
-    bird.limitSpeed(5);
+    bird.limitSpeed(2);
 
     bird2.attractionPoint(0.8, bird2_matingx, bird2_matingy)
     bird2.limitSpeed(2);
@@ -161,13 +175,6 @@ function birdMoveToTree() {
     bird3.attractionPoint(0.8, bird3_matingx, bird3_matingy)
     bird3.limitSpeed(2);
 
-
-    if (bird.overlap(branch) ) {
-      bird.changeAnimation('singing');
-      bird2.mirrorX(1);
-      bird2.attractionPoint(0.8, width/2 - 200, height/2)
-    }
-    
   }
 }
 
