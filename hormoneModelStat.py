@@ -2,7 +2,6 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 import json
-import pandas as pd
 
 def hormoneModelStatRun(gammaIn: np.array = np.array([.1, 2, .3]), 
                 GIn: float = 0.1, XminIn: float = 1, delSmaxIn: float = 1,
