@@ -34,6 +34,7 @@
         showValidationMessage,
         statRun
     } from "../data3_store.js";
+    import {apiEndpoint} from "../state_store"
 
     let Xhist = [];
     let Shist = [];
@@ -62,10 +63,6 @@
     let productionChartInstance = null;
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
-
-    const apiEndpoint = "http://127.0.0.1:5000"
-    //const apiEndpoint =
-    //    "https://hormonal-pathways-api-a4dcfa854663.herokuapp.com";
 
     //state
     let initialRun = false;
@@ -123,12 +120,12 @@
             // change query given which model you want to use
             if($statRun){
                  response = await axios.get(
-                `${apiEndpoint}/statModel?${queryString}`,
+                `${$apiEndpoint}/statModel?${queryString}`,
                  );
             }
             else{
                 response = await axios.get(
-                    `${apiEndpoint}/multihormonemodel?${queryString}`,
+                    `${$apiEndpoint}/multihormonemodel?${queryString}`,
                 );
             }
 
