@@ -34,7 +34,7 @@
         showValidationMessage,
         statRun
     } from "../data3_store.js";
-    import {apiEndpoint} from "../state_store"
+    import {apiEndpoint} from "../state_store.js"
 
     let Xhist = [];
     let Shist = [];
