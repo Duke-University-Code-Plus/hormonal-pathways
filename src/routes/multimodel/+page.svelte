@@ -52,6 +52,7 @@
     let ShistConK = [];
     let ShistTemp = [];
     let ChosenTrait = 'I';
+    let maxValue = 0;
     
     let gamma = [$gamma1, $gamma2, $gamma3];
     let z = [$z1, $z2, $z3]
@@ -160,6 +161,18 @@
             console.error("Error fetching data:", error);
         }
     }
+
+    // if (canvas == bodyConditionChart || canvas == sensitivityChart) {
+    //     maxValue = 10
+    // } else if (canvas == cumulativeFitnessChart) {
+    //     maxValue = 50
+    // } else if (canvas == productionChart) {
+    //     maxValue = 20
+    // } else {
+    //     maxValue = 5
+    // };
+
+
     // definechartOptions to higher scope
     const chartOptions = {
             plugins: {
@@ -171,10 +184,12 @@
                 x: {
                     beginAtZero: true,
                     title: { display: true, text: "Reproductive Cycle" },
+                    max: $N,
                 },
                 y: {
                     beginAtZero: true,
                     title: { display: true, text: "y label" },
+                    //max: maxValue
                 },
             },
         };
@@ -512,6 +527,7 @@ const SenseChartoptions = [
                 max={$foodShortend}
                 step="1"
                 bind:inputVar={$foodShortbegin}
+                modalMessage="Reproductive cycle when the food shortage begins"
             />
 
             <SliderInput
@@ -520,13 +536,14 @@ const SenseChartoptions = [
                 max={$N}
                 step="1"
                 bind:inputVar={$foodShortend}
+                modalMessage="Reproductive cycle when the food shortage ends"
             />
         </div>
 
         <!-- Container for G and mu sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput 
-                id="Min hormone level for gamete maturation (G)" 
+                id="Hormone level for gamete maturation (G)" 
                 min="0" 
                 max="1"
                 step="0.1" 
@@ -695,8 +712,7 @@ const SenseChartoptions = [
         class="m-auto w-[90%] h-px my-6 border-1 border-indigo-500 opacity-50"
     />
     <div class="flex flex-wrap justify-center">
-           
-        
+             
     <!-- Trait for Sensitivity DropDown (temporary)-->
     <!-- To change options refer to the senseChartoptions Variable-->
     <Dropdown
@@ -711,7 +727,7 @@ const SenseChartoptions = [
     />
     <!-- Choose variable drop down -->
     <div class="flex flex-wrap justify-center">
-        <div class="w-72 m-2">
+        <div class="w-72 m-2 mt-[27px]">
             <div class="relative h-10 w-72 min-w-[200px] invalid: iSum">
                 <select
                 id="variableDropDown"
@@ -723,7 +739,7 @@ const SenseChartoptions = [
                     <option value="beta">Second parameter of beta distribution (B)</option>
                     <option value="delSmax">Max change of sensitivity to hormone (|ΔSᵢ, ₘₐₓ|)</option>
                     <option value="delCmax">Max change of circulating hormone (|ΔCₘₐₓ|)</option>
-                    <option value="G">Min hormone level for gamete maturation (G)</option>
+                    <option value="G">Hormone level for gamete maturation (G)</option>
                     <option value="K">Michaelis-Menten constant (K)</option>
                     <option value="mu">Death probability (µ)</option>
                     <option value="tau">Food availability (τ)</option>

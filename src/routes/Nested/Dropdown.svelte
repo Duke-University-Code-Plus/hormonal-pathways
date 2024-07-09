@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex flex-wrap justify-center">
-    <div class="w-72 m-2">
+    <div class="w-72 m-2 mt-[27px]">
         <div class="relative h-10 w-72 min-w-[200px] invalid: iSum">
             <label
                 for="variableDropDown"
