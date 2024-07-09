@@ -242,7 +242,7 @@
             "Body Condition",
             Xhist,
             "rgba(75, 192, 192, 1)",
-            3.5
+            10
         );
 
         // Create Sensitivity Chart
@@ -251,7 +251,7 @@
             "Sensitivity",
             Shist,
             "rgba(255, 99, 132, 1)",
-            2.5
+            10
         );
 
         // Create Production Chart
@@ -260,7 +260,7 @@
             "Production",
             Chist,
             "rgba(153, 102, 255, 1)",
-            10
+            20
         );
 
         // Create Fitness Chart
@@ -269,7 +269,7 @@
             "Fitness",
             Whist,
             "rgba(255, 159, 64, 1)",
-            1.2
+            5
         );
 
         // Create Cumulative Fitness Chart
@@ -278,7 +278,7 @@
             "Cumulative Fitness",
             Wcuml,
             "rgba(255, 206, 86, 1)",
-            20
+            50
         );
 
         // traitChartInstance = makeChart(
@@ -369,6 +369,33 @@
             />
         </div>
 
+        <!-- Container for G and mu sliders-->
+        <div class="flex flex-wrap justify-center w-full">
+            <SliderInput 
+                id="Hormone level for gamete maturation (G)" 
+                min="0" 
+                max="1" 
+                step="0.1" 
+                bind:inputVar={$G} 
+                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization."
+                />
+
+            <SliderInput
+                id="Death probability (µ)"
+                min="0"
+                max="1"
+                step="0.001"
+                bind:inputVar={$mu}
+                modalMessage="A fixed chance that the bird will die randomly."
+            />
+        </div>
+
+        <!-- Line -->
+        <hr
+        class="m-auto w-[90%] h-px my-6 border-1 border-indigo-500 opacity-50"
+        />
+
+
         <!-- Container for food shortage sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
@@ -388,27 +415,6 @@
                 inputVarLowName="Food Shortage Begin"
                 minForVarLow=0
                 step=1
-            />
-        </div>
-
-        <!-- Container for G and mu sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <SliderInput 
-                id="Min hormone level for gamete maturation (G)" 
-                min="0" 
-                max="1" 
-                step="0.1" 
-                bind:inputVar={$G} 
-                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization."
-                />
-
-            <SliderInput
-                id="Death probability (µ)"
-                min="0"
-                max="1"
-                step="0.001"
-                bind:inputVar={$mu}
-                modalMessage="A fixed chance that the bird will die randomly."
             />
         </div>
     </div>
