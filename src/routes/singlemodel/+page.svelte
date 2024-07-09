@@ -26,7 +26,7 @@
         foodShort,
         foodShortbegin,
         foodShortend
-    } from "../data2_store.js";
+    } from "../data_store.js";
 
     let Xhist = [];
     let Shist = [];
@@ -242,7 +242,7 @@
             "Body Condition",
             Xhist,
             "rgba(75, 192, 192, 1)",
-            10
+            20
         );
 
         // Create Sensitivity Chart
@@ -251,7 +251,7 @@
             "Sensitivity",
             Shist,
             "rgba(255, 99, 132, 1)",
-            10
+            20
         );
 
         // Create Production Chart
@@ -269,7 +269,7 @@
             "Fitness",
             Whist,
             "rgba(255, 159, 64, 1)",
-            5
+            10
         );
 
         // Create Cumulative Fitness Chart
@@ -278,7 +278,7 @@
             "Cumulative Fitness",
             Wcuml,
             "rgba(255, 206, 86, 1)",
-            50
+            150
         );
 
         // traitChartInstance = makeChart(
