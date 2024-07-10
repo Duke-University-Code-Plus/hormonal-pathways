@@ -7,7 +7,7 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]),
                  GIn : float = 0.1, XminIn : float = 1, delSmaxIn : float = 1, 
                  delCmaxIn : float = 1, tauIn : float = 5, KIn : float = 1, 
                  alphaIn : float = 2, betaIn : float = 2, muIn : float = 0.0001, 
-                 zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100, 
+                 zIn : np.array = np.array([0.2, 0.3, 0.3]), NIn : int = 100,
                  foodShort : int = 0.5, foodShortbegin : int = 8, foodShortend : int = 20):
     
     # define constants:
@@ -29,6 +29,7 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]),
     
     # Food availability
     tau = tauIn
+    percentAvail = 1
     
     # Michaelis-Menten Constant
     K = KIn
@@ -53,12 +54,14 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]),
     Chist = np.zeros(N)
     Whist = np.zeros(N)
     Wcuml = np.zeros(N)
+    Vhist = np.zeros((3, N))
     
     # populate with initial conditions
     Xhist[0] = 1
     Shist[:, 0] = np.array([1, 1, 1])
     Chist[0] = 1
     Whist[0] = 1
+    Vhist[:, 0] = np.array([1, 1, 1])
 
     i = 0
     while alive and i < N - 1:
@@ -66,22 +69,28 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]),
         beta_t = beta_dist.rvs(alpha, beta)
         # define food availability
         if foodShortbegin < i < foodShortend:
-            F_t = foodShort
+            percentAvail = foodShort
         else:
-            F_t = 1
+            percentAvail = 1
         
-        E_t = tau * F_t
+        F_t = 1
+
+        E_t = tau * percentAvail * F_t
         
-        X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[i], beta_t, z, Shist[:, i], Chist[i], K, E_t, gamma, delCmax, delSmax, Xmin, G)
+        X_t1, S_t1, C_t1, W_t1, V_t = forwardModel(Xhist[i], beta_t, z, Shist[:, i], Chist[i], K, E_t, gamma, delCmax, delSmax, Xmin, G)
         Xhist[i + 1] = X_t1
         Shist[:, i + 1] = S_t1
         Chist[i + 1] = C_t1
         Whist[i + 1] = W_t1
+
         
         if np.random.rand() < mu or X_t1 < 0:
             alive = False
         
         Wcuml[i + 1] = Wcuml[i] + W_t1
+
+        Vhist[:, i + 1] = V_t
+
         i += 1
     
     results = {
@@ -89,7 +98,8 @@ def hormoneModel(gammaIn : np.array = np.array([.1, 2, .3]),
         'Shist': Shist.tolist(),
         'Chist': Chist.tolist(),
         'Whist': Whist.tolist(),
-        'Wcuml': Wcuml.tolist()
+        'Wcuml': Wcuml.tolist(),
+        'Vhist': Vhist.tolist()
     }
         
     return results
@@ -113,8 +123,12 @@ def forwardModel(X_t, beta_t, z_t, S_t, C_t, K, E_t1, gamma_t, delCmax, delSmax,
     
     S_t1 = S_t + delMaxCS[:3]
     C_t1 = C_t + delMaxCS[3]
+
+    #V1_t = V_t[0]
+    #V2_t =  V_t[1],
+    #V3_t = V_t[2]
     
-    return X_t1, S_t1, C_t1, W_t1
+    return X_t1, S_t1, C_t1, W_t1, V_t 
 
 def fitness_function(beta, z, S, C, K, X_t, E_t1, gamma, delCS, Xmin, G):
     V = np.zeros_like(S)

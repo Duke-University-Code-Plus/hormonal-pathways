@@ -3,14 +3,12 @@ from scipy.optimize import minimize
 from scipy.stats import beta as beta_dist
 import json
 
-def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]), 
+def hormoneModelStatRun(gammaIn: np.array = np.array([.1, 2, .3]), 
                 GIn: float = 0.1, XminIn: float = 1, delSmaxIn: float = 1,
                 delCmaxIn: float = 1, tauIn: float = 5, KIn: float = 1, 
-                alphaIn: float = 2, betaIn: float = 2, muIn: float = 0.000000, 
+                alphaIn: float = 2, betaIn: float = 2, muIn: float = 0.0, 
                 zIn: np.array = np.array([0.2, 0.3, 0.3]), NIn: int = 100, 
-                foodShort: float = 0.5, foodShortbegin: int = 8, foodShortend: int = 20, numRuns: int = 2,
-                variableName: str = 'delSmax',
-                variableRangeBegin: float = 1, variableRangeEnd: float = 2,
+                foodShort: float = 1, foodShortbegin: int = 8, foodShortend: int = 20, numRuns: int = 20,
                 outputFileName: str = 'results.txt'):
 
     # define constants:
@@ -26,6 +24,7 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
     mu = muIn
     z = zIn
     N = NIn
+    foodShortage = 1
 
     params = {
         'G': G,
@@ -41,19 +40,22 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
         'N': N,
     }
 
-
-    if variableName in params:
-        variable_values = np.linspace(variableRangeBegin, variableRangeEnd, numRuns)
-    else:
-
-        variable_values = np.array([params[variableName]] * numRuns)
-
-    # states being tracked
+    #states being tracked
     Xhist = np.zeros((N, numRuns))
     Shist = np.zeros((3, N, numRuns))
     Chist = np.zeros((N, numRuns))
     Whist = np.zeros((N, numRuns))
     Wcuml = np.zeros((N, numRuns))
+
+    delSmax = params['delSmax']
+    delCmax = params['delCmax']
+    tau = params['tau']
+    K = params['K']
+    alpha = params['alpha']
+    beta = params['beta']
+    mu = params['mu']
+    z = params['z']
+    N = params['N']
 
     for j in range(numRuns):
 
@@ -66,9 +68,6 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
         alive = True
         i = 0
 
-        if variableName in params:
-            params[variableName] = variable_values[j]
-
         delSmax = params['delSmax']
         delCmax = params['delCmax']
         tau = params['tau']
@@ -79,18 +78,18 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
         z = params['z']
         N = params['N']
 
+
         while alive and i < N - 1:
             #find beta for this timestep:
             beta_t = beta_dist.rvs(alpha, beta)
             #define food availability
             if foodShortbegin < i < foodShortend:
-                percentAvail = foodShort
+                foodShortage = foodShort
             else:
-                percentAvail = 1
-        
-            F_t = 1
+                foodShortage = 1
 
-            E_t = tau * percentAvail * F_t
+            F_t = 1
+            E_t = tau * F_t * foodShortage
 
             X_t1, S_t1, C_t1, W_t1 = forwardModel(Xhist[i, j], beta_t, z, Shist[:, i, j], Chist[i, j], K, E_t, gamma, delCmax, delSmax, Xmin, G)
             Xhist[i + 1, j] = X_t1
@@ -104,16 +103,34 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
             Wcuml[i + 1, j] = Wcuml[i, j] + W_t1
             i += 1
 
-    results = {
-        'Xhist': Xhist.tolist(),
-        'Shist': Shist.tolist(),
-        'Chist': Chist.tolist(),
-        'Whist': Whist.tolist(),
-        'Wcuml': Wcuml.tolist()
-    }
+    Xhist, XhistCon = convertToAverage(Xhist.tolist())
+    Chist, ChistCon = convertToAverage(Chist.tolist())
+    Whist, WhistCon = convertToAverage(Whist.tolist())
+    Wcuml, WcumlCon = convertToAverage(Wcuml.tolist())
+    ShistI, ShistConI = convertToAverage(Shist[0].tolist())
+    ShistK, ShistConK = convertToAverage(Shist[1].tolist())
+    ShistJ, ShistConJ = convertToAverage(Shist[2].tolist())
 
+    results = {
+        'Xhist': Xhist,
+        'XhistCon': XhistCon,
+        'Chist': Chist,
+        'ChistCon': ChistCon,
+        'Whist': Whist,
+        'WhistCon': WhistCon,
+        'Wcuml': Wcuml,
+        'WcumlCon': WcumlCon,
+        # Shist Graphs
+        'ShistI': ShistI,
+        'ShistConI': ShistConI,
+        'ShistK': ShistK,
+        'ShistConK': ShistConK,
+        'ShistJ': ShistJ,
+        'ShistConJ': ShistConJ,
+    }
     with open(outputFileName, "w") as f:
          json.dump(results, f)
+    # Write the JSON data to the file
 
     return results
 
@@ -164,7 +181,15 @@ def fitness_function(beta, z, S, C, K, X_t, E_t1, gamma, delCS, Xmin, G):
 
     return -((W_t1**1) * (X_t1**3))
 
-runMultiRun()
+def convertToAverage(DataSet:list):
+    confidenceInterval = [0] * len(DataSet)
+    for i, row in enumerate(DataSet):
+        print(row)
+        confidenceInterval[i] += 2 * np.std(row)
+        DataSet[i] = np.average(row)
+    
+    return DataSet, confidenceInterval
 
+hormoneModelStatRun()
 
 
