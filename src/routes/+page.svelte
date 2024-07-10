@@ -1,509 +1,222 @@
 <script>
+    import { registerables } from "chart.js";
     import { onMount } from "svelte";
-    import axios from "axios";
-    import { writable, get } from "svelte/store";
-    import Chart from "chart.js/auto";
-    import FormInput from "./multimodel/Nested/FormInput.svelte";
-    import NavBar from "./multimodel/Nested/navigation.svelte";
-    import SliderInput from "./multimodel/Nested/SliderInput.svelte";
-
-    let Xhist = [];
-    let Shist = [];
-    let Chist = [];
-    let Whist = [];
-    let Wcuml = [];
-
-    // Initialize writable stores with default values
-    let gamma1 = writable(0.1);
-    let gamma2 = writable(0.2);
-    let gamma3 = writable(0.3);
-    let G = writable(0.1);
-    let Xmin = writable(1);
-    let delSmax = writable(1);
-    let delCmax = writable(1);
-    let tau = writable(5);
-    let K = writable(1);
-    let alpha = writable(4);
-    let beta = writable(2);
-    let mu = writable(0.01);
-    let z1 = writable(0.2);
-    let z2 = writable(0.3);
-    let z3 = writable(0.3);
-    let N = writable(100);
-    let foodShort = writable(0.4);
-    let foodShortbegin = writable(8);
-    let foodShortend = writable(20);
-
-    let gamma = writable([get(gamma1), get(gamma2), get(gamma3)]);
-    let z = writable([get(z1), get(z2), get(z3)]);
-
-    let bodyConditionChartInstance = null;
-    let sensitivityChartInstance = null;
-    let productionChartInstance = null;
-    let fitnessChartInstance = null;
-    let cumulativeFitnessChartInstance = null;
-
-    const apiEndpoint =
-        "https://hormonal-pathways-api-a4dcfa854663.herokuapp.com";
-
-    onMount(() => {
-        fetchData();
-    });
-
-    async function fetchData() {
-        try {
-            gamma = writable([get(gamma1), get(gamma2), get(gamma3)]);
-            z = writable([get(z1), get(z2), get(z3)]);
-            const params = {
-                gamma: get(gamma).join(","), // Convert array to comma-separated string
-                G: get(G),
-                Xmin: get(Xmin),
-                delSmax: get(delSmax),
-                delCmax: get(delCmax),
-                tau: get(tau),
-                K: get(K),
-                alpha: get(alpha),
-                beta: get(beta),
-                mu: get(mu),
-                z: get(z).join(","), // Convert array to comma-separated string
-                N: get(N),
-                foodShort: get(foodShort),
-                foodShortbegin: get(foodShortbegin),
-                foodShortend: get(foodShortend),
-            };
-
-            const queryString = new URLSearchParams(params).toString();
-            const response = await axios.get(
-                `${apiEndpoint}/hormonemodel?${queryString}`,
-            );
-            const data = response.data;
-
-            // Data from API
-            Xhist = data.Xhist;
-            Shist = data.Shist;
-            Chist = data.Chist;
-            Whist = data.Whist;
-            Wcuml = data.Wcuml;
-
-            createCharts();
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-
-    function makeChart(canvas, title, y, color) {
-        const chartOptions = {
-            plugins: {
-                legend: {
-                    display: false,
-                },
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    title: { display: true, text: "Reproductive Cycle" },
-                },
-                y: {
-                    beginAtZero: true,
-                    title: { display: true, text: "y label" },
-                },
-            },
-        };
-
-        let chartData = {};
-        const is2dArray = (array) => array.every((item) => Array.isArray(item));
-        if (is2dArray(y)) {
-            let chartDatasets = [];
-            for (let i = 0; i < y.length; i++) {
-                let data = {
-                    label: title + " " + i,
-                    data: y[i],
-                    borderColor: color,
-                    borderWidth: 1,
-                    fill: false,
-                };
-                chartDatasets.push(data);
-            }
-            chartData = {
-                labels: Array.from({ length: y[0].length }, (_, i) => i),
-                datasets: chartDatasets,
-            };
-        } else {
-            let data = {
-                label: title,
-                data: y,
-                borderColor: color,
-                borderWidth: 1,
-                fill: false,
-            };
-            chartData = {
-                labels: Array.from({ length: y.length }, (_, i) => i),
-                datasets: [data],
-            };
-        }
-
-        let ctx = document.getElementById(canvas);
-        return new Chart(ctx, {
-            type: "line",
-            data: chartData,
-            options: chartOptions,
+  
+    let width = 250;
+    let height = 250;
+  
+    const numBoids = 100;
+    const visualRange = 75;
+  
+    let boids = [];
+  
+    function initBoids() {
+      for (let i = 0; i < numBoids; i += 1) {
+        boids.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          dx: Math.random() * 10 - 5,
+          dy: Math.random() * 10 - 5,
+          history: [],
         });
+      }
+    }
+  
+    function distance(boid1, boid2) {
+      return Math.sqrt(
+        (boid1.x - boid2.x) * (boid1.x - boid2.x) +
+          (boid1.y - boid2.y) * (boid1.y - boid2.y)
+      );
+    }
+  
+    function sizeCanvas() {
+      const canvas = document.getElementById("boids");
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+  
+    function keepWithinBounds(boid) {
+      const margin = 0;
+      const turnFactor = 1;
+  
+      if (boid.x < margin) {
+        boid.dx += turnFactor;
+      }
+      if (boid.x > width - margin) {
+        boid.dx -= turnFactor;
+      }
+      if (boid.y < margin) {
+        boid.dy += turnFactor;
+      }
+      if (boid.y > height - margin) {
+        boid.dy -= turnFactor;
+      }
+    }
+  
+    function flyTowardsCenter(boid) {
+      const centeringFactor = 0.005;
+  
+      let centerX = 0;
+      let centerY = 0;
+      let numNeighbors = 0;
+  
+      for (let otherBoid of boids) {
+        if (distance(boid, otherBoid) < visualRange) {
+          centerX += otherBoid.x;
+          centerY += otherBoid.y;
+          numNeighbors += 1;
+        }
+      }
+  
+      if (numNeighbors) {
+        centerX = centerX / numNeighbors;
+        centerY = centerY / numNeighbors;
+  
+        boid.dx += (centerX - boid.x) * centeringFactor;
+        boid.dy += (centerY - boid.y) * centeringFactor;
+      }
+    }
+  
+    function avoidOthers(boid) {
+      const minDistance = 30;
+      const avoidFactor = 0.05;
+      let moveX = 0;
+      let moveY = 0;
+      for (let otherBoid of boids) {
+        if (otherBoid !== boid) {
+          if (distance(boid, otherBoid) < minDistance) {
+            moveX += boid.x - otherBoid.x;
+            moveY += boid.y - otherBoid.y;
+          }
+        }
+      }
+  
+      boid.dx += moveX * avoidFactor;
+      boid.dy += moveY * avoidFactor;
+    }
+  
+    function matchVelocity(boid) {
+      const matchingFactor = 0.05;
+  
+      let avgDX = 0;
+      let avgDY = 0;
+      let numNeighbors = 0;
+  
+      for (let otherBoid of boids) {
+        if (distance(boid, otherBoid) < visualRange) {
+          avgDX += otherBoid.dx;
+          avgDY += otherBoid.dy;
+          numNeighbors += 1;
+        }
+      }
+  
+      if (numNeighbors) {
+        avgDX = avgDX / numNeighbors;
+        avgDY = avgDY / numNeighbors;
+  
+        boid.dx += (avgDX - boid.dx) * matchingFactor;
+        boid.dy += (avgDY - boid.dy) * matchingFactor;
+      }
+    }
+  
+    function limitSpeed(boid) {
+      const speedLimit = 5;
+  
+      const speed = Math.sqrt(boid.dx * boid.dx + boid.dy * boid.dy);
+      if (speed > speedLimit) {
+        boid.dx = (boid.dx / speed) * speedLimit;
+        boid.dy = (boid.dy / speed) * speedLimit;
+      }
+    }
+  
+    const DRAW_TRAIL = true;
+    function drawBoid(ctx, boid) {
+      const angle = Math.atan2(boid.dy, boid.dx);
+      ctx.translate(boid.x, boid.y);
+      ctx.rotate(angle);
+      ctx.translate(-boid.x, -boid.y);
+      ctx.fillStyle = "#558cf4";
+      ctx.beginPath();
+      ctx.moveTo(boid.x, boid.y);
+      ctx.lineTo(boid.x - 15, boid.y + 5);
+      ctx.lineTo(boid.x - 15, boid.y - 5);
+      ctx.lineTo(boid.x, boid.y);
+      ctx.fill();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+  
+      if (DRAW_TRAIL) {
+        ctx.strokeStyle = "#558cff66";
+        ctx.beginPath();
+        ctx.moveTo(boid.history[0][0], boid.history[0][1]);
+        for (const point of boid.history) {
+          ctx.lineTo(point[0], point[1]);
+        }
+        ctx.stroke();
+      }
+    }
+  
+    function animationLoop() {
+      for (let boid of boids) {
+        flyTowardsCenter(boid);
+        avoidOthers(boid);
+        matchVelocity(boid);
+        limitSpeed(boid);
+        keepWithinBounds(boid);
+  
+        boid.x += boid.dx;
+        boid.y += boid.dy;
+        boid.history.push([boid.x, boid.y]);
+        boid.history = boid.history.slice(-50);
+      }
+  
+      const ctx = document.getElementById("boids").getContext("2d");
+      ctx.clearRect(0, 0, width, height);
+      for (let boid of boids) {
+        drawBoid(ctx, boid);
+      }
+  
+      window.requestAnimationFrame(animationLoop);
     }
 
-    function createCharts() {
-        // Destroy existing charts if they exist
-        if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
-        if (sensitivityChartInstance) sensitivityChartInstance.destroy();
-        if (productionChartInstance) productionChartInstance.destroy();
-        if (fitnessChartInstance) fitnessChartInstance.destroy();
-        if (cumulativeFitnessChartInstance)
-            cumulativeFitnessChartInstance.destroy();
-
-        // Create Body Condition Chart
-        bodyConditionChartInstance = makeChart(
-            "bodyConditionChart",
-            "Body Condition",
-            Xhist,
-            "rgba(75, 192, 192, 1)",
-        );
-
-        // Create Sensitivity Chart
-        sensitivityChartInstance = makeChart(
-            "sensitivityChart",
-            "Sensitivity",
-            Shist,
-            "rgba(255, 99, 132, 1)",
-        );
-
-        // Create Production Chart
-        productionChartInstance = makeChart(
-            "productionChart",
-            "Production",
-            Chist,
-            "rgba(153, 102, 255, 1)",
-        );
-
-        // Create Fitness Chart
-        fitnessChartInstance = makeChart(
-            "fitnessChart",
-            "Fitness",
-            Whist,
-            "rgba(255, 159, 64, 1)",
-        );
-
-        // Create Cumulative Fitness Chart
-        cumulativeFitnessChartInstance = makeChart(
-            "cumulativeFitnessChart",
-            "Cumulative Fitness",
-            Wcuml,
-            "rgba(255, 206, 86, 1)",
-        );
+    function handleKeyPress(event) {
+    if (event.key === "Enter") {
+      window.location.href = "/about-us";
     }
-</script>
-
-<NavBar multiPage="nope" />
-
-<!-- <nav>
-    <a href="/">home</a>
-    <a href="/multimodel">multimodel</a>
-</nav>-->
-
-<h1
-    class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
->
-    Hormone Model Visualization
-</h1>
-
-<!--Input Parameters -->
-<div class="flex flex-wrap justify-center">
-    <div
-        class="flex flex-wrap justify-center grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-1"
-    >
-        <!-- Container for Gamma Sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <SliderInput
-                id="Gamma 1"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma1}
-            />
-
-            <SliderInput
-                id="Gamma 2"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma2}
-            />
-
-            <SliderInput
-                id="Gamma 3"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma3}
-            />
-        </div>
-
-        <!-- Container for Z sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <SliderInput
-                id="Z 1"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z1}
-            />
-
-            <SliderInput
-                id="Z 2"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z2}
-            />
-
-            <SliderInput
-                id="Z 3"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z3}
-            />
-        </div>
-
-        <!-- Container for food shortage sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <SliderInput
-                id="Food Short"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$foodShort}
-            />
-
-            <SliderInput
-                id="Food Short Begin"
-                min="0"
-                max={$foodShortend}
-                step="1"
-                bind:inputVar={$foodShortbegin}
-            />
-
-            <SliderInput
-                id="Food Short End"
-                min="0"
-                max={$N}
-                step="1"
-                bind:inputVar={$foodShortend}
-            />
-        </div>
-
-        <!-- Container for G and mu sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <SliderInput id="G" min="0" max="1" step="0.1" bind:inputVar={$G} />
-
-            <SliderInput
-                id="Mu"
-                min="0"
-                max="1"
-                step="0.001"
-                bind:inputVar={$mu}
-            />
-        </div>
+  }
+  
+    onMount(() => {
+      window.addEventListener("resize", sizeCanvas, false);
+      sizeCanvas();
+      initBoids();
+      window.requestAnimationFrame(animationLoop);
+      addEventListener("keydown", handleKeyPress, false);
+    });
+  </script>
+  
+  <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+    <div class="text-center pointer-events-auto mb-4">
+      <div class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-darkIndigo">
+        The Hormonal Pathways <br> and Trait Expression Simulator Project
+      </div>
     </div>
-
-    <!-- Form Inputs-->
-    <div class="flex flex-wrap justify-center">
-        <!--input for gamma-->
-        <!--
-        <FormInput
-            id="Gamma"
-            inputType="text"
-            bind:inputVar={$gamma}
-        />
-        -->
-
-        <!--input for G-->
-        <!--
-        <FormInput
-            id="G"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$G}
-        />
-        -->
-
-        <!--input for Xmin-->
-        <FormInput
-            id="Xmin"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$Xmin}
-        />
-
-        <FormInput
-            id="delSmax"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$delSmax}
-        />
-
-        <FormInput
-            id="delCmax"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$delCmax}
-        />
-
-        <FormInput
-            id="Tau"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$tau}
-        />
-
-        <FormInput
-            id="K"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$K}
-        />
-
-        <FormInput
-            id="Alpha"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$alpha}
-        />
-
-        <FormInput
-            id="Beta"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$beta}
-        />
-
-        <!--input for mu-->
-        <!--
-        <FormInput
-            id="Mu"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.001"
-            bind:inputVar={$mu}
-         />
-         -->
-
-        <!--
-         <FormInput
-            id="Z"
-            inputType="text"
-            bind:inputVar={$z}
-        />
-        -->
-
-        <FormInput
-            id="N"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            bind:inputVar={$N}
-        />
-
-        <!--
-
-         <FormInput
-            id="Food Short"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$foodShort}
-         />
-
-         <FormInput
-            id="Food Short Begin"
-            inputType="number"
-            min="0"
-            max={$foodShortend}
-            step="1"
-            bind:inputVar={$foodShortbegin}
-         />
-
-         <FormInput
-            id="Food Short End"
-            inputType="number"
-            min="0"
-            max={$N}
-            step="1"
-            bind:inputVar={$foodShortend}
-         />
-         -->
+    <div class="pointer-events-auto z-30">
+      <ul class="flex flex-row gap-4 font-semibold justify-center w-full px-3 py-1 text-2xl font-bold text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full shadow-sm hover:from-purple-600 hover:to-indigo-500 focus:outline-none focus:ring-1 focus:ring-purple-600 focus:ring-opacity-50 transition duration-300">
+        <li class="m-1">
+          <a href="/about-us">
+            Enter
+          </a>
+        </li>
+      </ul>
     </div>
-</div>
-
-<!-- Run Simulation Button-->
-<div class="text-center mt-4">
-    <button
-        class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded"
-        on:click={fetchData}>Run</button
-    >
-</div>
-
-<!-- Creating Charts-->
-<div class="flex flex-row flex-wrap gap-6 items-center justify-center">
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Body Condition
-        </h2>
-        <canvas id="bodyConditionChart"></canvas>
-    </div>
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">Sensitivity</h2>
-        <canvas id="sensitivityChart"></canvas>
-    </div>
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">Production</h2>
-        <canvas id="productionChart"></canvas>
-    </div>
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
-        <canvas id="fitnessChart"></canvas>
-    </div>
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Cumulative Fitness
-        </h2>
-        <canvas id="cumulativeFitnessChart"></canvas>
-    </div>
-</div>
+  </div>
+  <canvas id="boids" width="250" height="250" class="absolute inset-0 z-0"></canvas>
+  
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+  
