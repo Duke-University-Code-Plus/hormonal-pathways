@@ -2,6 +2,7 @@
 var predator;
 var player_sprite;
 var femalebird; 
+var babybirds;
 var babybird; 
 
 //animation
@@ -12,6 +13,13 @@ var sing;
 //scavenge 
 var searchDirection; 
 var preyLocation;
+
+//mating
+var babybirdCount = 0; 
+var loveCondition = false; 
+var femalebirdX; 
+var femalebirdY;
+var babybirdX;
 
 //player location
 var groundHeight;
@@ -54,7 +62,7 @@ var foodAvailability;
 var shortageSlider; 
 var matingCheckbox; 
 var matingCondition = false; 
-var loveCondition = false; 
+
 
 //load JSON files and Spritesheets 
 function preload() {
@@ -94,7 +102,7 @@ function draw() {
   background(135, 206, 250);
 
   time = millis();  
-  updateInputs();
+  updateText();
   //bird trait 
   if (player_sprite.velocity.x > 0) 
     player_sprite.mirrorX(-1);
@@ -147,7 +155,6 @@ function draw() {
     love.show();
     if (love.getLoveCondition() == false) { 
       loveCondition = false; 
-      love = null; 
     }
   }
 }
@@ -228,11 +235,12 @@ function createMalebird() {
   player_sprite.debug = false;
   player_sprite.depth = 20;
 
-  player_sprite.scale = 0.15; 
+  player_sprite.scale = 0.1; 
 }
 
-function updateInputs() {
+function updateText() {
   text(floor(shortageSlider.value()), 100, 100);
+  text("Reproductive Success: " + babybirdCount, 0, 120);
 }
 
 
@@ -240,8 +248,6 @@ function createFemalebird() {
   //create predator sprite and add animation
   var femalebirdLocation = random(["left", "right"]); 
 
-  var femalebirdX; 
-  var femalebirdY;
   if (femalebirdLocation == "left") { 
     femalebirdX = 0 - 64; 
     femalebirdY = random(0, height / 4);
@@ -256,7 +262,7 @@ function createFemalebird() {
   femalebird.debug = false;
   femalebird.friction = 0.1;
   femalebird.depth = 20;
-  femalebird.scale = 0.15; 
+  femalebird.scale = 0.1; 
 }
 
 function femalebirdMovement() { 
@@ -264,20 +270,31 @@ function femalebirdMovement() {
     femalebird.mirrorX(-1);
   if (femalebird.velocity.x < 0) 
     femalebird.mirrorX(1);
-  femalebird.attractionPoint (0.1, player_sprite.position.x,  player_sprite.position.y + player_sprite.originalHeight / 2);
+  femalebird.attractionPoint (0.2, player_sprite.position.x,  player_sprite.position.y + player_sprite.originalHeight / 2);
 }
 
-function perch() {
-  var perchX; 
-  var perchY; 
-}
+// function perch() {
+//   var perchX = tree.position.x - tree.originalWidth / 2; 
+//   var perchY = tree.position.y + tree.originalWidth; 
+//   if (femalebird.velocity.x > 0) 
+//     femalebird.mirrorX(-1);
+//   if (femalebird.velocity.x < 0) 
+//     femalebird.mirrorX(1);
+//   player_sprite.attractionPoint(0.1, perchX,  perchY);
+//   femalebird.attractionPoint (0.1, perchX,  perchY);
+// }
 
 function createBabybird() { 
-  babybird = createSprite(nest.position.x, nest.position.y);
-  babybird.addAnimation('normal', imagePath + 'babybird0001.png', imagePath + 'babybird0002.png');
-  babybird.debug = false;
-  babybird.depth = 20;
-  babybird.scale = 0.1; 
+  babybirdX = nest.position.x - nest.originalWidth / 4 + ((player_sprite.originalWidth / 2) * babybirdCount);
+  if (babybirdX <= nest.position.x + nest.originalWidth / 2) { 
+    babybirds = new Group();
+    babybird = createSprite(babybirdX, nest.position.y - nest.originalWidth / 8);
+    babybird.addAnimation('normal', imagePath + 'babybird0001.png', imagePath + 'babybird0002.png');
+    babybird.debug = false;
+    babybird.depth = 50;
+    babybird.scale = 0.05; 
+    babybirds.add(babybird);
+  }
 }
 
 function birdMate(){  
@@ -303,10 +320,14 @@ function birdMate(){
     player_sprite.changeAnimation('stand'); 
     if (love == null)
       loveCondition = true; 
-    if (babybird == null && !loveCondition)
+    if (babybird == null && !loveCondition) {
       createBabybird(); 
-    else 
+      babybirdCount++;
+    }
+    if (babybird != null) {
       matingCondition = false; 
+      love = null; 
+    }
   }
 }
 
@@ -474,13 +495,13 @@ class Heart {
 
   fade() {
     if (this.fadeEffectCondition) {
-      this.fadeEffect += 5;
+      this.fadeEffect += 2;
       if (this.fadeEffect >= 255) {
         this.fadeEffect = 255;
         this.fadeEffectCondition = false;
       }
     } else {
-      this.fadeEffect -= 5;
+      this.fadeEffect -= 2;
       if (this.fadeEffect <= 0) {
         this.fadeEffect = 0;
         this.fadeEffectCondition = true;
