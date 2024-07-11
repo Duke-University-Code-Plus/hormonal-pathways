@@ -178,7 +178,7 @@
     const chartOptions = {
             plugins: {
                 legend: {
-                    display: false, // no legend
+                    display: true, // no legend
                 },
             },
             scales: {
@@ -313,7 +313,7 @@ function createSensitivityDatasets(data, labelPrefix) {
                     type: "line",
                     data: {
                         labels: Array.from(
-                            { length: Shis[0].length },
+                            { length: Shist[0].length },
                             (_, i) => i,
                         ),
                         datasets: createSensitivityDatasets(Shist,"Sensitivity"),
@@ -456,6 +456,11 @@ const SenseChartoptions = [
     { value: 'J', label: 'Trait J' },
     { value: 'K', label: 'Trait K' }
 ];
+
+function bruh() {
+            $statRun = !$statRun
+            console.log($statRun)
+}
 </script>
 
 <NavBar multiPage="Multi" />
@@ -807,6 +812,12 @@ const SenseChartoptions = [
             bind:inputVar={$numRuns}
         />
     </div>
+</div>
+<div class="text-center my-4">
+    <button
+        class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded"
+       on:click={bruh}>Switch Run Type</button
+    >
 </div>
 
 <div class="text-center my-4">
