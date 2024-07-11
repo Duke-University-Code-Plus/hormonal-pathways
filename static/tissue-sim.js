@@ -9,11 +9,7 @@ var nucleus;
 var cell;
 var inv1;
 var inv2;
-<<<<<<< HEAD
 var dna_strand, midDNA, leftDNA, rightDNA;
-=======
-var dna_strand;
->>>>>>> 23-tissue-simulation
 const particles = [];
 
 function setup() {
@@ -136,11 +132,8 @@ function draw() {
 
     drawSprites();
 
-<<<<<<< HEAD
 
      // Draw and update particles
-=======
->>>>>>> 23-tissue-simulation
     for (let i = particles.length - 1; i >= 0; i--) {
         particles[i].update();
         particles[i].show();
@@ -148,12 +141,9 @@ function draw() {
             particles.splice(i, 1);
         }
     }
-<<<<<<< HEAD
 
 
    
-=======
->>>>>>> 23-tissue-simulation
 }
 
 function absorb(circle, box) {
@@ -164,7 +154,6 @@ function absorb(circle, box) {
     if (circle != box.circle) {
         return;
     }
-<<<<<<< HEAD
     
     circle.attractionPoint(15, box.position.x, box.position.y - 20);
     circle.maxSpeed = 5;
@@ -174,27 +163,11 @@ function absorb(circle, box) {
 
 
     toDNA(box,circle)
-=======
-
-    circle.attractionPoint(20, box.position.x, box.position.y - 20);
-    circle.maxSpeed = 7;
-    circle.absorbed = true;
->>>>>>> 23-tissue-simulation
 
     toDNA(circle, box);
 }
 
-<<<<<<< HEAD
 function toDNA(box,circle) {
-=======
-function circleBounce(circle1, circle2){
-    if(circle1.absorbed || circle2.absorbed){
-        return;
-    }
-}
-
-function toDNA(circle, box) {
->>>>>>> 23-tissue-simulation
     if (!dna_strand) {
         console.error('DNA strand is not defined');
         return;
@@ -204,11 +177,7 @@ function toDNA(circle, box) {
         box.framesAtDNA = 0;
     }
 
-<<<<<<< HEAD
     if (box.framesAtDNA < 30) {
-=======
-    if (box.framesAtDNA < 20) {
->>>>>>> 23-tissue-simulation
         if (box.dnaPos == null) {
             let coors = findDNACoors();
             if (coors != null) {
@@ -229,7 +198,6 @@ function toDNA(circle, box) {
         if (xDiff <= 3 && yDiff <= 3) {
             box.framesAtDNA++;
         }
-<<<<<<< HEAD
      } else {
         
     //     createrna(box.position.x, box.position.y);
@@ -286,37 +254,6 @@ function resetDNACoors(coors) {
 
 
 
-=======
-    } 
-    else {
-        box.movingBack = true;
-        box.circle = null;
-        circle.velocity.x = -2;
-        circle.velocity.y = -5;
-        circle.absorbed = false;
-        circle.leaving = true;
-        box.dnaPos = null;
-        circle.remove();
-        createCircle();
-        createParticles(box.position.x, box.position.y);
-    }
-}
-
-async function createParticles(x, y){
-    for (let i = 0; i < 200; i++) {
-        let p = new Particle(x, y);
-        particles.push(p);
-        await sleep(50)
-    }
-}
-
-function sleep(millisecondsDuration)
-{
-  return new Promise((resolve) => {
-    setTimeout(resolve, millisecondsDuration);
-  })
-}
->>>>>>> 23-tissue-simulation
 
 function findDNACoors() {
     let midX = dna_strand.position.x;
