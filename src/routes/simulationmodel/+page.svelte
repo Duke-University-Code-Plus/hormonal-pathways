@@ -6,6 +6,7 @@
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
     import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
+    import TissueSim from './TissueSim.svelte';
     import {
         gamma1,
         gamma2,
@@ -26,7 +27,7 @@
         foodShort,
         foodShortbegin,
         foodShortend
-    } from "../data4_store.js";
+    } from "../data_store.js";
     import {apiEndpoint} from "../state_store.js"
 
     let Xhist = [];
@@ -81,6 +82,7 @@
             // Data from API
             Xhist = data.Xhist;
             Shist = data.Shist;
+            console.log(Shist)
             Chist = data.Chist;
             Whist = data.Whist;
             Wcuml = data.Wcuml;
@@ -246,7 +248,7 @@
             "Sensitivity",
             Shist,
             "rgba(255, 99, 132, 1)",
-            2.5
+            20
         );
 
         // Create Production Chart
@@ -255,7 +257,7 @@
             "Production",
             Chist,
             "rgba(153, 102, 255, 1)",
-            10
+            20
         );
 
         // Create Fitness Chart
@@ -281,7 +283,7 @@
             "Trait Value",
             Vhist,
             "rgba(210, 155, 90, 1)",
-            2.5
+            20
         )
     }
 </script>
@@ -576,16 +578,7 @@
 
 <!-- Creating Charts-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
-    <!--
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Energy of Organism
-        </h2>
-        <canvas id="bodyConditionChart"></canvas>
-    </div>
-    -->
+    
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -598,22 +591,7 @@
         <h2 class="text-center text-xl font-semibold mb-4">Circulating Level Of Hormone </h2>
         <canvas id="productionChart"></canvas>
     </div>
-    <!--
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
-        <canvas id="fitnessChart"></canvas>
-    </div>
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Cumulative Fitness
-        </h2>
-        <canvas id="cumulativeFitnessChart"></canvas>
-    </div>
-    -->
+    
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -622,4 +600,13 @@
         </h2>
         <canvas id="traitChart"></canvas>
     </div>
+
+</div>
+
+<!-- Simulations -->
+<div class = " flex flex-row items-center justify-center p-10">
+    <div> 
+        <TissueSim />
+    </div>
+
 </div>
