@@ -1,18 +1,25 @@
 var circles;
 var boxes;
 var proteins;
-let slider;
+let hormoneSlider;
+let receptorSlider;
 var outer;
 var nuc;
 var nucleus;
 var cell;
 var inv1;
 var inv2;
+<<<<<<< HEAD
 var dna_strand, midDNA, leftDNA, rightDNA;
+=======
+var dna_strand;
+>>>>>>> 23-tissue-simulation
 const particles = [];
 
 function setup() {
     createCanvas(960, 672);
+
+    // Initialize images
     bg = loadImage('cell-images/tissue-sim-background.png');
     outer_mem = loadImage('cell-images/outermembrane.png');
     nuc_mem = loadImage('cell-images/nuclearmembrane.png');
@@ -22,54 +29,59 @@ function setup() {
     cellbg = loadImage('cell-images/cell-bg.png');
     nucbg = loadImage('cell-images/nucleus-bg.png');
 
-    slider = createSlider(0, 20, 0, 1);
-    slider.position(10, 10);
-    slider.size(80);
-    slider.input(sliderchange);
+    // Initialize sliders
+    hormoneSlider = createSlider(0, 20, 0, 1);
+    hormoneSlider.position(10, 10);
+    hormoneSlider.size(80);
+    hormoneSlider.input(hormoneSliderchange);
 
-    slider2 = createSlider(0, 6, 0, 1);
-    slider2.position(10, 30);
-    slider2.size(80);
-    slider2.input(slider2change);
+    receptorSlider = createSlider(0, 10, 0, 1);
+    receptorSlider.position(10, 30);
+    receptorSlider.size(80);
+    receptorSlider.input(receptorSliderchange);
 
-    // Create groups
+    // Initialize groups
     circles = new Group();
     boxes = new Group();
     proteins = new Group();
     particle = new Group();
 
-    function sliderchange() {
-        console.log(slider.value())
+    function hormoneSliderchange() {
+        console.log(hormoneSlider.value());
     }
 
-    function slider2change() {
-        console.log(slider2.value())
+    function receptorSliderchange() {
+        console.log(receptorSlider.value());
     }
 
-    setBG()
+    // Initialize sprites
+    setBG();
     setMembranes();
     setDNA();
     invisibleSprites();
 
     // Create circles and boxes
-    for (let i = 0; i < slider.value(); i++) {
-        createCircle()
+    for (let i = 0; i < hormoneSlider.value(); i++) {
+        createCircle();
     }
 
-    for (let j = 0; j < 3; j++) {
-        createBoxes()
+    for (let j = 0; j < receptorSlider.value(); j++) {
+        createBoxes();
     }
 
-    // for (var i = 0; i < allSprites.length; i++) {
-    //     allSprites[i].debug = true;
-    // }
+    
 }
 
 function draw() {
     background(247, 211, 208);
 
-    let g = slider.value();
-    let h = slider2.value();
+    for (var i = 0; i < boxes.length; i++) {
+        boxes[i].debug = true;
+    }
+
+    // Handle sliders
+    let g = hormoneSlider.value();
+    let h = receptorSlider.value();
 
     while (g > circles.length) {
         createCircle();
@@ -87,8 +99,11 @@ function draw() {
         removeBox();
     }
 
+    updateCircles();
+
     // Circles bounce against each other
-    circles.bounce(circles);
+    circles.bounce(circles, circleBounce);
+
 
 
     //circles.bounce(inv1);
@@ -96,6 +111,7 @@ function draw() {
     // Circles absorb boxes
     circles.overlap(boxes, absorb);
 
+    moveBackBoxes();
 
     // Handle edges
     for (var i = 0; i < allSprites.length; i++) {
@@ -120,8 +136,11 @@ function draw() {
 
     drawSprites();
 
+<<<<<<< HEAD
 
      // Draw and update particles
+=======
+>>>>>>> 23-tissue-simulation
     for (let i = particles.length - 1; i >= 0; i--) {
         particles[i].update();
         particles[i].show();
@@ -129,19 +148,23 @@ function draw() {
             particles.splice(i, 1);
         }
     }
+<<<<<<< HEAD
 
 
    
+=======
+>>>>>>> 23-tissue-simulation
 }
 
 function absorb(circle, box) {
-    if (!box.circle && !circle.absorbed) {
+    if (!box.circle && !circle.absorbed && !box.movingBack) {
         box.circle = circle;
     }
 
     if (circle != box.circle) {
-        return
+        return;
     }
+<<<<<<< HEAD
     
     circle.attractionPoint(15, box.position.x, box.position.y - 20);
     circle.maxSpeed = 5;
@@ -151,10 +174,27 @@ function absorb(circle, box) {
 
 
     toDNA(box,circle)
+=======
 
+    circle.attractionPoint(20, box.position.x, box.position.y - 20);
+    circle.maxSpeed = 7;
+    circle.absorbed = true;
+>>>>>>> 23-tissue-simulation
+
+    toDNA(circle, box);
 }
 
+<<<<<<< HEAD
 function toDNA(box,circle) {
+=======
+function circleBounce(circle1, circle2){
+    if(circle1.absorbed || circle2.absorbed){
+        return;
+    }
+}
+
+function toDNA(circle, box) {
+>>>>>>> 23-tissue-simulation
     if (!dna_strand) {
         console.error('DNA strand is not defined');
         return;
@@ -164,27 +204,32 @@ function toDNA(box,circle) {
         box.framesAtDNA = 0;
     }
 
+<<<<<<< HEAD
     if (box.framesAtDNA < 30) {
+=======
+    if (box.framesAtDNA < 20) {
+>>>>>>> 23-tissue-simulation
         if (box.dnaPos == null) {
             let coors = findDNACoors();
             if (coors != null) {
                 box.dnaPos = coors;
                 box.attractionPoint(15, coors[0], coors[1]);
                 box.maxSpeed = 3;
-            }
-            else {
-                console.log('no coordinates found')
+            } else {
+                console.log('no coordinates found');
+                return;
             }
         } else {
             let coors = box.dnaPos;
             box.attractionPoint(15, coors[0], coors[1]);
         }
-        //console.log('compare ' + box.position, box.dnaPos);
+
         let xDiff = abs(box.position.x - box.dnaPos[0]);
         let yDiff = abs(box.position.y - box.dnaPos[1]);
         if (xDiff <= 3 && yDiff <= 3) {
             box.framesAtDNA++;
         }
+<<<<<<< HEAD
      } else {
         
     //     createrna(box.position.x, box.position.y);
@@ -241,43 +286,86 @@ function resetDNACoors(coors) {
 
 
 
+=======
+    } 
+    else {
+        box.movingBack = true;
+        box.circle = null;
+        circle.velocity.x = -2;
+        circle.velocity.y = -5;
+        circle.absorbed = false;
+        circle.leaving = true;
+        box.dnaPos = null;
+        circle.remove();
+        createCircle();
+        createParticles(box.position.x, box.position.y);
+    }
+}
+
+async function createParticles(x, y){
+    for (let i = 0; i < 200; i++) {
+        let p = new Particle(x, y);
+        particles.push(p);
+        await sleep(50)
+    }
+}
+
+function sleep(millisecondsDuration)
+{
+  return new Promise((resolve) => {
+    setTimeout(resolve, millisecondsDuration);
+  })
+}
+>>>>>>> 23-tissue-simulation
 
 function findDNACoors() {
-    // console.log('midDNA:', midDNA);
-    // console.log('leftDNA:', leftDNA);
-    // console.log('rightDNA:', rightDNA);
+    let midX = dna_strand.position.x;
+    let midY = dna_strand.position.y;
+    let w = 150;
 
-    let midFull = midDNA.full;
-    let leftFull = leftDNA.full;
-    let rightFull = rightDNA.full;
+    let x = midX + random(-1 * w, w);
+    let y = midY;
 
-    if (!midFull) {
-        midDNA.full = true;
-        return [midDNA.pos.x, midDNA.pos.y];
-    } else if (!leftFull) {
-        leftDNA.full = true;
-        return [leftDNA.pos.x, leftDNA.pos.y];
-    } else if (!rightFull) {
-        rightDNA.full = true;
-        return [rightDNA.pos.x, rightDNA.pos.y];
-    }
+    return [x, y];
+}
 
-    return null;
+function moveBackBoxes() {
+    boxes.forEach(box => {
+        if (box.movingBack) {
+            box.attractionPoint(15, box.initPos.x, box.initPos.y);
+            box.maxSpeed = 3;
+            if (isAtInitialPosition(box)) {
+                resetBox(box);
+            }
+        }
+    });
+}
+
+function isAtInitialPosition(box) {
+    return abs(box.position.x - box.initPos.x) <= 3 && abs(box.position.y - box.initPos.y) <= 3;
+}
+
+function resetBox(box) {
+    box.position.x = box.initPos.x;
+    box.position.y = box.initPos.y;
+    box.velocity.x = 0;
+    box.velocity.y = 0;
+    box.movingBack = false;
+    box.framesAtDNA = null;
 }
 
 function createCircle() {
-    var circle = createSprite(random(800, width), random(0, height));
-    //circle.addAnimation('normal', 'assets/asterisk_circle0006.png', 'assets/asterisk_circle0008.png');
-    circle.addImage(hormone)
-    //circle.setCollider('circle', -2, 2, 55);
+    var circle = createSprite(width + 50, random(0, height));
+    circle.addImage(hormone);
     circle.setCollider('circle', 0, 0, 25);
-    circle.setSpeed(random(2, 3), random(0, 360));
+    circle.setSpeed(random(2, 3), 180);
+    circle.enteredCell = false;
     circle.scale = 0.5;
-    circle.mass = 1;
+    circle.mass = 5;
     circle.depth = 5;
-    circle.absorbed = false; // Track if the circle has absorbed a box
+    circle.absorbed = false;
+    circle.leaving = false;
     circles.add(circle);
-
 }
 
 function removeCircle() {
@@ -290,9 +378,46 @@ function removeCircle() {
     circles[index].remove();
 }
 
-function removeBox() {
-    const index = boxes.length - 1
-    boxes[index].remove()
+function updateCircles() {
+    for (let i = 0; i < circles.length; i++) {
+        let circle = circles[i];
+        if (!circle.enteredCell && circle.overlap(inv2)) {
+            circle.enteredCell = true;
+            //circle.setSpeed(random(2, 3), random(0, 360)); // Change to random movement
+        }
+        if (circle.enteredCell && !circle.absorbed) {
+            keepWithinCell(circle);
+        }
+        // if (circle.leaving) {
+        //     circleLeaveScreen(circle);
+        //     if (!circle.replaced) {
+        //         createCircle();
+        //         circle.replaced = true;
+        //     }
+        // }
+    }
+}
+
+function keepWithinCell(circle) {
+    if(circle.absorbed == true){
+        return;
+    }
+    if (nucleus.overlapPixel(circle.position.x, circle.position.y) || outer.overlapPixel(circle.position.x, circle.position.y)) {
+        // Reverse the velocity
+        circle.velocity.y = -circle.velocity.y
+        circle.velocity.x = -circle.velocity.x
+    }
+
+}
+
+function circleLeaveScreen(circle) {
+    circle.remove();
+    // circle.velocity.y += 0.02;
+
+    // if (circle.position.x < 0 || circle.position.y < 0 || circle.position.y > height) {
+    //     circle.remove();
+    // }
+
 }
 
 function createBoxes() {
@@ -303,10 +428,9 @@ function createBoxes() {
     do {
         overlapping = false;
         correctLoc = false;
-        var bx = random(200, 760);
-        var by = random(200, 480);
+        var bx = random(0, width);
+        var by = random(20, height - 20);
 
-        // Check for overlap with existing boxes
         for (var k = 0; k < boxes.length; k++) {
             var otherBox = boxes[k];
             if (dist(bx, by, otherBox.position.x, otherBox.position.y) < 100) {
@@ -322,20 +446,27 @@ function createBoxes() {
             correctLoc = checkReceptorLocation(box);
             box.remove(); // Remove temporary box
         }
-        //console.log(correctLoc)
 
-        // Make the box
         if (!overlapping && correctLoc) {
             box = createSprite(bx, by);
             box.addImage(receptor);
             box.setCollider('rectangle');
             box.immovable = true;
             box.depth = 4;
-            box.absorbed = false;
             boxes.add(box);
             box.dnaPos = null;
+            box.initPos = {
+                x: bx,
+                y: by
+            };
+            box.movingBack = false;
         }
     } while (overlapping || !correctLoc);
+}
+
+function removeBox() {
+    const index = boxes.length - 1;
+    boxes[index].remove();
 }
 
 function setMembranes() {
@@ -355,34 +486,6 @@ function setDNA() {
     dna_strand.addImage(dna);
     dna_strand.immovable = true;
     dna_strand.depth = 3;
-
-    let midX = dna_strand.position.x;
-    let midY = dna_strand.position.y;
-    let w = 100
-
-    midDNA = {
-        pos: {
-            x: midX,
-            y: midY,
-        },
-        full: false
-    };
-    leftDNA = {
-        pos: {
-            x: midX - w,
-            y: midY
-        }
-        ,
-        full: false
-    };
-    rightDNA = {
-        pos: {
-            x: midX + w,
-            y: midY
-        }
-        ,
-        full: false
-    };
 }
 
 function setBG() {
@@ -398,29 +501,58 @@ function setBG() {
 }
 
 function invisibleSprites() {
-    inv2 = createSprite();
-    inv2.draw = function () { ellipse(210, 435, 30, 30) }
-    inv2.depth = 1
-    inv2.setCollider('circle', 210, 435, 400);
-    inv2.visible = false;
-
     inv1 = createSprite();
-    inv1.draw = function () { ellipse(10, 672, 30, 30) }
+    inv1.draw = function () {
+        ellipse(10, 672, 30, 30);
+    };
     inv1.setCollider('circle', 10, 672, 500);
     inv1.visible = false;
     inv1.immovable = true; 
 
-
+    inv2 = createSprite();
+    inv2.draw = function () {
+        ellipse(210, 435, 30, 30);
+    };
+    inv2.depth = 1;
+    inv2.setCollider('circle', 210, 435, 400);
+    inv2.visible = false;
 }
 
 function checkReceptorLocation(box) {
-    var withinCell = box.overlap(inv2);
-    var inNucleus = box.overlap(inv1);
-    // console.log('withinCell ' + withinCell)
-    // console.log('inNucleus ' + inNucleus)
+    var withinCell = cell.overlapPixel(box.position.x, box.position.y);
+    var inNucleus = nucleus.overlapPixel(box.position.x, box.position.y);
+    var onOuter = outer.overlapPixel(box.position.x, box.position.y);
+    var onNuc = nuc.overlapPixel(box.position.x, box.position.y);
 
+    return withinCell && !inNucleus && !onOuter && !onNuc;
+}
 
-    return withinCell && !inNucleus;
+class Particle {
+
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = random(-1, 1);
+        this.vy = random(-8, 0);
+        this.alpha = 255;
+    }
+
+    finished() {
+        return this.alpha < 0;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= 3;
+    }
+
+    show() {
+        noStroke();
+        fill(355, 100, 0, this.alpha);
+        ellipse(this.x, this.y, 16);
+    }
+
 }
 
 
