@@ -8,7 +8,7 @@
 
     async function runLlavaScript(base64Data) {
         try {
-            const response = await fetch('http://localhost:5200/llavaserver', {
+            const response = await fetch('http://localhost:5000/llavaserver', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
