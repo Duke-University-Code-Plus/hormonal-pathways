@@ -26,7 +26,7 @@
         foodShort,
         foodShortbegin,
         foodShortend
-    } from "../data4_store.js";
+    } from "../data_store.js";
     import {apiEndpoint} from "../state_store.js"
 
     let Xhist = [];
@@ -93,17 +93,24 @@
     }
 
     
-    function makeChart(canvas, title, y, color, maxValue) {
+    function makeChart(canvas, title, y, color, maxValue, ylabel) {
         // <block:data:3>
+        let color_pool = [[216, 27, 96], 
+                          [9, 224, 188], 
+                          [124, 181, 24]]
         let chartData = {};
         const is2dArray = (array) => array.every((item) => Array.isArray(item));
         if (is2dArray(y)) {
             let chartDatasets = [];
             for (let i = 0; i < y.length; i++) {
+                color = color_pool[i]
+                let r = color[0];
+                let g = color[1];
+                let b = color[2];
                 let data = {
                     label: title + " " + i,
                     data: y[i],
-                    borderColor: color,
+                    borderColor: "rgba(" + r + ", " + g + ", " + b + ", 1)",
                     radius: 0,
                     borderWidth: 1,
                     fill: false,
@@ -154,38 +161,38 @@
                 : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
 
         const animation = {
-        x: {
-            type: 'number',
-            easing: 'linear',
-            duration: delayBetweenPoints,
-            from: NaN, // the point is initially skipped
-            delay(ctx) {
-            if (ctx.type !== 'data' || ctx.xStarted) {
-                return 0;
+            x: {
+                type: 'number',
+                easing: 'linear',
+                duration: delayBetweenPoints,
+                from: NaN, // the point is initially skipped
+                delay(ctx) {
+                if (ctx.type !== 'data' || ctx.xStarted) {
+                    return 0;
+                }
+                ctx.xStarted = true;
+                return ctx.index * delayBetweenPoints;
+                }
+            },
+            y: {
+                type: 'number',
+                easing: 'linear',
+                duration: delayBetweenPoints,
+                from: previousY,
+                delay(ctx) {
+                if (ctx.type !== 'data' || ctx.yStarted) {
+                    return 0;
+                }
+                ctx.yStarted = true;
+                return ctx.index * delayBetweenPoints;
+                }
             }
-            ctx.xStarted = true;
-            return ctx.index * delayBetweenPoints;
-            }
-        },
-        y: {
-            type: 'number',
-            easing: 'linear',
-            duration: delayBetweenPoints,
-            from: previousY,
-            delay(ctx) {
-            if (ctx.type !== 'data' || ctx.yStarted) {
-                return 0;
-            }
-            ctx.yStarted = true;
-            return ctx.index * delayBetweenPoints;
-            }
-        }
         };
         // </block:animation>
 
         // <block:chartOptions:1>
         const chartOptions = {
-            animation,
+            //animation,
             interaction: {
                 intersect: false
             },
@@ -203,7 +210,7 @@
                 },
                 y: {
                     beginAtZero: true,
-                    title: { display: true, text: "y label" },
+                    title: { display: true, text: ylabel },
                     max: maxValue
                 },
             },
@@ -216,7 +223,7 @@
             data: chartData,
             options: chartOptions
         };
-    // </block:config>
+        // </block:config>
 
         return new Chart(ctx, config);
     }
@@ -246,7 +253,8 @@
             "Sensitivity",
             Shist,
             "rgba(255, 99, 132, 1)",
-            2.5
+            20,
+            "Sensitivity to hormone"
         );
 
         // Create Production Chart
@@ -255,7 +263,8 @@
             "Production",
             Chist,
             "rgba(153, 102, 255, 1)",
-            10
+            20,
+            "Hormone concentration"
         );
 
         // Create Fitness Chart
@@ -281,7 +290,8 @@
             "Trait Value",
             Vhist,
             "rgba(210, 155, 90, 1)",
-            2.5
+            20,
+            "Trait Values"
         )
     }
 </script>
@@ -575,7 +585,7 @@
 </div>
 
 <!-- Creating Charts-->
-<div class="flex flex-row flex-wrap gap-6 items-center justify-center">
+<div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
     <!--
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
