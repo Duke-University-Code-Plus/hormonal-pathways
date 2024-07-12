@@ -10,7 +10,6 @@ var preys;
 
 //animation
 var peck; 
-var food_peck;
 var sing; 
 
 //scavenge 
@@ -34,6 +33,7 @@ var notes_flipped;
 var notes; 
 var music; 
 var babybirdDirection;
+var reproduce; 
 
 //player location
 var groundHeight;
@@ -50,14 +50,12 @@ var love;
 
 //spritesheets
 var malebird_fly_spritesheet;
-var malebird_food_fly_spritesheet;
 var malebird_sing_spritesheet; 
 var femalebird_fly_spritesheet;
 var babybird_fly_spritesheet;
 var notes_spritesheet;
 var notes_flipped_spritesheet; 
 var malebird_fly;
-var malebird_food_fly;
 var malebird_sing;
 var femalebird_fly;
 var babybird_fly;
@@ -88,6 +86,7 @@ var shortageSliderSet;
 var shortageSliderChange = false;
 var matingCheckbox; 
 var matingCondition = false; 
+var matingChange = false; 
 
 
 //load JSON files and Spritesheets 
@@ -96,10 +95,6 @@ function preload() {
   loadJSON(imagePath + 'malebird_fly.json', function(malebird_fly_frames) {
     // Load tiles sprite sheet from frames array once frames array is ready
     malebird_fly_spritesheet = loadSpriteSheet(imagePath + 'malebird_fly_spritesheet.png', malebird_fly_frames);
-  });
-
-  loadJSON(imagePath + 'malebird_food_fly.json', function(malebird_food_fly_frames) {
-    malebird_food_fly_spritesheet = loadSpriteSheet(imagePath + 'malebird_food_fly_spritesheet.png', malebird_food_fly_frames);
   });
 
   loadJSON(imagePath + 'femalebird_fly.json', function(femalebird_fly_frames) {
@@ -152,6 +147,10 @@ function draw() {
   if (babybirds != null)
     babybirdMovement();
 
+  //female bird trait 
+if (femalebird != null)
+  femalebirdMovement();
+
   //bird animation to scavenge
   if (foodCondition) { 
     if (!scavengeChange) { 
@@ -161,9 +160,11 @@ function draw() {
     birdScavenge(); 
   }
   else if (matingCondition) { 
-    if (femalebird == null)
+    if (!matingChange) {
       createFemalebird();
-    femalebirdMovement()
+      reproductiveSuccess();
+      matingChange = true;
+    }
     birdMate();
   }
   //bird animation in death
@@ -246,7 +247,6 @@ function createEnvironment() {
 //create malebird
 function createAnimals() {
   malebird_fly = loadAnimation(malebird_fly_spritesheet);
-  malebird_food_fly = loadAnimation(malebird_food_fly_spritesheet);
   femalebird_fly = loadAnimation(femalebird_fly_spritesheet);
   babybird_fly = loadAnimation(babybird_fly_spritesheet);
   notes_play = loadAnimation(notes_spritesheet);
@@ -256,16 +256,13 @@ function createAnimals() {
   malebird = createSprite(nest.position.x, nest.position.y - 20);
   malebird.addAnimation('walk', malebird_fly);
   malebird.addAnimation('stand', imagePath + 'malebird_stand.png');
-  malebird.addAnimation('food_walk', malebird_food_fly);
   sing = malebird.addAnimation('sing', imagePath + 'malebird_sing0001.png', imagePath + 'malebird_sing0002.png');
   peck = malebird.addAnimation('peck', imagePath + 'malebird_peck0001.png', imagePath + 'malebird_peck0002.png');
   malebird.addAnimation('transformed', imagePath + 'malebird_death.png');
-  food_peck = malebird.addAnimation('peck_food', imagePath + 'malebird_food_peck0001.png', imagePath + 'malebird_food_peck0002.png');
 
   peckFrameCycle = 20; 
   singFrameCycle = 60; 
   peck.frameDelay = peckFrameCycle / 2;
-  food_peck.frameDelay = peckFrameCycle / 2; 
   sing.frameDelay = singFrameCycle / 4; 
   // create collider for player 
   malebird.setCollider('circle', 0, 0, 200);
@@ -321,14 +318,23 @@ function createFemalebird() {
   femalebird.scale = 0.1; 
 }
 
-function femalebirdMovement() { 
+  function femalebirdMovement() { 
   if (femalebird.velocity.x > 0) 
     femalebird.mirrorX(-1);
   if (femalebird.velocity.x < 0) 
     femalebird.mirrorX(1);
-  femalebird.attractionPoint (0.2, malebird.position.x,  malebird.position.y + malebird.originalHeight / 2);
+  if (matingCondition)
+    femalebird.attractionPoint (0.2, malebird.position.x,  malebird.position.y + malebird.originalHeight / 2);
+  if (!matingCondition) {
+    femalebird.changeAnimation('normal'); 
+    femalebird.attractionPoint (0.2, femalebirdX,  femalebirdY);
+    if (femalebird.position.x <=  0 - malebird.originalWidth || femalebird.position.x >=  width + malebird.originalWidth) {
+      femalebird.remove();
+      femalebird = null;
+    }
+  }
 }
-
+ 
 // function perch() {
 //   var perchX = tree.position.x - tree.originalWidth / 2; 
 //   var perchY = tree.position.y + tree.originalWidth; 
@@ -340,8 +346,12 @@ function femalebirdMovement() {
 //   femalebird.attractionPoint (0.1, perchX,  perchY);
 // }
 
+function reproductiveSuccess() {
+  reproduce = true; 
+}
+
 function createBabybird() { 
-  babybirdX = nest.position.x - nest.originalWidth / 4 + ((malebird.originalWidth / 2) * babybirdCount);
+  babybirdX = nest.position.x - nest.originalWidth / 4 + ((malebird.originalWidth / 4) * babybirdCount);
   if (babybirdX <= nest.position.x + nest.originalWidth / 2) { 
     babybirds = new Group();
     babybird = createSprite(babybirdX, nest.position.y - nest.originalWidth / 8);
@@ -433,30 +443,28 @@ function birdMate(){
     femalebird.changeAnimation('stand'); 
     femalebird.velocity.x = 0;
     femalebird.velocity.y = 0;
-  }
-
-  if (singFrameCount >= singFrameCycle * 1) {
-    malebird.changeAnimation('stand'); 
-    if (notes != null) { 
-      notes.remove();
-      notes = null; 
-    }
-    else {
-      notes_flipped.remove();
-      notes_flipped = null; 
-    }
-    if (love == null)
-      loveCondition = true; 
-    if (babybird == null && !loveCondition) {
-      createBabybird(); 
-      babybirdCount++;
-    }
-    // if (!loveCondition) {
-    //   femalebird.attractionPoint (0.2, femalebirdX,  femalebirdY);
-    // }
-    if (babybird != null) {
-      matingCondition = false; 
-      love = null; 
+    if (singFrameCount >= singFrameCycle * 1) {
+      malebird.changeAnimation('stand'); 
+      if (notes != null) { 
+        notes.remove();
+        notes = null; 
+      }
+      else {
+        notes_flipped.remove();
+        notes_flipped = null; 
+      }
+      if (love == null)
+        loveCondition = true; 
+      if (reproduce && !loveCondition) {
+        createBabybird(); 
+        babybirdCount++;
+        reproduce = false; 
+      }
+      if (!reproduce && !loveCondition) {
+        matingCondition = false; 
+        matingChange = false;
+        love = null; 
+      }
     }
   }
 }
@@ -493,6 +501,8 @@ function catchPrey() {
     }
     counter--; 
   }
+  if (deadPrey == true)
+    createPrey();
 }
 
 function trackcatchablePrey() { 
