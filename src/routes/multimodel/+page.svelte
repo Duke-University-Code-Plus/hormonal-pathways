@@ -813,11 +813,17 @@ function bruh() {
         />
     </div>
 </div>
-<div class="text-center my-4">
-    <button
-        class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded"
-       on:click={bruh}>Switch Run Type</button
-    >
+<div class="flex items-center text-center justify-center ">
+<button
+  on:click={bruh}
+  class="px-4 py-2 rounded-md focus:outline-none transition-colors duration-300"
+  class:bg-indigo-500={!$statRun}
+  class:text-white={!$statRun}
+  class:bg-indigo-600={$statRun}
+  class:text-gray-100={$statRun}
+>
+  {!$statRun ? 'Multple Lines Graph' : 'Median and Confidence Interval Graph'}
+</button>
 </div>
 
 <div class="text-center my-4">
