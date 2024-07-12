@@ -27,8 +27,13 @@
 		"autoprefixer": "^10.4.19",
 		"axios": "^1.7.2",
 		"chart.js": "^4.4.3",
+<<<<<<< HEAD
 		"cors": "^2.8.5",
 		"numpy": "^0.0.1"
+=======
+		"chartjs-chart-error-bars": "^4.4.1",
+		"cors": "^2.8.5"
+>>>>>>> origin/23-adding-states
 	},
 	"engines": {
 		"node": ">=20.10.0",

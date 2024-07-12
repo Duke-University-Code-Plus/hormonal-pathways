@@ -1,55 +1,72 @@
 <script>
     import { onMount } from "svelte";
     import axios from "axios";
-    import { writable, get } from "svelte/store";
     import Chart from "chart.js/auto";
-    import FormInput from "./Nested/FormInput.svelte";
-    import NavBar from "./Nested/navigation.svelte";
-    import SliderInput from "./Nested/SliderInput.svelte";
+    import FormInput from "../Nested/FormInput.svelte";
+    import NavBar from "../Nested/navigation.svelte";
+    import SliderInput from "../Nested/SliderInput.svelte";
+    import Dropdown from "../Nested/Dropdown.svelte";
+    import { LineWithErrorBarsChart } from 'chartjs-chart-error-bars';
+    
+    import {
+        gamma1,
+        gamma2,
+        gamma3,
+        G,
+        Xmin,
+        delSmax,
+        delCmax,
+        tau,
+        K,
+        alpha,
+        beta,
+        mu,
+        z1,
+        z2,
+        z3,
+        N,
+        foodShort,
+        foodShortbegin,
+        foodShortend,
+        variableName,
+        variableRangeBegin,
+        variableRangeEnd,
+        numRuns,
+        showValidationMessage,
+        statRun
+    } from "../data3_store.js";
+    import {apiEndpoint} from "../state_store.js"
 
     let Xhist = [];
     let Shist = [];
     let Chist = [];
     let Whist = [];
     let Wcuml = [];
-
-    //default values
-    let gamma1 = writable(0.1);
-    let gamma2 = writable(0.2);
-    let gamma3 = writable(0.3);
-    let G = writable(0.1);
-    let Xmin = writable(1);
-    let delSmax = writable(1);
-    let delCmax = writable(1);
-    let tau = writable(5);
-    let K = writable(1);
-    let alpha = writable(4);
-    let beta = writable(2);
-    let mu = writable(0.01);
-    let z1 = writable(0.2);
-    let z2 = writable(0.3);
-    let z3 = writable(0.3);
-    let N = writable(100);
-    let foodShort = writable(0.4);
-    let foodShortbegin = writable(8);
-    let foodShortend = writable(20);
-    let variableName = writable("Choose a Variable");
-    let variableRangeBegin = writable(1);
-    let variableRangeEnd = writable(2);
-    let numRuns = writable(2);
-    let showValidationMessage = writable(false);
-
-    let gamma = writable([get(gamma1), get(gamma2), get(gamma3)]);
-    let z = writable([get(z1), get(z2), get(z3)]);
+    let XhistCon = [];
+    let ChistCon = [];
+    let WhistCon = [];
+    let WcumlCon = [];
+    let ShistI = [];
+    let ShistJ = [];
+    let ShistK = [];
+    let ShistConI = [];
+    let ShistConJ = [];
+    let ShistConK = [];
+    let ShistTemp = [];
+    let ChosenTrait = 'I';
+    let maxValue = 0;
+    let ShistConTemp = [];
+    let YminCon = 0;
+    let YmaxCon = 0;
+    
+    let gamma = [$gamma1, $gamma2, $gamma3];
+    let z = [$z1, $z2, $z3]
 
     let bodyConditionChartInstance = null;
     let sensitivityChartInstance = null;
     let productionChartInstance = null;
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
-
-    const apiEndpoint =
-        "https://hormonal-pathways-api-a4dcfa854663.herokuapp.com";
 
     //state
     let initialRun = false;
@@ -59,7 +76,7 @@
     });
 
     async function fetchData() {
-        if (get(variableName) === "Choose a Variable") {
+        if ($variableName === "Choose a Variable") {
             document
                 .getElementById("variableDropDown")
                 .classList.add("border-red-500");
@@ -75,44 +92,70 @@
         try {
             if (!initialRun) initialRun = true;
 
-            gamma = writable([get(gamma1), get(gamma2), get(gamma3)]);
-            z = writable([get(z1), get(z2), get(z3)]);
-
+            gamma = [$gamma1, $gamma2, $gamma3];
+            z = [$z1, $z2, $z3];
             const params = {
-                gamma: get(gamma),
-                G: get(G),
-                Xmin: get(Xmin),
-                delSmax: get(delSmax),
-                delCmax: get(delCmax),
-                tau: get(tau),
-                K: get(K),
-                alpha: get(alpha),
-                beta: get(beta),
-                mu: get(mu),
-                z: get(z),
-                N: get(N),
-                foodShort: get(foodShort),
-                foodShortbegin: get(foodShortbegin),
-                foodShortend: get(foodShortend),
-                variableName: get(variableName),
-                variableRangeBegin: get(variableRangeBegin),
-                variableRangeEnd: get(variableRangeEnd),
-                numRuns: get(numRuns),
+                gamma: gamma.join(","), // Convert array to comma-separated string
+                G: $G,
+                Xmin: $Xmin,
+                delSmax: $delSmax,
+                delCmax: $delCmax,
+                tau: $tau,
+                K: $K,
+                alpha: $alpha,
+                beta: $beta,
+                mu: $mu,
+                z: z.join(","), // Convert array to comma-separated string
+                N: $N,
+                foodShort: $foodShort,
+                foodShortbegin: $foodShortbegin,
+                foodShortend: $foodShortend,
+                numRuns: $numRuns,
+            };
+
+            if (!$statRun) {
+                params.variableName = $variableName;
+                params.variableRangeBegin = $variableRangeBegin;
+                params.variableRangeEnd = $variableRangeEnd;
             };
 
             const queryString = new URLSearchParams(params).toString();
-            const response = await axios.get(
-                `${apiEndpoint}/multihormonemodel?${queryString}`,
-            );
+            let response;
+            // change query given which model you want to use
+            if($statRun){
+                 response = await axios.get(
+                `${$apiEndpoint}/statModel?${queryString}`,
+                 );
+            }
+            else{
+                response = await axios.get(
+                    `${$apiEndpoint}/multihormonemodel?${queryString}`,
+                );
+            }
 
             const data = response.data;
 
             // Data from API
             Xhist = data.Xhist;
-            Shist = data.Shist;
             Chist = data.Chist;
             Whist = data.Whist;
             Wcuml = data.Wcuml;
+            if($statRun){
+                XhistCon = data.XhistCon;
+                ChistCon = data.ChistCon;
+                WhistCon = data.WhistCon;
+                WcumlCon = data.WcumlCon;
+                // Shist DataSets
+                ShistI = data.ShistI;
+                ShistJ = data.ShistJ;
+                ShistK = data.ShistK;
+                ShistConI = data.ShistConI;
+                ShistConJ = data.ShistConJ;
+                ShistConK = data.ShistConK;
+            }
+            else{
+                Shist = data.Shist;
+            }
 
             createCharts();
         } catch (error) {
@@ -120,70 +163,19 @@
         }
     }
 
-    function createDatasets(data, labelPrefix) {
-        const numRunsValue = get(numRuns); // Number of lines
+    // if (canvas == bodyConditionChart || canvas == sensitivityChart) {
+    //     maxValue = 10
+    // } else if (canvas == cumulativeFitnessChart) {
+    //     maxValue = 50
+    // } else if (canvas == productionChart) {
+    //     maxValue = 20
+    // } else {
+    //     maxValue = 5
+    // };
 
-        function interpolateColor(startColor, endColor, factor) {
-            const result = startColor.slice();
-            for (let i = 0; i < 3; i++) {
-                result[i] = Math.round(
-                    result[i] + factor * (endColor[i] - startColor[i]),
-                );
-            }
-            return result;
-        }
 
-        const startColor = [0, 0, 255]; // Blue
-        const endColor = [255, 0, 0]; // Red
-
-        const datasets = Array.from({ length: numRunsValue }, (_, runIndex) => {
-            const factor = runIndex / (numRunsValue - 1);
-            const color = interpolateColor(startColor, endColor, factor);
-            return {
-                label: `${labelPrefix} ${runIndex + 1}`,
-                data: data.map((point) => point[runIndex]),
-                borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
-                borderWidth: 1,
-                fill: false,
-            };
-        });
-
-        return datasets;
-    }
-
-    function createSensitivityDatasets(data, labelPrefix) {
-        const numRunsValue = get(numRuns);
-        const colors = [
-            [255, 99, 132],
-            [75, 192, 192],
-            [153, 102, 255],
-        ];
-        const datasets = [];
-
-        for (let i = 0; i < 3; i++) {
-            datasets.push(
-                ...Array.from({ length: numRunsValue }, (_, runIndex) => ({
-                    label: `${labelPrefix} ${i + 1} Run ${runIndex + 1}`,
-                    data: data[i].map((point) => point[runIndex]),
-                    borderColor: `rgba(${colors[i][0]}, ${colors[i][1]}, ${colors[i][2]}, 1)`,
-                    borderWidth: 1,
-                    fill: false,
-                })),
-            );
-        }
-
-        return datasets;
-    }
-
-    function createCharts() {
-        if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
-        if (sensitivityChartInstance) sensitivityChartInstance.destroy();
-        if (productionChartInstance) productionChartInstance.destroy();
-        if (fitnessChartInstance) fitnessChartInstance.destroy();
-        if (cumulativeFitnessChartInstance)
-            cumulativeFitnessChartInstance.destroy();
-
-        const chartOptions = {
+    // definechartOptions to higher scope
+    const chartOptions = {
             plugins: {
                 legend: {
                     display: false, // no legend
@@ -193,84 +185,220 @@
                 x: {
                     beginAtZero: true,
                     title: { display: true, text: "Reproductive Cycle" },
+                    max: $N,
                 },
                 y: {
                     beginAtZero: true,
                     title: { display: true, text: "y label" },
+                    //max: maxValue
                 },
             },
         };
 
+        function createDatasets(data, ConfidenceData, labelPrefix) {
+    let numRunsValue = $numRuns; // Number of lines
+    if ($statRun) {
+        numRunsValue = 1;
+    }
+
+    function interpolateColor(startColor, endColor, factor) {
+        const result = startColor.slice();
+        for (let i = 0; i < 3; i++) {
+            result[i] = Math.round(
+                result[i] + factor * (endColor[i] - startColor[i])
+            );
+        }
+        return result;
+    }
+
+    const startColor = [0, 0, 255]; // Blue
+    const endColor = [255, 0, 0]; // Red
+    let color = startColor;
+    let dataSetRet, YminCon, YmaxCon;
+
+    const datasets = Array.from({ length: numRunsValue }, (_, runIndex) => {
+        const factor = runIndex / (numRunsValue - 1);
+        if (!$statRun) {
+            color = interpolateColor(startColor, endColor, factor);
+            dataSetRet = data.map((point) => point[runIndex]);
+            YminCon = 0;
+            YmaxCon = 0;
+        } else {
+            dataSetRet = data;
+            YminCon = data.map((point, idx) => {
+                if (idx % 5 === 0) {
+                    return point[idx] - ConfidenceData[idx];
+                } else {
+                    return null; // No error bar for this point
+                }
+            });
+            YmaxCon = data.map((point, idx) => {
+                if (idx % 5 === 0) {
+                    return point[idx] + ConfidenceData[idx];
+                } else {
+                    return null; // No error bar for this point
+                }
+            });
+        }
+        return {
+            label: `${labelPrefix} ${runIndex + 1}`,
+            data: dataSetRet,
+            borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
+            borderWidth: 1,
+            radius: 0,
+            yMin: YminCon,
+            yMax: YmaxCon,
+            fill: false,
+        };
+    });
+
+    console.log(datasets);
+    return datasets;
+}
+
+function createSensitivityDatasets(data, labelPrefix) {
+    const numRunsValue = $numRuns;
+    const colors = [
+        [255, 99, 132],
+        [75, 192, 192],
+        [153, 102, 255],
+    ];
+    const datasets = [];
+
+    for (let i = 0; i < 3; i++) {
+        datasets.push(
+            ...Array.from({ length: numRunsValue }, (_, runIndex) => ({
+                label: `${labelPrefix} ${i + 1} Run ${runIndex + 1}`,
+                data: data[i].map((point) => point[runIndex]),
+                borderColor: `rgba(${colors[i][0]}, ${colors[i][1]}, ${colors[i][2]}, 1)`,
+                borderWidth: 1,
+                radius: 0,
+                fill: false,
+            }))
+        );
+    }
+
+    return datasets;
+}
+    function createCharts() {
+        if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
+        if (sensitivityChartInstance) sensitivityChartInstance.destroy();
+        if (productionChartInstance) productionChartInstance.destroy();
+        if (fitnessChartInstance) fitnessChartInstance.destroy();
+        if (cumulativeFitnessChartInstance)
+            cumulativeFitnessChartInstance.destroy();
+
         //create Body Condition Chart
-        bodyConditionChartInstance = new Chart(
+        bodyConditionChartInstance = new LineWithErrorBarsChart(
             document.getElementById("bodyConditionChart"),
             {
                 type: "line",
                 data: {
                     labels: Array.from({ length: Xhist.length }, (_, i) => i),
-                    datasets: createDatasets(Xhist, "Body Condition"),
+                    datasets: createDatasets(Xhist,XhistCon, "Body Condition"),
                 },
+                lineTension: .5,
                 options: chartOptions,
             },
         );
 
-        //create Sensitivity Chart
-        sensitivityChartInstance = new Chart(
-            document.getElementById("sensitivityChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from(
-                        { length: Shist[0].length },
-                        (_, i) => i,
-                    ),
-                    datasets: createSensitivityDatasets(Shist, "Sensitivity"),
+        //createSensitivityChart if we are doing mutliRun else go to stat run sensitivity
+        if ($statRun){
+            switchSensitivityGraphs()
+        }
+        else{
+            sensitivityChartInstance = new LineWithErrorBarsChart(
+                document.getElementById("sensitivityChart"),
+                {
+                    type: "line",
+                    data: {
+                        labels: Array.from(
+                            { length: Shis[0].length },
+                            (_, i) => i,
+                        ),
+                        datasets: createSensitivityDatasets(Shist,"Sensitivity"),
+                    },
+                    lineTension: .5,
+                    options: chartOptions,
                 },
-                options: chartOptions,
-            },
-        );
+            );
+        }
 
         //create Production Chart
-        productionChartInstance = new Chart(
+        productionChartInstance = new LineWithErrorBarsChart(
             document.getElementById("productionChart"),
             {
                 type: "line",
                 data: {
                     labels: Array.from({ length: Chist.length }, (_, i) => i),
-                    datasets: createDatasets(Chist, "Production"),
+                    datasets: createDatasets(Chist,ChistCon, "Production"),
                 },
+                lineTension: .5,
                 options: chartOptions,
             },
         );
 
         //create Fitness Chart
-        fitnessChartInstance = new Chart(
+        fitnessChartInstance = new LineWithErrorBarsChart(
             document.getElementById("fitnessChart"),
             {
                 type: "line",
                 data: {
                     labels: Array.from({ length: Whist.length }, (_, i) => i),
-                    datasets: createDatasets(Whist, "Fitness"),
+                    datasets: createDatasets(Whist,WhistCon, "Fitness"),
                 },
+                lineTension: .5,
                 options: chartOptions,
             },
         );
 
         //create Cumulative Fitness Chart
-        cumulativeFitnessChartInstance = new Chart(
+        cumulativeFitnessChartInstance = new LineWithErrorBarsChart(
             document.getElementById("cumulativeFitnessChart"),
             {
                 type: "line",
                 data: {
                     labels: Array.from({ length: Wcuml.length }, (_, i) => i),
-                    datasets: createDatasets(Wcuml, "Cumulative Fitness"),
+                    datasets: createDatasets(Wcuml, WcumlCon, "Cumulative Fitness"),
                 },
+                lineTension: .5,
                 options: chartOptions,
             },
         );
     }
+    
+    function switchSensitivityGraphs(ChosenTrait) {
+    if (sensitivityChartInstance) sensitivityChartInstance.destroy();
+
+    if (ChosenTrait === 'I') {
+        ShistTemp = ShistI;
+        ShistConTemp = ShistConI;
+    } else if (ChosenTrait === 'J') {
+        ShistTemp = ShistJ;
+        ShistConTemp = ShistConJ;
+    } else {
+        ShistTemp = ShistK;
+        ShistConTemp = ShistConK;
+    }
+
+    sensitivityChartInstance = new LineWithErrorBarsChart(
+        document.getElementById("sensitivityChart"),
+        {
+            type: "line",
+            data: {
+                labels: Array.from(
+                    { length: ShistTemp.length },
+                    (_, i) => i
+                ),
+                datasets: createDatasets(ShistTemp,ShistConTemp, "Sensitivity"),
+            },
+            lineTension: 0.5,
+            options: chartOptions,
+        }
+    );
+}
     function handleDropdownChange() {
-        if (get(variableName) === "Choose a Variable") {
+        if ($variableName === "Choose a Variable") {
             document
                 .getElementById("variableDropDown")
                 .classList.add("border-red-500");
@@ -321,14 +449,20 @@
             }
         }
     }
+
+
+const SenseChartoptions = [
+    { value: 'I', label: 'Trait I' },
+    { value: 'J', label: 'Trait J' },
+    { value: 'K', label: 'Trait K' }
+];
 </script>
 
-<NavBar multiPage="true" />
+<NavBar multiPage="Multi" />
 
 <h1
-    class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
->
-    Hormone Multi-Run Model Visualization
+    class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
+    Hormone Model - Multi Run
 </h1>
 
 <div class="flex flex-wrap justify-center">
@@ -339,94 +473,111 @@
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Gamma 1"
+                id="Selection against effort in trait i (γᵢ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma1}
+                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
             />
 
             <SliderInput
-                id="Gamma 2"
+                id="Selection against effort in trait j (γⱼ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma2}
+                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the second trait."
             />
 
             <SliderInput
-                id="Gamma 3"
+                id="Selection against effort in trait k (γₖ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma3}
+                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the third trait."
             />
         </div>
 
         <!-- Container for Z sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Z 1"
+                id="Weight of first Trait (zᵢ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$z1}
+                modalMessage="The weight of the first trait in the role of the fitness function."
             />
+            
 
             <SliderInput
-                id="Z 2"
+                id="Weight of second trait (zⱼ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$z2}
+                modalMessage="The weight of the second trait in the role of the fitness function."
             />
 
             <SliderInput
-                id="Z 3"
+                id="Weight of third trait (zₖ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$z3}
+                modalMessage="The weight of the third trait in the role of the fitness function."
             />
         </div>
 
         <!-- Container for food shortage sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Food Short"
+                id="Food Shortage"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$foodShort}
+                modalMessage="A multiplier of current food."
             />
 
             <SliderInput
-                id="Food Short Begin"
+                id="Food shortage begins"
                 min="0"
                 max={$foodShortend}
                 step="1"
                 bind:inputVar={$foodShortbegin}
+                modalMessage="Reproductive cycle when the food shortage begins"
             />
 
             <SliderInput
-                id="Food Short End"
+                id="Food shortage ends"
                 min="0"
                 max={$N}
                 step="1"
                 bind:inputVar={$foodShortend}
+                modalMessage="Reproductive cycle when the food shortage ends"
             />
         </div>
 
         <!-- Container for G and mu sliders-->
         <div class="flex flex-wrap justify-center w-full">
-            <SliderInput id="G" min="0" max="1" step="0.1" bind:inputVar={$G} />
+            <SliderInput 
+                id="Hormone level for gamete maturation (G)" 
+                min="0" 
+                max="1"
+                step="0.1" 
+                bind:inputVar={$G} 
+                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization."/>
 
             <SliderInput
-                id="Mu"
+                id="Death probability (µ)"
                 min="0"
                 max="1"
                 step="0.001"
                 bind:inputVar={$mu}
+                modalMessage="A fixed chance that the bird will die randomly."
             />
         </div>
     </div>
@@ -452,65 +603,72 @@
 
         <!--input for Xmin-->
         <FormInput
-            id="Xmin"
+            id="Min energy level for reproduction (xᵣₑₚ)"
             inputType="number"
             min="0"
             max="10000"
             step="1"
+            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by energy function"
             bind:inputVar={$Xmin}
         />
 
         <FormInput
-            id="delSmax"
+            id="Max change of sensitivity to hormone (|ΔSᵢ, ₘₐₓ|)"
             inputType="number"
             min="0"
             max="10000"
             step="1"
+            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues"
             bind:inputVar={$delSmax}
         />
 
         <FormInput
-            id="delCmax"
+            id="Max change of circulating hormone (|ΔCₘₐₓ|)"
             inputType="number"
             min="0"
             max="10000"
             step="1"
+            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism"
             bind:inputVar={$delCmax}
         />
 
         <FormInput
-            id="Tau"
+            id="Food availability (τ)"
             inputType="number"
             min="0"
             max="10000"
             step="1"
+            modalMessage="Determines the food availible in the environment for the organism. "
             bind:inputVar={$tau}
         />
 
         <FormInput
-            id="K"
+            id="Michaelis-Menten constant (K)"
             inputType="number"
             min="0"
             max="10000"
             step="1"
+            modalMessage="A constant used by the Michaelis-Menten Equation. Equal across all tissues."
             bind:inputVar={$K}
         />
 
         <FormInput
-            id="Alpha"
+            id="First parameter of beta distribution (A)"
             inputType="number"
             min="0"
             max="10000"
             step="1"
+            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
             bind:inputVar={$alpha}
         />
 
         <FormInput
-            id="Beta"
+            id="Second parameter of beta distribution (B)"
             inputType="number"
             min="0"
             max="10000"
             step="1"
+            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
             bind:inputVar={$beta}
         />
 
@@ -531,11 +689,12 @@
         -->
 
         <FormInput
-            id="N"
+            id="Number of reproductive cycles (N)"
             inputType="number"
             min="0"
             max="10000"
             step="1"
+            modalMessage="Number of reproductive cycles the simulation goes through. Once reached, the organism dies."
             bind:inputVar={$N}
         />
 
@@ -573,48 +732,52 @@
     <hr
         class="m-auto w-[90%] h-px my-6 border-1 border-indigo-500 opacity-50"
     />
-
-    <!-- Choose bariable drop down -->
     <div class="flex flex-wrap justify-center">
-        <div class="w-72 m-2">
-            <form class="relative w-full min-w-[200px] h-10 invalid: iSum">
-                <label
-                    for="variableDropDown"
-                    class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate
-            peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent
-            peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px]
-            peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px]
-            before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2
-            before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent
-            after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1
-            peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2
-            after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent
-            peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-purple-500 before:border-blue-gray-200
-            peer-focus:before:!border-purple-500 after:border-blue-gray-200 peer-focus:after:!border-purple-500"
-                    >Select an option</label
-                >
+             
+    <!-- Trait for Sensitivity DropDown (temporary)-->
+    <!-- To change options refer to the senseChartoptions Variable-->
+    <Dropdown
+    bind:ValueToChange={ChosenTrait}
+    optionList={SenseChartoptions}
+    changeFunction={(event) => {
+        handleDropdownChange(event);
+        switchSensitivityGraphs(event.target.value);
+    }}
+    showValidationMessage = {$showValidationMessage}
+    messageForValidation = "Please select a Trait For the SensitivityGraph"
+    />
+    <!-- Choose variable drop down -->
+    <div class="flex flex-wrap justify-center">
+        <div class="w-72 m-2 mt-[27px]">
+            <div class="relative h-10 w-72 min-w-[200px] invalid: iSum">
                 <select
-                    id="variableDropDown"
-                    class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900 focus:border-purple-500 placeholder:text-blue-gray-100"
-                    bind:value={$variableName}
-                    on:change={handleDropdownChange}
-                >
+                id="variableDropDown"
+                class="peer h-full w-full rounded-[7px] border border-gray-500 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-purple-500 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+                bind:value={$variableName}
+                on:change={handleDropdownChange}>
                     <option selected>Choose a Variable</option>
-                    <option value="alpha">alpha</option>
-                    <option value="beta">beta</option>
-                    <option value="delSmax">delSmax</option>
-                    <option value="delCmax">delCmax</option>
-                    <option value="G">G</option>
-                    <option value="K">K</option>
-                    <option value="mu">mu</option>
-                    <option value="tau">tau</option>
-                    <option value="Xmin">Xmin</option>
+                    <option value="alpha">First parameter of beta distribution (A)</option>
+                    <option value="beta">Second parameter of beta distribution (B)</option>
+                    <option value="delSmax">Max change of sensitivity to hormone (|ΔSᵢ, ₘₐₓ|)</option>
+                    <option value="delCmax">Max change of circulating hormone (|ΔCₘₐₓ|)</option>
+                    <option value="G">Hormone level for gamete maturation (G)</option>
+                    <option value="K">Michaelis-Menten constant (K)</option>
+                    <option value="mu">Death probability (µ)</option>
+                    <option value="tau">Food availability (τ)</option>
+                    <option value="Xmin">Min energy level for reproduction (xᵣₑₚ)</option>
                 </select>
                 {#if $showValidationMessage}
                     <p class="text-red-500 text-sm">Please select a variable</p>
                 {/if}
-            </form>
+                <label
+                for="variableDropDown"
+                class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-gray-500 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-gray-500 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:before:text-blue-gray-500 peer-focus:after:text-purple-500 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-purple-500 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-purple-500 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                Select an option
+                </label>
+            </div>
         </div>
+    </div>
+
 
         <FormInput
             id="Variable Range Begin"
@@ -622,6 +785,7 @@
             min="0"
             max={$variableRangeEnd}
             step="1"
+            modalMessage="Sets the starting value for the chosen variable at the beginning of the number of runs."
             bind:inputVar={$variableRangeBegin}
         />
         <FormInput
@@ -630,6 +794,7 @@
             min="0"
             max="1000000"
             step="1"
+            modalMessage="Sets the ending value for the variable at the end of the number of runs."
             bind:inputVar={$variableRangeEnd}
         />
         <FormInput
@@ -638,12 +803,13 @@
             min="0"
             max="1000000"
             step="1"
+            modalMessage="Variable that runs the model multiple times. It overlays all simulations onto one graph."
             bind:inputVar={$numRuns}
         />
     </div>
 </div>
 
-<div class="text-center mt-4">
+<div class="text-center my-4">
     <button
         class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded"
         on:click={fetchData}>Run</button
@@ -656,20 +822,20 @@
             class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
         >
             <h2 class="text-center text-xl font-semibold mb-4">
-                Body Condition
+                Energy of Organism
             </h2>
             <canvas id="bodyConditionChart"></canvas>
         </div>
         <div
             class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
         >
-            <h2 class="text-center text-xl font-semibold mb-4">Sensitivity</h2>
+            <h2 class="text-center text-xl font-semibold mb-4">Sensitivity to Hormone</h2>
             <canvas id="sensitivityChart"></canvas>
         </div>
         <div
             class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
         >
-            <h2 class="text-center text-xl font-semibold mb-4">Production</h2>
+            <h2 class="text-center text-xl font-semibold mb-4">Circulating Level Of Hormone</h2>
             <canvas id="productionChart"></canvas>
         </div>
         <div
