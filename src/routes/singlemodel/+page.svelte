@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import axios from "axios";
     import Chart, { registerables } from "chart.js/auto";
+    import ExportChart from "../Nested/ExportChart.svelte";
     import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
@@ -45,6 +46,12 @@
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
     //let traitChartInstance = null;
+
+    let exportData1 = '';
+    let exportData2 = '';
+    let exportData3 = '';
+    let exportData4 = '';
+    let exportData5 = '';
 
     onMount(() => {
         fetchData();
@@ -91,18 +98,22 @@
             console.error("Error fetching data:", error);
         }
     }
-
     
-    function makeChart(canvas, title, y, color, maxValue) {
+    function makeChart(canvas, title, y, color, maxValue, ylabel) {
         // <block:data:3>
+        let color_pool = [[216, 27, 96], 
+                          [9, 224, 188], 
+                          [124, 181, 24]]
+
         let chartData = {};
         const is2dArray = (array) => array.every((item) => Array.isArray(item));
         if (is2dArray(y)) {
             let chartDatasets = [];
             for (let i = 0; i < y.length; i++) {
-                let r = 255 / i;
-                let g = 99 / i;
-                let b = 132 / i;
+                color = color_pool[i]
+                let r = color[0];
+                let g = color[1];
+                let b = color[2];
                 let data = {
                     label: title + " " + i,
                     data: y[i],
@@ -157,38 +168,38 @@
                 : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
 
         const animation = {
-        x: {
-            type: 'number',
-            easing: 'linear',
-            duration: delayBetweenPoints,
-            from: NaN, // the point is initially skipped
-            delay(ctx) {
-            if (ctx.type !== 'data' || ctx.xStarted) {
-                return 0;
+            x: {
+                type: 'number',
+                easing: 'linear',
+                duration: delayBetweenPoints,
+                from: NaN, // the point is initially skipped
+                delay(ctx) {
+                if (ctx.type !== 'data' || ctx.xStarted) {
+                    return 0;
+                }
+                ctx.xStarted = true;
+                return ctx.index * delayBetweenPoints;
+                }
+            },
+            y: {
+                type: 'number',
+                easing: 'linear',
+                duration: delayBetweenPoints,
+                from: previousY,
+                delay(ctx) {
+                if (ctx.type !== 'data' || ctx.yStarted) {
+                    return 0;
+                }
+                ctx.yStarted = true;
+                return ctx.index * delayBetweenPoints;
+                }
             }
-            ctx.xStarted = true;
-            return ctx.index * delayBetweenPoints;
-            }
-        },
-        y: {
-            type: 'number',
-            easing: 'linear',
-            duration: delayBetweenPoints,
-            from: previousY,
-            delay(ctx) {
-            if (ctx.type !== 'data' || ctx.yStarted) {
-                return 0;
-            }
-            ctx.yStarted = true;
-            return ctx.index * delayBetweenPoints;
-            }
-        }
         };
         // </block:animation>
 
         // <block:chartOptions:1>
         const chartOptions = {
-            animation,
+            //animation,
             interaction: {
                 intersect: false
             },
@@ -206,7 +217,7 @@
                 },
                 y: {
                     beginAtZero: true,
-                    title: { display: true, text: "y label" },
+                    title: { display: true, text: ylabel },
                     max: maxValue
                 },
             },
@@ -219,7 +230,7 @@
             data: chartData,
             options: chartOptions
         };
-    // </block:config>
+        // </block:config>
 
         return new Chart(ctx, config);
     }
@@ -240,7 +251,8 @@
             "Body Condition",
             Xhist,
             "rgba(75, 192, 192, 1)",
-            20
+            20,
+            "Energy of the organism"
         );
 
         // Create Sensitivity Chart
@@ -249,7 +261,8 @@
             "Sensitivity",
             Shist,
             "rgba(255, 99, 132, 1)",
-            20
+            20,
+            "Sensitivity to hormone"
         );
 
         // Create Production Chart
@@ -258,7 +271,8 @@
             "Production",
             Chist,
             "rgba(153, 102, 255, 1)",
-            20
+            20,
+            "Hormone concentration"
         );
 
         // Create Fitness Chart
@@ -267,7 +281,8 @@
             "Fitness",
             Whist,
             "rgba(255, 159, 64, 1)",
-            10
+            10,
+            "Fitness"
         );
 
         // Create Cumulative Fitness Chart
@@ -276,7 +291,8 @@
             "Cumulative Fitness",
             Wcuml,
             "rgba(255, 206, 86, 1)",
-            150
+            150,
+            "Accumulated Fitness"
         );
 
         // traitChartInstance = makeChart(
@@ -287,6 +303,16 @@
         //     2.5
         // )
     }
+
+    function exportChartBase64(chartInstance){
+        // console.log("chartInstance", chartInstance)
+        const base64 = chartInstance.toBase64Image();
+        //base64Data.set(base64);
+        // console.log("base64", base64)
+        // document.getElementById('chart-image-show').src = base64;
+        return base64.slice(22)
+    }
+    
 </script>
 
 <NavBar multiPage="Single" />
@@ -582,39 +608,96 @@
 </div>
 
 <!-- Creating Charts-->
-<div class="flex flex-row flex-wrap gap-6 items-center justify-center">
+<div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Energy of Organism
-        </h2>
+        <div class="flex justify-center items-center">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Energy of Organism
+            </h2>
+            <button on:click={()=>{ exportData1 = exportChartBase64(bodyConditionChartInstance) }}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                </svg>
+                <ExportChart
+                    data={exportData1}
+                />                                
+            </button>
+        </div>
         <canvas id="bodyConditionChart"></canvas>
+        
     </div>
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <h2 class="text-center text-xl font-semibold mb-4">Sensitivity to Hormone</h2>
+        <div class="flex justify-center items-center">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Sensitivity to Hormone
+            </h2>
+            <button on:click={()=>{ exportData2 = exportChartBase64(sensitivityChartInstance) }}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                </svg>
+                <ExportChart
+                    data={exportData2}
+                />                 
+            </button>
+        </div>
         <canvas id="sensitivityChart"></canvas>
     </div>
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <h2 class="text-center text-xl font-semibold mb-4">Circulating Level Of Hormone </h2>
+        <div class="flex justify-center items-center">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Circulating Level Of Hormone
+            </h2>
+            <button on:click={()=>{ exportData3 = exportChartBase64(productionChartInstance) }}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                </svg>
+                <ExportChart
+                    data={exportData3}
+                />                 
+            </button>
+        </div>    
         <canvas id="productionChart"></canvas>
     </div>
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
+        <div class="flex justify-center items-center">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Fitness
+            </h2>
+            <button on:click={()=>{ exportData4 = exportChartBase64(fitnessChartInstance) }}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                </svg>
+                <ExportChart
+                    data={exportData4}
+                />                 
+            </button>
+        </div>
         <canvas id="fitnessChart"></canvas>
     </div>
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Cumulative Fitness
-        </h2>
+        <div class="flex justify-center items-center">
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Cumulative Fitness
+            </h2>
+            <button on:click={()=>{ exportData5 = exportChartBase64(cumulativeFitnessChartInstance) }}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                </svg>
+                <ExportChart
+                    data={exportData5}
+                />                 
+            </button>
+        </div>    
         <canvas id="cumulativeFitnessChart"></canvas>
     </div>
     <!-- <div
