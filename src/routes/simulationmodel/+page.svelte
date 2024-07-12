@@ -30,6 +30,12 @@
     } from "../data_store.js";
     import {apiEndpoint} from "../state_store.js"
 
+
+
+    import {gamma1_tissue, gamma2_tissue, gamma3_tissue} from "../tissue_store"
+
+
+
     let Xhist = [];
     let Shist = [];
     let Chist = [];
@@ -286,7 +292,25 @@
             20
         )
     }
+
+
+    function fadeReturnData(){
+        console.log("Button clicked")
+        $gamma1_tissue = 5
+    }
+
+
+
+
 </script>
+
+
+
+
+
+
+
+
 
 <NavBar multiPage="Single" />
 
@@ -300,6 +324,13 @@
 >
     Hormone Model - Single Run
 </h1>
+
+
+
+
+<button on:click={fadeReturnData}>Fake Data Update</button>
+
+
 
 <!--Input Parameters -->
 <div class="flex flex-wrap justify-center">

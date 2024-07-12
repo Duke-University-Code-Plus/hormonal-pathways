@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { scale } from "svelte/transition";
+    import {gamma1_tissue, gamma2_tissue, gamma3_tissue} from "../tissue_store.js"
 
     let sketchContainer;
 
@@ -117,19 +118,26 @@
                     p.allSprites[i].debug = true;
                 }
 
-                while (g > circles.length) {
+
+                //console.log("$gamma1_tissue", $gamma1_tissue)
+
+                h = $gamma1_tissue
+
+
+
+                if (g > circles.length) {
                     p.createCircle();
                 }
 
-                while (g < circles.length) {
+                if (g < circles.length) {
                     p.removeCircle();
                 }
 
-                while (h > boxes.length) {
+                if (h > boxes.length) {
                     p.createBoxes();
                 }
 
-                while (h < boxes.length) {
+                if (h < boxes.length) {
                     p.removeBox();
                 }
 
