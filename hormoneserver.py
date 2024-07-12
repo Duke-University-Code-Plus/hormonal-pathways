@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import llava
 from hormoneModel_6_4_24 import hormoneModel
 from hormoneMulti import runMultiRun
 from hormoneModelStat import hormoneModelStatRun
@@ -100,6 +101,14 @@ def get_stat_arrays():
     except Exception as e:
         app.logger.error(f"Error processing request: {e}")
         return jsonify({'error': str(e)}), 400
+    
+@app.route('/llavaserver', methods=['POST'])
+def run_script():
+    data = request.json.get('base64')
+    response = llava.run_analysis(data)
+    print(response)
+    # Return some result
+    return jsonify({"message": response})
     
 
 
