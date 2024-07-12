@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { scale } from "svelte/transition";
+    import {gamma1_tissue, gamma2_tissue, gamma3_tissue} from "../tissue_store.js";
 
     let sketchContainer;
 
@@ -56,6 +57,8 @@
                 dna,
                 cellbg,
                 nucbg;
+            let g = 10;
+            let h = 3;
             const particles = [];
 
             let setwidth = 960;
@@ -105,11 +108,11 @@
                 p.invisibleSprites();
 
                 // Create circles and boxes
-                for (let i = 0; i < hormoneSlider.value(); i++) {
+                for (let i = 0; i < g; i++) {
                     p.createCircle();
                 }
 
-                for (let j = 0; j < receptorSlider.value(); j++) {
+                for (let j = 0; j < h; j++) {
                     p.createBoxes();
                 }
             };
@@ -124,8 +127,8 @@
 
 
                 // Handle sliders
-                let g = hormoneSlider.value();
-                let h = receptorSlider.value();
+                // let g = hormoneSlider.value();
+                // let h = receptorSlider.value();
 
                 while (g > circles.length) {
                     p.createCircle();
@@ -475,7 +478,7 @@
                     210, 435,
                     400,
                 );
-                //inv2.visible = false;
+                inv2.visible = false;
             };
 
             p.checkReceptorLocation = (box) => {
