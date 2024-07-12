@@ -64,6 +64,10 @@
             let setwidth = 960;
             let setheight = 672;
 
+            // Hormone and receptor count
+            let g = 10 // hormone
+            let h = 0 // receptor
+
             p.setup = () => {
                 p.createCanvas(setwidth/2, setheight/2);
 
@@ -106,29 +110,15 @@
                 p.setMembranes();
                 p.setDNA();
                 p.invisibleSprites();
-
-                // Create circles and boxes
-                for (let i = 0; i < g; i++) {
-                    p.createCircle();
-                }
-
-                for (let j = 0; j < h; j++) {
-                    p.createBoxes();
-                }
             };
 
             p.draw = () => {
                 p.background(247, 211, 208);
                 p.scale(0.5);
 
-                 for (var i = 0; i < p.allSprites.length; i++) {
-                     p.allSprites[i].debug = true;
+                for (var i = 0; i < p.allSprites.length; i++) {
+                    p.allSprites[i].debug = true;
                 }
-
-
-                // Handle sliders
-                // let g = hormoneSlider.value();
-                // let h = receptorSlider.value();
 
                 while (g > circles.length) {
                     p.createCircle();
@@ -375,53 +365,46 @@
 
             p.createBoxes = () => {
                 var box;
-                var overlapping;
-                var correctLoc;
 
-                do {
-                    overlapping = false;
-                    correctLoc = false;
-                    var bx = p.random(0, p.width*2);
-                    var by = p.random(20, p.height*2 - 20);
+                // Select random coordinates
+                var bx = p.random(0, p.width*2);
+                var by = p.random(20, p.height*2 - 20);
 
-                    for (var k = 0; k < boxes.length; k++) {
-                        var otherBox = boxes[k];
-                        if (
-                            p.dist(
-                                bx,
-                                by,
-                                otherBox.position.x,
-                                otherBox.position.y,
-                            ) < 100
-                        ) {
-                            overlapping = true;
-                            break;
-                        }
-                    }
+                // Check if coordinates overlap with another box
+                for (var k = 0; k < boxes.length; k++) {
+                    var otherBox = boxes[k];
+                    if (
+                        p.dist(
+                            bx,
+                            by,
+                            otherBox.position.x,
+                            otherBox.position.y,
+                        ) < 100
+                    ) return;
+                }
+                console.log("Passed first test: No overlap with other boxes")
 
-                    // Create temporary box for location checking
-                    if (!overlapping) {
-                        box = p.createSprite(bx, by);
-                        box.setCollider("rectangle");
-                        correctLoc = p.checkReceptorLocation(box);
-                        box.remove(); // Remove temporary box
-                    }
+                // Check if coordinates overlap with background sprites
+                // Create temporary box for location checking
+                box = p.createSprite(bx, by);
+                box.setCollider("rectangle");
+                if (!p.isCorrectReceptorLocation(box)) return box.remove()
+                box.remove()
+                console.log("Passed second test: No overlap with background sprites")
 
-                    if (!overlapping && correctLoc) {
-                        box = p.createSprite(bx, by);
-                        box.addImage(receptor);
-                        box.setCollider("rectangle");
-                        box.immovable = true;
-                        box.depth = 4;
-                        boxes.add(box);
-                        box.dnaPos = null;
-                        box.initPos = {
-                            x: bx,
-                            y: by,
-                        };
-                        box.movingBack = false;
-                    }
-                } while (overlapping || !correctLoc);
+                // Create box
+                box = p.createSprite(bx, by);
+                box.addImage(receptor);
+                box.setCollider("rectangle");
+                box.immovable = true;
+                box.depth = 4;
+                boxes.add(box);
+                box.dnaPos = null;
+                box.initPos = {
+                    x: bx,
+                    y: by,
+                };
+                box.movingBack = false;
             };
 
             p.removeBox = () => {
@@ -481,7 +464,7 @@
                 inv2.visible = false;
             };
 
-            p.checkReceptorLocation = (box) => {
+            p.isCorrectReceptorLocation = (box) => {
                 var withinCell = cell.overlapPixel(
                     box.position.x,
                     box.position.y,
