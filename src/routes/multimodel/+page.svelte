@@ -834,7 +834,7 @@ function bruh() {
 </div>
 
 {#if initialRun}
-    <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
+    <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
         <div
             class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
         >
