@@ -5,6 +5,7 @@
     import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
+    import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
     import Dropdown from "../Nested/Dropdown.svelte";
     import { LineWithErrorBarsChart } from 'chartjs-chart-error-bars';
     
@@ -536,37 +537,6 @@ function bruh() {
             />
         </div>
 
-        <!-- Container for food shortage sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <SliderInput
-                id="Food Shortage"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$foodShort}
-                modalMessage="A multiplier of current food."
-            />
-
-            <SliderInput
-                id="Food shortage begins"
-                min="0"
-                max={$foodShortend}
-                step="1"
-                bind:inputVar={$foodShortbegin}
-                modalMessage="Reproductive cycle when the food shortage begins"
-            />
-
-            <SliderInput
-                id="Food shortage ends"
-                min="0"
-                max={$N}
-                step="1"
-                bind:inputVar={$foodShortend}
-                modalMessage="Reproductive cycle when the food shortage ends"
-            />
-        </div>
-
-        <!-- Container for G and mu sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput 
                 id="Hormone level for gamete maturation (G)" 
@@ -585,6 +555,35 @@ function bruh() {
                 modalMessage="A fixed chance that the bird will die randomly."
             />
         </div>
+
+        <hr
+        class="m-auto w-[90%] h-px my-6 border-1 border-indigo-500 opacity-50"
+        />
+
+        <!-- Container for food shortage sliders-->
+        <div class="flex flex-wrap justify-center w-full">
+            <SliderInput
+                id="Food Shortage"
+                min="0"
+                max="1"
+                step="0.1"
+                bind:inputVar={$foodShort}
+                modalMessage="A multiplier of current food."
+            />
+
+            <SliderTwoInput
+                bind:inputVarHigh={$foodShortend}
+                bind:maxForVarHigh={$N}
+                bind:inputVarLow={$foodShortbegin}
+                inputVarHighName="Food Shortage End"
+                inputVarLowName="Food Shortage Begin"
+                minForVarLow=0
+                step=1
+            />
+        </div>
+
+        <!-- Container for G and mu sliders-->
+        
     </div>
 
     <!-- Form Inputs -->

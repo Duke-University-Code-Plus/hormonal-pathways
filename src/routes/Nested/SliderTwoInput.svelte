@@ -136,6 +136,7 @@
         background-color:#a855f7;
         border-radius: 50%;
         cursor: pointer;
+        opacity: 75%;
     }
 
     input[type=range]::-moz-range-thumb {
