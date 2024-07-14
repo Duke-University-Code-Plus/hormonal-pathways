@@ -34,6 +34,13 @@ var notes;
 var music; 
 var babybirdDirection;
 var reproduce; 
+var femalebirdLocation;
+var perchLeftX;
+var perchLeftY;
+var perchRightX;
+var perchRightY;
+var malePerchVicinity = false; 
+var femalePerchVicinity = false; 
 
 //player location
 var groundHeight;
@@ -165,6 +172,7 @@ if (femalebird != null)
       reproductiveSuccess();
       matingChange = true;
     }
+    // perch();
     birdMate();
   }
   //bird animation in death
@@ -299,13 +307,12 @@ function updateInputs() {
 
 function createFemalebird() { 
   //create predator sprite and add animation
-  var femalebirdLocation = random(["left", "right"]); 
-
+  femalebirdLocation = random(["left", "right"]); 
   if (femalebirdLocation == "left") { 
     femalebirdX = 0 - malebird.originalWidth; 
     femalebirdY = random(0, height / 4);
   }
-  else if (femalebirdLocation == "right") { 
+  else { 
     femalebirdX = width + malebird.originalWidth; 
     femalebirdY = random(0, height / 4);
   }
@@ -336,14 +343,38 @@ function createFemalebird() {
 }
  
 // function perch() {
-//   var perchX = tree.position.x - tree.originalWidth / 2; 
-//   var perchY = tree.position.y + tree.originalWidth; 
-//   if (femalebird.velocity.x > 0) 
-//     femalebird.mirrorX(-1);
-//   if (femalebird.velocity.x < 0) 
-//     femalebird.mirrorX(1);
-//   malebird.attractionPoint(0.1, perchX,  perchY);
-//   femalebird.attractionPoint (0.1, perchX,  perchY);
+//   perchLeftX = tree.position.x - 0.75 * tree.originalWidth; 
+//   perchLeftY = tree.position.y; 
+//   perchRightX = tree.position.x - tree.originalWidth / 4; 
+//   perchRightY = tree.position.y + tree.originalHeight / 8; 
+
+
+//   if ((malebird.position.x >= tree.position.x - 0.75 * tree.originalWidth && malebird.position.x <= tree.position.x - tree.originalWidth / 4)){
+//     malePerchVicinity = true; 
+//   }
+//   if (femalebird.position.x >= tree.position.x - 0.75 * tree.originalWidth && femalebird.position.x <= tree.position.x - tree.originalWidth / 4) {
+//     femalePerchVicinity = true; 
+//   }
+
+//   malebird.changeAnimation('walk');
+//   if (femalebirdLocation == "left") {
+//     femalebird.attractionPoint (0.2, perchLeftX,  perchLeftY);
+//     malebird.attractionPoint (0.2, perchRightX,  perchRightY);
+//     if (femalebird.position.x == perchLeftX && femalebird.position.y == perchLeftY) {
+//       femalebird.changeAnimation('stand'); 
+//       femalebird.velocity.x = 0; 
+//       femalebird.velocity.y = 0;
+//     }
+//     if (malebird.position.x == perchRightX && femalebird.position.y == perchRightY) {
+//       malebird.changeAnimation('stand'); 
+//       malebird.velocity.x = 0; 
+//       malebird.velocity.y = 0;
+//     }
+//   }
+//   if (femalebirdLocation == "right")  {
+//     femalebird.attractionPoint (0.2, perchRightX, perchRightY);
+//     malebird.attractionPoint (0.2, perchLeftX,  perchLeftY);
+//   }
 // }
 
 function reproductiveSuccess() {
@@ -424,15 +455,21 @@ function createNotes() {
 }
 
 function birdMate(){  
+  // if ((malebird.position.x == perchLeftX && femalebird.position.x == perchRightX)
+  //   || (femalebird.position.x == perchLeftX && malebird.position.x == perchRightX)) 
+  //   matesVicinity = true; 
+  // else 
+  //   matesVicinity = false; 
+
   if (1.5 * nest.originalWidth > abs(femalebird.position.x - malebird.position.x)
-  && abs(femalebird.position.y - malebird.position.y) < malebird.originalHeight / 4) 
-    matesVicinity = true; 
-  else 
-    matesVicinity = false; 
+    && abs(femalebird.position.y - malebird.position.y) < malebird.originalHeight / 4) 
+      matesVicinity = true; 
+    else 
+      matesVicinity = false; 
 
   if (femalebird.position.x < malebird.position.x) 
     malebird.mirrorX(1); 
-  else
+  if (femalebird.position.x > malebird.position.x) 
     malebird.mirrorX(-1); 
   
   if (matesVicinity) { 
@@ -443,7 +480,7 @@ function birdMate(){
     femalebird.changeAnimation('stand'); 
     femalebird.velocity.x = 0;
     femalebird.velocity.y = 0;
-    if (singFrameCount >= singFrameCycle * 1) {
+    if (singFrameCount >= singFrameCycle * 3) {
       malebird.changeAnimation('stand'); 
       if (notes != null) { 
         notes.remove();
