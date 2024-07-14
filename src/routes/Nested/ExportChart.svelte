@@ -58,9 +58,7 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     {:else}
-                        <div class="">
-                            {modalMessage}
-                        </div>
+                        {modalMessage}
                     {/if}
                 </p>
             </div>
