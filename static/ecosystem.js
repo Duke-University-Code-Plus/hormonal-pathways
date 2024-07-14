@@ -20,7 +20,7 @@ var caughtPrey;
 var removedPrey;
 var preySide; 
 var rightPreys; 
-var leftPreys
+var leftPreys;
 var peckColliderY = 0; 
 
 //mating
@@ -39,8 +39,10 @@ var perchLeftX;
 var perchLeftY;
 var perchRightX;
 var perchRightY;
-var malePerchVicinity = false; 
-var femalePerchVicinity = false; 
+var collisionBox;
+var perched = false;
+var box1;
+var box2;
 
 //player location
 var groundHeight;
@@ -170,9 +172,9 @@ if (femalebird != null)
     if (!matingChange) {
       createFemalebird();
       reproductiveSuccess();
+      makeCollisions();
       matingChange = true;
     }
-    // perch();
     birdMate();
   }
   //bird animation in death
@@ -288,6 +290,36 @@ function createAnimals() {
   }
 }
 
+//Create Collision Box
+
+function createCollisionBox(x, y) {
+  invisibleBox = createSprite(x, y, 20, 20);
+  invisibleBox.setCollider('rectangle', 0, 0, 20, 20);
+  invisibleBox.debug = true;
+  //invisibleBox.visible = false;
+
+  return invisibleBox
+}
+
+function handleCollision(bird, x, y, box) {
+  if (bird.overlapPoint(x, y)) {
+    bird.changeAnimation('stand');
+    bird.velocity.x = 0;
+    bird.velocity.y = 0;
+    box.remove(); // Destroy the box after collision
+  }
+}
+
+function makeCollisions(){
+  perchLeftX = tree.position.x - 0.75 * tree.originalWidth; 
+  perchLeftY = tree.position.y; 
+  perchRightX = tree.position.x - tree.originalWidth / 4; 
+  perchRightY = tree.position.y + tree.originalHeight / 8; 
+
+  box1 = createCollisionBox(perchLeftX, perchLeftY);
+  box2 = createCollisionBox(perchRightX, perchRightY);
+}
+
 function updateText() {
   text(floor(shortageSlider.value()), 100, 100);
   text("Reproductive Success: " + babybirdCount, 0, 120);
@@ -319,6 +351,7 @@ function createFemalebird() {
   femalebird = createSprite(femalebirdX, femalebirdY);
   femalebird.addAnimation('normal', femalebird_fly);
   femalebird.addAnimation('stand', imagePath + 'femalebird_stand.png');
+  femalebird.setCollider('circle', 0, 0, 200);
   femalebird.debug = false;
   femalebird.friction = 0.1;
   femalebird.depth = 20;
@@ -342,40 +375,26 @@ function createFemalebird() {
   }
 }
  
-// function perch() {
-//   perchLeftX = tree.position.x - 0.75 * tree.originalWidth; 
-//   perchLeftY = tree.position.y; 
-//   perchRightX = tree.position.x - tree.originalWidth / 4; 
-//   perchRightY = tree.position.y + tree.originalHeight / 8; 
+function perch() {
+  if (femalebirdLocation == "left") {
+    malebird.changeAnimation('walk');
+    femalebird.attractionPoint (0.2, perchLeftX,  perchLeftY);
+    malebird.attractionPoint (0.2, perchRightX,  perchRightY);
+    handleCollision(femalebird, perchLeftX,  perchLeftY, box1);
+    handleCollision(malebird, perchRightX,  perchRightY, box2);
+  }
+  if (femalebirdLocation == "right")  {
+    malebird.changeAnimation('walk');
+    femalebird.attractionPoint (0.2, perchRightX, perchRightY);
+    malebird.attractionPoint (0.2, perchLeftX,  perchLeftY);
+    handleCollision(malebird, perchLeftX, perchLeftY, box1);
+    handleCollision(femalebird, perchRightX,  perchRightY, box2);
+  } 
 
-
-//   if ((malebird.position.x >= tree.position.x - 0.75 * tree.originalWidth && malebird.position.x <= tree.position.x - tree.originalWidth / 4)){
-//     malePerchVicinity = true; 
-//   }
-//   if (femalebird.position.x >= tree.position.x - 0.75 * tree.originalWidth && femalebird.position.x <= tree.position.x - tree.originalWidth / 4) {
-//     femalePerchVicinity = true; 
-//   }
-
-//   malebird.changeAnimation('walk');
-//   if (femalebirdLocation == "left") {
-//     femalebird.attractionPoint (0.2, perchLeftX,  perchLeftY);
-//     malebird.attractionPoint (0.2, perchRightX,  perchRightY);
-//     if (femalebird.position.x == perchLeftX && femalebird.position.y == perchLeftY) {
-//       femalebird.changeAnimation('stand'); 
-//       femalebird.velocity.x = 0; 
-//       femalebird.velocity.y = 0;
-//     }
-//     if (malebird.position.x == perchRightX && femalebird.position.y == perchRightY) {
-//       malebird.changeAnimation('stand'); 
-//       malebird.velocity.x = 0; 
-//       malebird.velocity.y = 0;
-//     }
-//   }
-//   if (femalebirdLocation == "right")  {
-//     femalebird.attractionPoint (0.2, perchRightX, perchRightY);
-//     malebird.attractionPoint (0.2, perchLeftX,  perchLeftY);
-//   }
-// }
+  if (malebird.getAnimationLabel() == 'stand' && femalebird.getAnimationLabel() == 'stand'){
+    perched = true;
+  }
+}
 
 function reproductiveSuccess() {
   reproduce = true; 
@@ -420,7 +439,6 @@ function babybirdMovement() {
     }
     else {
       babybird_organism.changeAnimation('fly');
-      console.log(babybirdDirection[i]);
       if (babybirdDirection[i] == "left") {
         babybird_organism.mirrorX(1);
         babybird_organism.velocity.x = -2;
@@ -455,24 +473,14 @@ function createNotes() {
 }
 
 function birdMate(){  
-  // if ((malebird.position.x == perchLeftX && femalebird.position.x == perchRightX)
-  //   || (femalebird.position.x == perchLeftX && malebird.position.x == perchRightX)) 
-  //   matesVicinity = true; 
-  // else 
-  //   matesVicinity = false; 
-
-  if (1.5 * nest.originalWidth > abs(femalebird.position.x - malebird.position.x)
-    && abs(femalebird.position.y - malebird.position.y) < malebird.originalHeight / 4) 
-      matesVicinity = true; 
-    else 
-      matesVicinity = false; 
-
-  if (femalebird.position.x < malebird.position.x) 
-    malebird.mirrorX(1); 
-  if (femalebird.position.x > malebird.position.x) 
-    malebird.mirrorX(-1); 
+  perch()
   
-  if (matesVicinity) { 
+  if (perched) {
+    if (femalebird.position.x < malebird.position.x) 
+      malebird.mirrorX(1); 
+    if (femalebird.position.x > malebird.position.x) 
+      malebird.mirrorX(-1); 
+
     malebird.changeAnimation('sing');
     singFrameCount++;  
     if (notes == null && notes_flipped == null)
@@ -501,6 +509,7 @@ function birdMate(){
         matingCondition = false; 
         matingChange = false;
         love = null; 
+        perched = false;
       }
     }
   }
