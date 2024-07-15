@@ -5,8 +5,7 @@
     import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
-    import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
-    import TissueSim from './TissueSim.svelte';
+    import TissueSim from "./TissueSim.svelte";
     import {
         gamma1,
         gamma2,
@@ -26,15 +25,15 @@
         N,
         foodShort,
         foodShortbegin,
-        foodShortend
+        foodShortend,
     } from "../data_store.js";
-    import {apiEndpoint} from "../state_store.js"
-
-
-
-    import {gamma1_tissue, gamma2_tissue, gamma3_tissue} from "../tissue_store"
-
-
+    import { apiEndpoint } from "../state_store.js";
+    import {
+        gamma1_tissue,
+        gamma2_tissue,
+        gamma3_tissue,
+        hormoneCount,
+    } from "../tissue_store";
 
     let Xhist = [];
     let Shist = [];
@@ -52,6 +51,10 @@
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
     let traitChartInstance = null;
+
+    let canvas1 = "gamma1_tissue";
+    let canvas2 = "gamma2_tissue";
+    let canvas3 = "gamma3_tissue"
 
     onMount(() => {
         fetchData();
@@ -76,7 +79,7 @@
                 N: $N,
                 foodShort: $foodShort,
                 foodShortbegin: $foodShortbegin,
-                foodShortend: $foodShortend
+                foodShortend: $foodShortend,
             };
 
             const queryString = new URLSearchParams(params).toString();
@@ -88,7 +91,7 @@
             // Data from API
             Xhist = data.Xhist;
             Shist = data.Shist;
-            console.log(Shist)
+            console.log(Shist);
             Chist = data.Chist;
             Whist = data.Whist;
             Wcuml = data.Wcuml;
@@ -100,7 +103,6 @@
         }
     }
 
-    
     function makeChart(canvas, title, y, color, maxValue) {
         // <block:data:3>
         let chartData = {};
@@ -115,7 +117,7 @@
                     radius: 0,
                     borderWidth: 1,
                     fill: false,
-                    lineTension: .5,
+                    lineTension: 0.5,
                 };
                 chartDatasets.push(data);
             }
@@ -131,7 +133,7 @@
                 radius: 0,
                 borderWidth: 1,
                 fill: false,
-                lineTension: .5,
+                lineTension: 0.5,
             };
             chartData = {
                 labels: Array.from({ length: y.length }, (_, i) => i),
@@ -139,55 +141,58 @@
             };
         }
 
-        let ctx = document.getElementById(canvas) //.getContext("2d");
+        let ctx = document.getElementById(canvas); //.getContext("2d");
         if (!ctx) {
-            console.error(`Canvas element with ID ${canvas} not found`)
+            console.error(`Canvas element with ID ${canvas} not found`);
         }
         // </block:data>
-
 
         // <block:animation:2>
         const render = [];
 
         for (let i = 0; i < y.length; i++) {
-            render.push({x: i, y: y[i]});
+            render.push({ x: i, y: y[i] });
         }
         //ratio for sensitvity graphs is ? 1 : 32.78
         //const totalDuration = 2800;
-        const totalDuration = canvas == 'sensitivityChart' || canvas == 'traitChart' ? 122 : 4000;
+        const totalDuration =
+            canvas == "sensitivityChart" || canvas == "traitChart" ? 122 : 4000;
         const delayBetweenPoints = totalDuration / render.length;
 
-        const previousY = (ctx) => ctx.index === 0 
-                ? ctx.chart.scales.y.getPixelForValue(100) 
-                : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+        const previousY = (ctx) =>
+            ctx.index === 0
+                ? ctx.chart.scales.y.getPixelForValue(100)
+                : ctx.chart
+                      .getDatasetMeta(ctx.datasetIndex)
+                      .data[ctx.index - 1].getProps(["y"], true).y;
 
         const animation = {
-        x: {
-            type: 'number',
-            easing: 'linear',
-            duration: delayBetweenPoints,
-            from: NaN, // the point is initially skipped
-            delay(ctx) {
-            if (ctx.type !== 'data' || ctx.xStarted) {
-                return 0;
-            }
-            ctx.xStarted = true;
-            return ctx.index * delayBetweenPoints;
-            }
-        },
-        y: {
-            type: 'number',
-            easing: 'linear',
-            duration: delayBetweenPoints,
-            from: previousY,
-            delay(ctx) {
-            if (ctx.type !== 'data' || ctx.yStarted) {
-                return 0;
-            }
-            ctx.yStarted = true;
-            return ctx.index * delayBetweenPoints;
-            }
-        }
+            x: {
+                type: "number",
+                easing: "linear",
+                duration: delayBetweenPoints,
+                from: NaN, // the point is initially skipped
+                delay(ctx) {
+                    if (ctx.type !== "data" || ctx.xStarted) {
+                        return 0;
+                    }
+                    ctx.xStarted = true;
+                    return ctx.index * delayBetweenPoints;
+                },
+            },
+            y: {
+                type: "number",
+                easing: "linear",
+                duration: delayBetweenPoints,
+                from: previousY,
+                delay(ctx) {
+                    if (ctx.type !== "data" || ctx.yStarted) {
+                        return 0;
+                    }
+                    ctx.yStarted = true;
+                    return ctx.index * delayBetweenPoints;
+                },
+            },
         };
         // </block:animation>
 
@@ -195,24 +200,24 @@
         const chartOptions = {
             animation,
             interaction: {
-                intersect: false
+                intersect: false,
             },
             plugins: {
-                display:{
-                    legend: true
+                display: {
+                    legend: true,
                 },
             },
             scales: {
                 x: {
-                    type: 'linear',
+                    type: "linear",
                     beginAtZero: true,
                     title: { display: true, text: "Reproductive Cycle" },
-                    max: $N
+                    max: $N,
                 },
                 y: {
                     beginAtZero: true,
                     title: { display: true, text: "y label" },
-                    max: maxValue
+                    max: maxValue,
                 },
             },
         };
@@ -220,11 +225,11 @@
 
         // <block:config:0>
         const config = {
-            type: 'line',
+            type: "line",
             data: chartData,
-            options: chartOptions
+            options: chartOptions,
         };
-    // </block:config>
+        // </block:config>
 
         return new Chart(ctx, config);
     }
@@ -233,20 +238,11 @@
         // Destroy existing charts if they exist
         if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
         if (sensitivityChartInstance) sensitivityChartInstance.destroy();
-        if (productionChartInstance) productionChartInstance.destroy();
-        if (fitnessChartInstance) fitnessChartInstance.destroy();
+        if (productionChartInstance) sensitivityChartInstance.destroy();
+        if (fitnessChartInstance) sensitivityChartInstance.destroy();
         if (cumulativeFitnessChartInstance)
             cumulativeFitnessChartInstance.destroy();
         if (traitChartInstance) traitChartInstance.destroy();
-
-        // Create Body Condition Chart
-        // bodyConditionChartInstance = makeChart(
-        //     "bodyConditionChart",
-        //     "Body Condition",
-        //     Xhist,
-        //     "rgba(75, 192, 192, 1)",
-        //     3.5
-        // );
 
         // Create Sensitivity Chart
         sensitivityChartInstance = makeChart(
@@ -254,7 +250,7 @@
             "Sensitivity",
             Shist,
             "rgba(255, 99, 132, 1)",
-            20
+            20,
         );
 
         // Create Production Chart
@@ -263,83 +259,42 @@
             "Production",
             Chist,
             "rgba(153, 102, 255, 1)",
-            20
+            20,
         );
-
-        // Create Fitness Chart
-        // fitnessChartInstance = makeChart(
-        //     "fitnessChart",
-        //     "Fitness",
-        //     Whist,
-        //     "rgba(255, 159, 64, 1)",
-        //     1.2
-        // );
-
-        // Create Cumulative Fitness Chart
-        // cumulativeFitnessChartInstance = makeChart(
-        //     "cumulativeFitnessChart",
-        //     "Cumulative Fitness",
-        //     Wcuml,
-        //     "rgba(255, 206, 86, 1)",
-        //     20
-        // );
 
         traitChartInstance = makeChart(
             "traitChart",
             "Trait Value",
             Vhist,
             "rgba(210, 155, 90, 1)",
-            20
-        )
+            20,
+        );
     }
 
-
-    function fadeReturnData(){
-        console.log("Button clicked")
-        $gamma1_tissue = 5
+    function fakeReturnData() {
+        console.log("Button clicked");
+        $gamma1_tissue = 5;
+        $gamma2_tissue = 3;
+        $gamma3_tissue = 9;
+        $hormoneCount = 20;
     }
-
-
-
-
 </script>
 
-
-
-
-
-
-
-
-
 <NavBar multiPage="Single" />
-
-<!-- <nav>
-    <a href="/">home</a>
-    <a href="/multimodel">multimodel</a>
-</nav>-->
 
 <h1
     class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
 >
-    Hormone Model - Single Run
+    Simulations
 </h1>
 
-
-
-
-<button on:click={fadeReturnData}>Fake Data Update</button>
-
-
-
 <!--Input Parameters -->
-<div class="flex flex-wrap justify-center">
+<div class="flex flex-wrap justify-center flex-row">
     <div
         class="flex flex-wrap justify-center grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-1"
     >
         <!-- Container for Gamma Sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <!--
+        <div class="flex flex-wrap justify-center w-full flex-col">
             <SliderInput
                 id="Selection against effort in trait i (γᵢ, ₜ)"
                 min="0"
@@ -357,80 +312,18 @@
                 bind:inputVar={$gamma2}
                 modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the second trait."
             />
-        
+
             <SliderInput
-                id="Selection against effort in each trait k (γₖ, ₜ)"
+                id="Selection against effort in trait k (γₖ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma3}
             />
-            -->
-        </div>
-
-        <!-- Container for Z sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <!--
-            <SliderInput
-                id="Weight of first trait (zᵢ)" 
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z1}
-                modalMessage="The weight of the first trait in the role of the fitness function."
-            />
-
-            <SliderInput
-                id="Weight of second trait (zⱼ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z2}
-                modalMessage="The weight of the second trait in the role of the fitness function."
-            />
-            
-            <SliderInput
-                id="Weight of third trait (zₖ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z3}
-            />
-            -->
-        </div>
-
-        <!-- Container for food shortage sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <SliderInput
-                id="Food Shortage"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$foodShort}
-                modalMessage="A multiplier of current food."
-            />
-
-            <SliderTwoInput
-                bind:inputVarHigh={$foodShortend}
-                bind:maxForVarHigh={$N}
-                bind:inputVarLow={$foodShortbegin}
-                inputVarHighName="Food Shortage End"
-                inputVarLowName="Food Shortage Begin"
-                minForVarLow=0
-                step=1
-            />
         </div>
 
         <!-- Container for G and mu sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <!--
-            <SliderInput 
-                id="Min hormone level for gamete maturation (G)" 
-                min="0" 
-                max="1" 
-                step="0.1" 
-                bind:inputVar={$G} />
-            -->
+        <!-- <div class="flex flex-wrap justify-center w-full">
 
             <SliderInput
                 id="Death probability (µ)"
@@ -440,45 +333,11 @@
                 bind:inputVar={$mu}
                 modalMessage="A fixed chance that the bird will die randomly."
             />
-        </div>
+        </div> -->
     </div>
 
     <!-- Form Inputs-->
-    <div class="flex flex-wrap justify-center">
-        <!--input for gamma-->
-        <!--
-        <FormInput
-            id="Gamma"
-            inputType="text"
-            bind:inputVar={$gamma}
-        />
-        -->
-
-        <!--input for G-->
-        <!--
-        <FormInput
-            id="G"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$G}
-        />
-        -->
-
-        <!--input for Xmin-->
-        <!--
-        <FormInput
-            id="Min energy level for reproduction (xᵣₑₚ)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by energy function"
-            bind:inputVar={$Xmin}
-        />
-        -->
-
+    <div class="flex flex-wrap justify-center items-center">
         <FormInput
             id="Max change of sensitivity to hormone (|ΔSᵢ, ₘₐₓ|)"
             inputType="number"
@@ -488,114 +347,6 @@
             modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues"
             bind:inputVar={$delSmax}
         />
-
-        <FormInput
-            id="Max change of circulating hormone (|ΔCₘₐₓ|)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism"
-            bind:inputVar={$delCmax}
-        />
-
-        <FormInput
-            id="Food availability (τ)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Determines the food availible in the environment for the organism. "
-            bind:inputVar={$tau}
-        />
-        <!--
-        <FormInput
-            id="Michaelis-Menten constant (K)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="A constant used by the Michaelis-Menten Equation. Equal across all tissues."
-            bind:inputVar={$K}
-        />
-        
-
-        <FormInput
-            id="First parameter of beta distribution (A)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
-            bind:inputVar={$alpha}
-        />
-
-        <FormInput
-            id="Second parameter of beta distribution (B)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
-            bind:inputVar={$beta}
-        />
-        -->
-        <!--input for mu
-        <FormInput
-            id="Mu"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.001"
-            bind:inputVar={$mu}
-         />
-
-         <FormInput
-            id="Z"
-            inputType="text"
-            bind:inputVar={$z}
-        />
-        -->
-
-        <FormInput
-            id="Number of reproductive cycles (N)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Number of reproductive cycles the simulation goes through. Once reached, the organism dies."
-            bind:inputVar={$N}
-        />
-
-        <!--
-
-         <FormInput
-            id="Food Short"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$foodShort}
-         />
-
-         <FormInput
-            id="Food Short Begin"
-            inputType="number"
-            min="0"
-            max={$foodShortend}
-            step="1"
-            bind:inputVar={$foodShortbegin}
-         />
-
-         <FormInput
-            id="Food Short End"
-            inputType="number"
-            min="0"
-            max={$N}
-            step="1"
-            bind:inputVar={$foodShortend}
-         />
-         -->
     </div>
 </div>
 
@@ -609,35 +360,44 @@
 
 <!-- Creating Charts-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
-    
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <h2 class="text-center text-xl font-semibold mb-4">Sensitivity to Hormone</h2>
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Sensitivity to Hormone
+        </h2>
         <canvas id="sensitivityChart"></canvas>
     </div>
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <h2 class="text-center text-xl font-semibold mb-4">Circulating Level Of Hormone </h2>
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Circulating Level Of Hormone
+        </h2>
         <canvas id="productionChart"></canvas>
     </div>
-    
+
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Trait Values
-        </h2>
+        <h2 class="text-center text-xl font-semibold mb-4">Trait Values</h2>
         <canvas id="traitChart"></canvas>
     </div>
-
 </div>
 
+<button on:click={fakeReturnData}>Fake Data Update</button>
+
 <!-- Simulations -->
-<div class = " flex flex-row items-center justify-center p-10">
-    <div> 
-        <TissueSim />
+<div class=" flex flex-row flex-wrap items-center justify-center p-10 space-x-10">
+    <div>
+        <TissueSim canvas={canvas1}/>
     </div>
 
+    <div>
+        <TissueSim canvas={canvas2}/>
+    </div>
+
+    <div>
+        <TissueSim canvas={canvas3}/>
+    </div>
 </div>

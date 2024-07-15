@@ -2,19 +2,22 @@
   import TissueSim from '../simulationmodel/TissueSim.svelte';
 
 
-  import {gamma1_tissue, gamma2_tissue, gamma3_tissue} from "../tissue_store.js"
+  import {gamma1_tissue, gamma2_tissue, gamma3_tissue, hormoneCount} from "../tissue_store.js"
 
-  function fadeReturnData(){
+  function fakeReturnData(){
         console.log("Button clicked")
-        $gamma1_tissue = 5
+        $gamma1_tissue = 5;
+        $gamma2_tissue = 3;
+        $gamma3_tissue = 9;
+        $hormoneCount = 20;
     }
 
 </script>
 
 
-<button on:click={fadeReturnData}>Fake Data Update</button>
+<button on:click={fakeReturnData}>Fake Data Update</button>
 
 
 
 
-<TissueSim />
+<TissueSim canvas={'gamma1_tissue'}/>
