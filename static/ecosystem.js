@@ -74,6 +74,7 @@ var notes_flipped_play;
 
 //frames
 var time = 0; 
+var timeStep = 10; 
 var scavengeFrameCount = 0; 
 var peckFrameCycle; 
 var singFrameCycle; 
@@ -83,6 +84,7 @@ var fadeEffectCondition = true;
 var fadeEffectComplete = false; 
 
 //inputs
+var behavior; 
 var foodCheckbox; 
 var foodCondition = false; 
 var scavengeChange = false; 
@@ -135,8 +137,8 @@ function draw() {
   clear();
   background(135, 206, 250);
 
-  time = millis(); 
-  
+  time = millis() / 1000; 
+
   //inputs
   updateText();
   updateInputs();
@@ -160,6 +162,7 @@ function draw() {
 if (femalebird != null)
   femalebirdMovement();
 
+// if (foodCondition && babybirds != null)
   //bird animation to scavenge
   if (foodCondition) { 
     if (!scavengeChange) { 
@@ -185,7 +188,7 @@ if (femalebird != null)
     malebirdDeath(); 
   }
   else { 
-    malebirdOnBranch()
+    malebirdMovement();
   }
   //draw the sprite
   drawSprites();
@@ -229,7 +232,7 @@ function createInputs() {
     matingCondition = true; 
   });
   
-  shortageSlider = createSlider(0, 10, 5, 0);
+  shortageSlider = createSlider(2, 10, 5, 0);
   shortageSlider.position(10, 90);
   shortageSlider.size(80);
 }
@@ -263,7 +266,7 @@ function createAnimals() {
   notes_flipped_play = loadAnimation(notes_flipped_spritesheet);
 
   //create player sprite and add animations
-  malebird = createSprite(nest.position.x, nest.position.y - 20);
+  malebird = createSprite(0, dirt.originalHeight);
   malebird.addAnimation('walk', malebird_fly);
   malebird.addAnimation('stand', imagePath + 'malebird_stand.png');
   sing = malebird.addAnimation('sing', imagePath + 'malebird_sing0001.png', imagePath + 'malebird_sing0002.png');
@@ -290,35 +293,6 @@ function createAnimals() {
   }
 }
 
-//Create Collision Box
-
-function createCollisionBox(x, y) {
-  invisibleBox = createSprite(x, y, 20, 20);
-  invisibleBox.setCollider('rectangle', 0, 0, 20, 20);
-  invisibleBox.debug = true;
-  //invisibleBox.visible = false;
-
-  return invisibleBox
-}
-
-function handleCollision(bird, x, y, box) {
-  if (bird.overlapPoint(x, y)) {
-    bird.changeAnimation('stand');
-    bird.velocity.x = 0;
-    bird.velocity.y = 0;
-    box.remove(); // Destroy the box after collision
-  }
-}
-
-function makeCollisions(){
-  perchLeftX = tree.position.x - 0.75 * tree.originalWidth; 
-  perchLeftY = tree.position.y; 
-  perchRightX = tree.position.x - tree.originalWidth / 4; 
-  perchRightY = tree.position.y + tree.originalHeight / 8; 
-
-  box1 = createCollisionBox(perchLeftX, perchLeftY);
-  box2 = createCollisionBox(perchRightX, perchRightY);
-}
 
 function updateText() {
   text(floor(shortageSlider.value()), 100, 100);
@@ -334,6 +308,12 @@ function updateInputs() {
   }
   else { 
     shortageSliderChange = false; 
+  }
+}
+
+function malebirdBehavior() {
+  if (time % timeStep == 0) {
+    behavior = "";
   }
 }
 
@@ -374,7 +354,37 @@ function createFemalebird() {
     }
   }
 }
- 
+
+//Create Collision Box
+
+function createCollisionBox(x, y) {
+  invisibleBox = createSprite(x, y, 20, 20);
+  invisibleBox.setCollider('rectangle', 0, 0, 20, 20);
+  invisibleBox.debug = true;
+  //invisibleBox.visible = false;
+
+  return invisibleBox
+}
+
+function handleCollision(bird, x, y, box) {
+  if (bird.overlapPoint(x, y)) {
+    bird.changeAnimation('stand');
+    bird.velocity.x = 0;
+    bird.velocity.y = 0;
+    box.remove(); // Destroy the box after collision
+  }
+}
+
+function makeCollisions(){
+  perchLeftX = tree.position.x - 0.75 * tree.originalWidth; 
+  perchLeftY = tree.position.y; 
+  perchRightX = tree.position.x - tree.originalWidth / 4; 
+  perchRightY = tree.position.y + tree.originalHeight / 8; 
+
+  box1 = createCollisionBox(perchLeftX, perchLeftY);
+  box2 = createCollisionBox(perchRightX, perchRightY);
+}
+
 function perch() {
   if (femalebirdLocation == "left") {
     malebird.changeAnimation('walk');
@@ -623,31 +633,24 @@ function birdScavenge() {
   else
     atNest = false; 
 
-//bird facing prey       
-
-  //leave nest 
-  if (nestVicinity && !caughtPrey) { 
-    if (searchDirection == "left" && leftPreys.length != 0) 
-      malebird.velocity.x = -1; 
-    else 
-      malebird.velocity.x = 1;
-
-    malebird.velocity.y = -1; 
-    malebird.changeAnimation('walk');
-  }
-
   //horizontal travel to ground
-  if ((!nestVicinity && !caughtPrey)) { 
-    if (birdPosition == "left") {
-      malebird.attractionPoint(0.2, leftPreys[leftPreys.length - 1].position.x, dirt.position.y - dirt.originalHeight / 2);
+  if (!groundHeight && !caughtPrey) { 
+    if (birdPosition == "left" && leftPreys.length != 0) {
+      malebird.attractionPoint(0.5, leftPreys[leftPreys.length - 1].position.x, dirt.position.y - dirt.originalHeight / 2);
       leftPreys[leftPreys.length - 1].setSpeed(0.05); 
       if (2 * nest.originalWidth < abs(nest.position.x - leftPreys[leftPreys.length - 1].position.x)) 
         effcientScavenge = false; 
     }
-    else {
-      malebird.attractionPoint(0.2, rightPreys[rightPreys.length - 1].position.x, dirt.position.y - dirt.originalHeight / 2);
+    else if (birdPosition == "right" && rightPreys.length != 0) {
+      malebird.attractionPoint(0.5, rightPreys[rightPreys.length - 1].position.x, dirt.position.y - dirt.originalHeight / 2);
       rightPreys[rightPreys.length - 1].setSpeed(0.05); 
       if (2 * nest.originalWidth < abs(nest.position.x - rightPreys[rightPreys.length - 1].position.x)) 
+        effcientScavenge = false; 
+    }
+    else {
+      malebird.attractionPoint(0.5, preys[preys.length - 1].position.x, dirt.position.y - dirt.originalHeight / 2);
+      preys[preys.length - 1].setSpeed(0.05); 
+      if (2 * nest.originalWidth < abs(nest.position.x - preys[preys.length - 1].position.x)) 
         effcientScavenge = false; 
     }
     malebird.velocity.y = 3; 
@@ -689,7 +692,6 @@ function birdScavenge() {
       else
         caughtPrey.attractionPoint(3, malebird.position.x - 20,  malebird.position.y + 15);
     }
-
     caughtPrey.friction = 0.2; 
   }
 
@@ -697,26 +699,31 @@ function birdScavenge() {
   if (!nestVicinity && caughtPrey)  { 
     scavengeFrameCount = 0; 
     malebird.changeAnimation('walk');
-    if (birdPosition == "left" && effcientScavenge) 
-      malebird.velocity.x = 1; 
-    else if (birdPosition == "left"  && !effcientScavenge)
-      malebird.velocity.x = 1.5; 
-    else if (birdPosition == "right"  && effcientScavenge) 
-      malebird.velocity.x = -1; 
-    else 
-      malebird.velocity.x = -1.5; 
+    if (birdPosition == "left") {
+      if (effcientScavenge)
+        malebird.velocity.x = 0.5; 
+      else 
+        malebird.velocity.x = 2; 
+      malebird.attractionPoint(0.4, nest.position.x - nest.originalWidth / 4, nest.position.y - nest.originalHeight / 2);
+    }
+    else {
+      if (effcientScavenge)
+        malebird.velocity.x = -0.5; 
+      else 
+        malebird.velocity.x = -2; 
+      malebird.attractionPoint(0.4, nest.position.x + nest.originalWidth / 4, nest.position.y - nest.originalHeight / 2);
+    }
     malebird.velocity.y = -2; 
-    malebird.attractionPoint(0.2, nest.position.x, nest.position.y - nest.originalHeight / 2);
   }
 
   //enter nest
   if (nestVicinity && caughtPrey) {
     if (malebird.velocity.x < 0)
-      malebird.velocity.x = -0.4;
+      malebird.velocity.x = -0.3;
     else 
-      malebird.velocity.x = 0.4;
+      malebird.velocity.x = 0.3;
     malebird.velocity.y = 1; 
-    malebird.attractionPoint(0.1, nest.position.x, nest.position.y);
+    malebird.attractionPoint(0.2, nest.position.x, nest.position.y);
     }
 
   //feed
@@ -785,8 +792,19 @@ function malebirdDeath() {
     malebird.remove();
 }
 
-function malebirdOnBranch() {
-  malebird.changeAnimation('stand');
+function malebirdMovement() {
+  malebird.changeAnimation('walk');
+  if (malebird.position.y > dirt.originalHeight) { 
+    malebird.attractionPoint(0.2, width / 2, dirt.originalHeight);
+  }
+  else {
+    if (malebird.velocity.x > 0)
+      malebird.velocity.x = 2; 
+    else 
+      malebird.velocity.x = -2; 
+  }
+  if (malebird.position.x <= 0 || malebird.position.x >= width)
+    malebird.velocity.x *= -1; 
 }
 
 
