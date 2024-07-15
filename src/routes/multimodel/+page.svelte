@@ -484,7 +484,7 @@ function bruh() {
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma1}
-                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+                modalMessage="A variable that determines the negative weight of a trait. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for the first trait, the more costly it is to the organism to invest in the first trait. Therefore, there is lower value of the first trait, and will get picked less."
             />
 
             <SliderInput
@@ -493,7 +493,7 @@ function bruh() {
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma2}
-                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the second trait."
+                modalMessage="A variable that determines the negative weight of a trait. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for the second trait, the more costly it is to the organism to invest in the second trait. Therefore, there is lower value of the second trait, and will get picked less."
             />
 
             <SliderInput
@@ -502,7 +502,7 @@ function bruh() {
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma3}
-                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the third trait."
+                modalMessage="A variable that determines the negative weight of a trait. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for the third trait, the more costly it is to the organism to invest in the third trait. Therefore, there is lower value of the third trait, and will get picked less."
             />
         </div>
 
@@ -514,7 +514,7 @@ function bruh() {
                 max="1"
                 step="0.1"
                 bind:inputVar={$z1}
-                modalMessage="The weight of the first trait in the role of the fitness function."
+                modalMessage="The weight of the first trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
             />
             
 
@@ -524,7 +524,7 @@ function bruh() {
                 max="1"
                 step="0.1"
                 bind:inputVar={$z2}
-                modalMessage="The weight of the second trait in the role of the fitness function."
+                modalMessage="The weight of the second trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
             />
 
             <SliderInput
@@ -533,7 +533,7 @@ function bruh() {
                 max="1"
                 step="0.1"
                 bind:inputVar={$z3}
-                modalMessage="The weight of the third trait in the role of the fitness function."
+                modalMessage="The weight of the third trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
             />
         </div>
 
@@ -544,7 +544,7 @@ function bruh() {
                 max="1"
                 step="0.1" 
                 bind:inputVar={$G} 
-                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization."/>
+                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization. This is the minimum production of hormone that has to be present in the first trait (the first trait in our code) in order for gamete maturation to occur. A lower treshhold of hormone level (G) will result in lower costs in the energy level of the organism, and lower costs investing into parental effort."/>
 
             <SliderInput
                 id="Death probability (µ)"
@@ -612,7 +612,7 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by energy function"
+            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by the cost function. Decreasing the minimum energy required for reproduction will reduce the costs of investing more into mating effort.However, this is at the expense of investing into parental effort, and at the expense of accumulating energy."
             bind:inputVar={$Xmin}
         />
 
@@ -622,7 +622,7 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues"
+            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues. The organism maximizes its lifetime success by finding the optimal level of the |ΔSᵢ, ₘₐₓ| at a given target."
             bind:inputVar={$delSmax}
         />
 
@@ -632,7 +632,7 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism"
+            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism. The organism will try to optimize this value to maximize its lifetime success."
             bind:inputVar={$delCmax}
         />
 
@@ -642,7 +642,7 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="Determines the food availible in the environment for the organism. "
+            modalMessage="Determines the food availible in the environment for the organism. Increasing the food availiability will increase the payoff when investing in foraging."
             bind:inputVar={$tau}
         />
 

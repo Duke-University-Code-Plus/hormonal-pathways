@@ -1,8 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import axios from "axios";
-    import Chart, { registerables } from "chart.js/auto";
-    import ExportChart from "../Nested/ExportChart.svelte";
+    import Chart from "chart.js/auto";
     import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
@@ -35,7 +34,7 @@
     let Chist = [];
     let Whist = [];
     let Wcuml = [];
-    //let Vhist = [];
+    let Vhist = [];
 
     let gamma = [$gamma1, $gamma2, $gamma3];
     let z = [$z1, $z2, $z3];
@@ -45,13 +44,7 @@
     let productionChartInstance = null;
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
-    //let traitChartInstance = null;
-
-    let exportData1 = '';
-    let exportData2 = '';
-    let exportData3 = '';
-    let exportData4 = '';
-    let exportData5 = '';
+    let traitChartInstance = null;
 
     onMount(() => {
         fetchData();
@@ -91,20 +84,20 @@
             Chist = data.Chist;
             Whist = data.Whist;
             Wcuml = data.Wcuml;
-            //Vhist = data.Vhist;
+            Vhist = data.Vhist;
 
             createCharts();
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     }
+
     
     function makeChart(canvas, title, y, color, maxValue, ylabel) {
         // <block:data:3>
         let color_pool = [[216, 27, 96], 
                           [9, 224, 188], 
                           [124, 181, 24]]
-
         let chartData = {};
         const is2dArray = (array) => array.every((item) => Array.isArray(item));
         if (is2dArray(y)) {
@@ -145,7 +138,7 @@
             };
         }
 
-        let ctx = document.getElementById(canvas).getContext("2d");
+        let ctx = document.getElementById(canvas) //.getContext("2d");
         if (!ctx) {
             console.error(`Canvas element with ID ${canvas} not found`)
         }
@@ -160,7 +153,7 @@
         }
         //ratio for sensitvity graphs is ? 1 : 32.78
         //const totalDuration = 2800;
-        const totalDuration = canvas == 'sensitivityChart' ? 122 : 4000;
+        const totalDuration = canvas == 'sensitivityChart' || canvas == 'traitChart' ? 122 : 4000;
         const delayBetweenPoints = totalDuration / render.length;
 
         const previousY = (ctx) => ctx.index === 0 
@@ -243,17 +236,16 @@
         if (fitnessChartInstance) fitnessChartInstance.destroy();
         if (cumulativeFitnessChartInstance)
             cumulativeFitnessChartInstance.destroy();
-        //if (traitChartInstance) traitChartInstance.destroy();
+        if (traitChartInstance) traitChartInstance.destroy();
 
         // Create Body Condition Chart
-        bodyConditionChartInstance = makeChart(
-            "bodyConditionChart",
-            "Body Condition",
-            Xhist,
-            "rgba(75, 192, 192, 1)",
-            20,
-            "Energy of the organism"
-        );
+        // bodyConditionChartInstance = makeChart(
+        //     "bodyConditionChart",
+        //     "Body Condition",
+        //     Xhist,
+        //     "rgba(75, 192, 192, 1)",
+        //     3.5
+        // );
 
         // Create Sensitivity Chart
         sensitivityChartInstance = makeChart(
@@ -276,43 +268,32 @@
         );
 
         // Create Fitness Chart
-        fitnessChartInstance = makeChart(
-            "fitnessChart",
-            "Fitness",
-            Whist,
-            "rgba(255, 159, 64, 1)",
-            10,
-            "Fitness"
-        );
+        // fitnessChartInstance = makeChart(
+        //     "fitnessChart",
+        //     "Fitness",
+        //     Whist,
+        //     "rgba(255, 159, 64, 1)",
+        //     1.2
+        // );
 
         // Create Cumulative Fitness Chart
-        cumulativeFitnessChartInstance = makeChart(
-            "cumulativeFitnessChart",
-            "Cumulative Fitness",
-            Wcuml,
-            "rgba(255, 206, 86, 1)",
-            150,
-            "Accumulated Fitness"
-        );
+        // cumulativeFitnessChartInstance = makeChart(
+        //     "cumulativeFitnessChart",
+        //     "Cumulative Fitness",
+        //     Wcuml,
+        //     "rgba(255, 206, 86, 1)",
+        //     20
+        // );
 
-        // traitChartInstance = makeChart(
-        //     "traitChart",
-        //     "Trait Value",
-        //     Vhist,
-        //     "rgba(210, 155, 90, 1)",
-        //     2.5
-        // )
+        traitChartInstance = makeChart(
+            "traitChart",
+            "Trait Value",
+            Vhist,
+            "rgba(210, 155, 90, 1)",
+            20,
+            "Trait Values"
+        )
     }
-
-    function exportChartBase64(chartInstance){
-        // console.log("chartInstance", chartInstance)
-        const base64 = chartInstance.toBase64Image();
-        //base64Data.set(base64);
-        // console.log("base64", base64)
-        // document.getElementById('chart-image-show').src = base64;
-        return base64.slice(22)
-    }
-    
 </script>
 
 <NavBar multiPage="Single" />
@@ -335,13 +316,14 @@
     >
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
+            <!--
             <SliderInput
                 id="Selection against effort in trait i (γᵢ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma1}
-                modalMessage="A variable that determines the negative weight of a trait. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for the first trait, the more costly it is to the organism to invest in the first trait. Therefore, there is lower value of the first trait, and will get picked less."
+                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
             />
 
             <SliderInput
@@ -350,28 +332,29 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma2}
-                modalMessage="A variable that determines the negative weight of a trait. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for the second trait, the more costly it is to the organism to invest in the second trait. Therefore, there is lower value of the second trait, and will get picked less."
+                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the second trait."
             />
-
+        
             <SliderInput
-                id="Selection against effort in trait k (γₖ, ₜ)"
+                id="Selection against effort in each trait k (γₖ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma3}
-                modalMessage="A variable that determines the negative weight of a trait. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for the third trait, the more costly it is to the organism to invest in the third trait. Therefore, there is lower value of the third trait, and will get picked less."
             />
+            -->
         </div>
 
         <!-- Container for Z sliders-->
         <div class="flex flex-wrap justify-center w-full">
+            <!--
             <SliderInput
                 id="Weight of first trait (zᵢ)" 
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$z1}
-                modalMessage="The weight of the first trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
+                modalMessage="The weight of the first trait in the role of the fitness function."
             />
 
             <SliderInput
@@ -380,45 +363,18 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$z2}
-                modalMessage="The weight of the second trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
+                modalMessage="The weight of the second trait in the role of the fitness function."
             />
-
+            
             <SliderInput
                 id="Weight of third trait (zₖ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$z3}
-                modalMessage="The weight of the third trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
             />
+            -->
         </div>
-
-        <!-- Container for G and mu sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <SliderInput 
-                id="Hormone level for gamete maturation (G)" 
-                min="0" 
-                max="1" 
-                step="0.1" 
-                bind:inputVar={$G} 
-                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization. This is the minimum production of hormone that has to be present in the first trait (the first trait in our code) in order for gamete maturation to occur. A lower treshhold of hormone level (G) will result in lower costs in the energy level of the organism, and lower costs investing into parental effort."
-                />
-
-            <SliderInput
-                id="Death probability (µ)"
-                min="0"
-                max="1"
-                step="0.001"
-                bind:inputVar={$mu}
-                modalMessage="A fixed chance that the male songbird will die randomly."
-            />
-        </div>
-
-        <!-- Line -->
-        <hr
-        class="m-auto w-[90%] h-px my-6 border-1 border-indigo-500 opacity-50"
-        />
-
 
         <!-- Container for food shortage sliders-->
         <div class="flex flex-wrap justify-center w-full">
@@ -439,6 +395,27 @@
                 inputVarLowName="Food Shortage Begin"
                 minForVarLow=0
                 step=1
+            />
+        </div>
+
+        <!-- Container for G and mu sliders-->
+        <div class="flex flex-wrap justify-center w-full">
+            <!--
+            <SliderInput 
+                id="Min hormone level for gamete maturation (G)" 
+                min="0" 
+                max="1" 
+                step="0.1" 
+                bind:inputVar={$G} />
+            -->
+
+            <SliderInput
+                id="Death probability (µ)"
+                min="0"
+                max="1"
+                step="0.001"
+                bind:inputVar={$mu}
+                modalMessage="A fixed chance that the bird will die randomly."
             />
         </div>
     </div>
@@ -467,15 +444,17 @@
         -->
 
         <!--input for Xmin-->
+        <!--
         <FormInput
             id="Min energy level for reproduction (xᵣₑₚ)"
             inputType="number"
             min="0"
             max="10000"
             step="1"
-            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by the cost function. Decreasing the minimum energy required for reproduction will reduce the costs of investing more into mating effort.However, this is at the expense of investing into parental effort, and at the expense of accumulating energy."
+            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by energy function"
             bind:inputVar={$Xmin}
         />
+        -->
 
         <FormInput
             id="Max change of sensitivity to hormone (|ΔSᵢ, ₘₐₓ|)"
@@ -483,7 +462,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues. The organism maximizes its lifetime success by finding the optimal level of the |ΔSᵢ, ₘₐₓ| at a given target."
+            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues"
             bind:inputVar={$delSmax}
         />
 
@@ -493,7 +472,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism. The organism will try to optimize this value to maximize its lifetime success."
+            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism"
             bind:inputVar={$delCmax}
         />
 
@@ -503,10 +482,10 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="Determines the food availible in the environment for the organism. Increasing the food availiability will increase the payoff when investing in foraging."
+            modalMessage="Determines the food availible in the environment for the organism. "
             bind:inputVar={$tau}
         />
-
+        <!--
         <FormInput
             id="Michaelis-Menten constant (K)"
             inputType="number"
@@ -516,6 +495,7 @@
             modalMessage="A constant used by the Michaelis-Menten Equation. Equal across all tissues."
             bind:inputVar={$K}
         />
+        
 
         <FormInput
             id="First parameter of beta distribution (A)"
@@ -536,9 +516,8 @@
             modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
             bind:inputVar={$beta}
         />
-
-        <!--input for mu-->
-        <!--
+        -->
+        <!--input for mu
         <FormInput
             id="Mu"
             inputType="number"
@@ -547,9 +526,7 @@
             step="0.001"
             bind:inputVar={$mu}
          />
-         -->
 
-        <!--
          <FormInput
             id="Z"
             inputType="text"
@@ -609,103 +586,50 @@
 
 <!-- Creating Charts-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
+    <!--
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <div class="flex justify-center items-center">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Energy of Organism
-            </h2>
-            <button on:click={()=>{ exportData1 = exportChartBase64(bodyConditionChartInstance) }}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                <ExportChart
-                    data={exportData1}
-                />                                
-            </button>
-        </div>
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Energy of Organism
+        </h2>
         <canvas id="bodyConditionChart"></canvas>
-        
     </div>
+    -->
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <div class="flex justify-center items-center">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Sensitivity to Hormone
-            </h2>
-            <button on:click={()=>{ exportData2 = exportChartBase64(sensitivityChartInstance) }}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                <ExportChart
-                    data={exportData2}
-                />                 
-            </button>
-        </div>
+        <h2 class="text-center text-xl font-semibold mb-4">Sensitivity to Hormone</h2>
         <canvas id="sensitivityChart"></canvas>
     </div>
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <div class="flex justify-center items-center">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Circulating Level Of Hormone
-            </h2>
-            <button on:click={()=>{ exportData3 = exportChartBase64(productionChartInstance) }}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                <ExportChart
-                    data={exportData3}
-                />                 
-            </button>
-        </div>    
+        <h2 class="text-center text-xl font-semibold mb-4">Circulating Level Of Hormone </h2>
         <canvas id="productionChart"></canvas>
     </div>
+    <!--
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <div class="flex justify-center items-center">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Fitness
-            </h2>
-            <button on:click={()=>{ exportData4 = exportChartBase64(fitnessChartInstance) }}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                <ExportChart
-                    data={exportData4}
-                />                 
-            </button>
-        </div>
+        <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
         <canvas id="fitnessChart"></canvas>
     </div>
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
-        <div class="flex justify-center items-center">
-            <h2 class="text-center text-xl font-semibold mb-4">
-                Cumulative Fitness
-            </h2>
-            <button on:click={()=>{ exportData5 = exportChartBase64(cumulativeFitnessChartInstance) }}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                <ExportChart
-                    data={exportData5}
-                />                 
-            </button>
-        </div>    
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Cumulative Fitness
+        </h2>
         <canvas id="cumulativeFitnessChart"></canvas>
     </div>
-    <!-- <div
+    -->
+    <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
         <h2 class="text-center text-xl font-semibold mb-4">
             Trait Values
         </h2>
         <canvas id="traitChart"></canvas>
-    </div> -->
+    </div>
 </div>
