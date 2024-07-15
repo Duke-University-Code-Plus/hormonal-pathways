@@ -1,8 +1,12 @@
 <script>
     import { onMount } from "svelte";
     import { scale } from "svelte/transition";
-    import {gamma1_tissue, gamma2_tissue, gamma3_tissue, hormoneCount} from "../tissue_store.js"
-
+    import {
+        gamma1_tissue,
+        gamma2_tissue,
+        gamma3_tissue,
+        hormoneCount,
+    } from "../tissue_store.js";
     export let canvas;
 
     let sketchContainer;
@@ -28,7 +32,16 @@
 
         show(p) {
             p.noStroke();
-            p.fill(355, 100, 0, this.alpha);
+            if (canvas == "gamma1_tissue") {
+                p.fill(355, 100, 0, this.alpha);
+            }
+            if (canvas == "gamma2_tissue") {
+                p.fill(23, 181, 2, this.alpha);
+            }
+
+            if (canvas == "gamma3_tissue") {
+                p.fill(10, 24, 209, this.alpha);
+            }
             p.ellipse(this.x, this.y, 16);
         }
     }
@@ -66,12 +79,12 @@
 
             // Hormone and receptor count
             let g = 0; // hormone
-            let h = 0 // receptor
+            let h = 0; // receptor
 
-            let scaleFactor = 1/2.5;
+            let scaleFactor = 1 / 2.5;
 
             p.setup = () => {
-                p.createCanvas(setwidth*scaleFactor, setheight*scaleFactor);
+                p.createCanvas(setwidth * scaleFactor, setheight * scaleFactor);
 
                 //Initialize images
                 bg = p.loadImage("cell-images/tissue-sim-background.png");
@@ -115,15 +128,15 @@
             };
 
             p.draw = () => {
-                if(canvas == "gamma1_tissue"){
+                if (canvas == "gamma1_tissue") {
                     p.background(247, 211, 208);
                 }
-                if(canvas == "gamma2_tissue"){
+                if (canvas == "gamma2_tissue") {
                     p.background(188, 245, 188);
                 }
 
-                if(canvas == "gamma3_tissue"){
-                    p.background(210,210,248);
+                if (canvas == "gamma3_tissue") {
+                    p.background(210, 210, 248);
                 }
                 p.scale(scaleFactor);
 
@@ -132,21 +145,18 @@
                 // }
 
                 g = $hormoneCount;
-                
-                if(canvas == "gamma1_tissue"){
-                    h = $gamma1_tissue
+
+                if (canvas == "gamma1_tissue") {
+                    h = $gamma1_tissue;
                 }
 
-                if(canvas == "gamma2_tissue"){
-                    h = $gamma2_tissue
+                if (canvas == "gamma2_tissue") {
+                    h = $gamma2_tissue;
                 }
 
-                if(canvas == "gamma3_tissue"){
-                    h = $gamma3_tissue
+                if (canvas == "gamma3_tissue") {
+                    h = $gamma3_tissue;
                 }
-                
-                
-
 
                 if (g > circles.length) {
                     p.createCircle();
@@ -181,16 +191,16 @@
                         s.position.x = 1;
                         s.velocity.x = p.abs(s.velocity.x);
                     }
-                    if (s.position.x > p.width/scaleFactor) {
-                        s.position.x = p.width/scaleFactor - 1;
+                    if (s.position.x > p.width / scaleFactor) {
+                        s.position.x = p.width / scaleFactor - 1;
                         s.velocity.x = -p.abs(s.velocity.x);
                     }
                     if (s.position.y < 0) {
                         s.position.y = 1;
                         s.velocity.y = p.abs(s.velocity.y);
                     }
-                    if (s.position.y > p.height/scaleFactor) {
-                        s.position.y = p.height/scaleFactor - 1;
+                    if (s.position.y > p.height / scaleFactor) {
+                        s.position.y = p.height / scaleFactor - 1;
                         s.velocity.y = -p.abs(s.velocity.y);
                     }
                 }
@@ -328,8 +338,8 @@
 
             p.createCircle = () => {
                 var circle = p.createSprite(
-                    p.width/scaleFactor,
-                    p.random(0, p.height/scaleFactor),
+                    p.width / scaleFactor,
+                    p.random(0, p.height / scaleFactor),
                 );
                 circle.addImage(hormone);
                 circle.setCollider("circle", 0, 0, 25);
@@ -395,8 +405,8 @@
                 var box;
 
                 // Select random coordinates
-                var bx = p.random(0, p.width/scaleFactor);
-                var by = p.random(20, p.height/scaleFactor - 20);
+                var bx = p.random(0, p.width / scaleFactor);
+                var by = p.random(20, p.height / scaleFactor - 20);
 
                 // Check if coordinates overlap with another box
                 for (var k = 0; k < boxes.length; k++) {
@@ -408,17 +418,20 @@
                             otherBox.position.x,
                             otherBox.position.y,
                         ) < 100
-                    ) return;
+                    )
+                        return;
                 }
-                console.log("Passed first test: No overlap with other boxes")
+                console.log("Passed first test: No overlap with other boxes");
 
                 // Check if coordinates overlap with background sprites
                 // Create temporary box for location checking
                 box = p.createSprite(bx, by);
                 box.setCollider("rectangle");
-                if (!p.isCorrectReceptorLocation(box)) return box.remove()
-                box.remove()
-                console.log("Passed second test: No overlap with background sprites")
+                if (!p.isCorrectReceptorLocation(box)) return box.remove();
+                box.remove();
+                console.log(
+                    "Passed second test: No overlap with background sprites",
+                );
 
                 // Create box
                 box = p.createSprite(bx, by);
@@ -453,7 +466,12 @@
             };
 
             p.setDNA = () => {
-                dna_strand = p.createSprite(200, p.height/(scaleFactor*(10/9)), 30, 30);
+                dna_strand = p.createSprite(
+                    200,
+                    p.height / (scaleFactor * (10 / 9)),
+                    30,
+                    30,
+                );
                 dna_strand.addImage(dna);
                 dna_strand.immovable = true;
                 dna_strand.depth = 3;
@@ -484,11 +502,7 @@
                     p.ellipse(210, 435, 30, 30);
                 };
                 inv2.depth = 1;
-                inv2.setCollider(
-                    "circle",
-                    210, 435,
-                    400,
-                );
+                inv2.setCollider("circle", 210, 435, 400);
                 inv2.visible = false;
             };
 

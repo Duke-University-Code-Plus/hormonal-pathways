@@ -388,16 +388,17 @@
 <button on:click={fakeReturnData}>Fake Data Update</button>
 
 <!-- Simulations -->
-<div class=" flex flex-row flex-wrap items-center justify-center p-10 space-x-10">
-    <div>
+<div class="flex flex-row flex-wrap items-center justify-center p-10 space-x-10">
+    <div class="rounded-lg overflow-hidden shadow-md">
         <TissueSim canvas={canvas1}/>
     </div>
 
-    <div>
+    <div class="rounded-lg overflow-hidden shadow-md">
         <TissueSim canvas={canvas2}/>
     </div>
 
-    <div>
+    <div class="rounded-lg overflow-hidden shadow-md">
         <TissueSim canvas={canvas3}/>
     </div>
 </div>
+
