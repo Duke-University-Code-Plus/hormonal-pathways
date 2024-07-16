@@ -312,6 +312,7 @@
     function exportChartBase64(chartInstance){
         // console.log("chartInstance", chartInstance)
         const base64 = chartInstance.toBase64Image();
+        // console.log(base64.slice(22))
         // document.getElementById('chart-image-show').src = base64;
         return base64.slice(22)
     }
@@ -438,12 +439,12 @@
         <!-- Container for food shortage sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Food Shortage"
+                id="Food Availability Multiplier"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$foodShort}
-                modalMessage="A multiplier of current food."
+                modalMessage="A multiplier of current food. The lower the value, the lower the food available to the organism."
             />
 
             <SliderTwoInput
