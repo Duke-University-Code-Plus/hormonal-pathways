@@ -29,6 +29,9 @@
         foodShortend
     } from "../data_store.js";
     import {apiEndpoint} from "../state_store.js"
+    import {chartDescriptions} from "../message_store.js"
+
+    let exportChartComponent;
 
     let Xhist = [];
     let Shist = [];
@@ -47,11 +50,13 @@
     let cumulativeFitnessChartInstance = null;
     //let traitChartInstance = null;
 
+    let chartMessage1 = '';
+
     let exportData1 = '';
-    let exportData2 = '';
-    let exportData3 = '';
-    let exportData4 = '';
-    let exportData5 = '';
+    // let exportData2 = '';
+    // let exportData3 = '';
+    // let exportData4 = '';
+    // let exportData5 = '';
 
     onMount(() => {
         fetchData();
@@ -307,10 +312,20 @@
     function exportChartBase64(chartInstance){
         // console.log("chartInstance", chartInstance)
         const base64 = chartInstance.toBase64Image();
-        //base64Data.set(base64);
-        // console.log("base64", base64)
         // document.getElementById('chart-image-show').src = base64;
         return base64.slice(22)
+    }
+
+    function handleAIClickButton(number, chartInstance) {
+        if ($chartDescriptions[number].length < 1){
+            const imageData = exportChartBase64(chartInstance);
+            console.log('button works?')
+            exportChartComponent.open(number, imageData)
+        } else {
+            chartMessage1 = $chartDescriptions[number]
+            console.log('the data did not change')
+            exportChartComponent.open(number, null)
+        }
     }
     
 </script>
@@ -473,7 +488,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by the cost function. Decreasing the minimum energy required for reproduction will reduce the costs of investing more into mating effort.However, this is at the expense of investing into parental effort, and at the expense of accumulating energy."
+            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by the cost function. Decreasing the minimum energy required for reproduction will reduce the costs of investing more into mating effort. However, this is at the expense of investing into parental effort, and at the expense of accumulating energy."
             bind:inputVar={$Xmin}
         />
 
@@ -616,14 +631,14 @@
             <h2 class="text-center text-xl font-semibold mb-4">
                 Energy of Organism
             </h2>
-            <button on:click={()=>{ exportData1 = exportChartBase64(bodyConditionChartInstance) }}>
+            <button on:click={()=>{ handleAIClickButton(0, bodyConditionChartInstance) }}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                <ExportChart
-                    data={exportData1}
-                />                                
+                </svg>                             
             </button>
+            <ExportChart
+                bind:this={exportChartComponent}
+            />   
         </div>
         <canvas id="bodyConditionChart"></canvas>
         
@@ -635,14 +650,14 @@
             <h2 class="text-center text-xl font-semibold mb-4">
                 Sensitivity to Hormone
             </h2>
-            <button on:click={()=>{ exportData2 = exportChartBase64(sensitivityChartInstance) }}>
+            <button on:click={()=>{ handleAIClickButton(1, sensitivityChartInstance) }}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                <ExportChart
-                    data={exportData2}
-                />                 
+                </svg>                 
             </button>
+            <ExportChart
+                bind:this={exportChartComponent}
+            />  
         </div>
         <canvas id="sensitivityChart"></canvas>
     </div>
@@ -653,14 +668,14 @@
             <h2 class="text-center text-xl font-semibold mb-4">
                 Circulating Level Of Hormone
             </h2>
-            <button on:click={()=>{ exportData3 = exportChartBase64(productionChartInstance) }}>
+            <button on:click={()=>{ handleAIClickButton(2, productionChartInstance) }}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
                 </svg>
-                <ExportChart
-                    data={exportData3}
-                />                 
             </button>
+            <ExportChart
+                bind:this={exportChartComponent}
+            /> 
         </div>    
         <canvas id="productionChart"></canvas>
     </div>
@@ -671,14 +686,14 @@
             <h2 class="text-center text-xl font-semibold mb-4">
                 Fitness
             </h2>
-            <button on:click={()=>{ exportData4 = exportChartBase64(fitnessChartInstance) }}>
+            <button on:click={()=>{ handleAIClickButton(3, fitnessChartInstance) }}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                <ExportChart
-                    data={exportData4}
-                />                 
+                </svg>                 
             </button>
+            <ExportChart
+                bind:this={exportChartComponent}
+            /> 
         </div>
         <canvas id="fitnessChart"></canvas>
     </div>
@@ -689,14 +704,14 @@
             <h2 class="text-center text-xl font-semibold mb-4">
                 Cumulative Fitness
             </h2>
-            <button on:click={()=>{ exportData5 = exportChartBase64(cumulativeFitnessChartInstance) }}>
+            <button on:click={()=>{ handleAIClickButton(4, cumulativeFitnessChartInstance) }}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="peer size-6 ml-1 -mt-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                <ExportChart
-                    data={exportData5}
-                />                 
+                </svg>              
             </button>
+            <ExportChart
+                bind:this={exportChartComponent}
+            />
         </div>    
         <canvas id="cumulativeFitnessChart"></canvas>
     </div>

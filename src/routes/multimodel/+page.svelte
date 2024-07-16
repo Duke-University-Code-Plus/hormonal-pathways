@@ -612,7 +612,7 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by the cost function. Decreasing the minimum energy required for reproduction will reduce the costs of investing more into mating effort.However, this is at the expense of investing into parental effort, and at the expense of accumulating energy."
+            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by the cost function. Decreasing the minimum energy required for reproduction will reduce the costs of investing more into mating effort. However, this is at the expense of investing into parental effort, and at the expense of accumulating energy."
             bind:inputVar={$Xmin}
         />
 

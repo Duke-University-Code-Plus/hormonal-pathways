@@ -1,8 +1,8 @@
 <script>
     import Modal from './Modal.svelte';
-    import axios from 'axios';
+    import { chartDescriptions } from '../message_store';
 
-    export let data;
+    let chartMessage = chartDescriptions;
     let showModal = false;
     let modalMessage = null;
     let isLoading  = false;
@@ -26,15 +26,25 @@
         }
     }
 
-    $: if (data) {
-        handleDataChange();
+    function handleChartMessage(index) {
+        modalMessage = $chartDescriptions[index];
     }
 
-    async function handleDataChange() {
-        showModal = true;
-        const message = await runLlavaScript(data);
+    async function handleDataChange(index, imageData) {
+        const message = await runLlavaScript(imageData);
         modalMessage = message;
+        $chartDescriptions[index] = message
+        }
+
+    export function open(index, imageData){
+        if ($chartDescriptions[index].length > 0) {
+            handleChartMessage(index);
+        } else {
+            handleDataChange(index, imageData);
+        }
+        showModal = true;
     }
+
 </script>
 
 <div class="flex flex-row flex-wrap justify-end -mt-3 ml-1">
