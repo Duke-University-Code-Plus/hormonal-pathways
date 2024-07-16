@@ -6,8 +6,18 @@
         gamma2_tissue,
         gamma3_tissue,
         hormoneCount,
+        currRate1,
+        currRate2,
+        currRate3,
+        receptorsBound1,
+        receptorsBound2,
+        receptorsBound3,
     } from "../tissue_store.js";
     export let canvas;
+
+    // function updateCurrRate(value) {
+    //     currRate.set(value);
+    // }
 
     let sketchContainer;
 
@@ -84,8 +94,8 @@
 
             let scaleFactor = 1 / 2.5;
 
-            let receptorsBinded = 0;
-            let currRate = 0;
+            let frameCounter = 0;
+            let receptorCounter = 0;
 
             p.setup = () => {
                 p.createCanvas(setwidth * scaleFactor, setheight * scaleFactor);
@@ -200,8 +210,21 @@
 
                 p.moveBackBoxes();
 
-                currRate = p.bindRate()
-                //console.log(currRate);
+                frameCounter += 1;
+                if (frameCounter == 20) {
+                    if (canvas == "gamma1_tissue") {
+                        $currRate1 = p.bindRate();
+                    }
+
+                    if (canvas == "gamma2_tissue") {
+                        $currRate2 = p.bindRate();
+                    }
+
+                    if (canvas == "gamma3_tissue") {
+                        $currRate3 = p.bindRate();
+                    }
+                    frameCounter = 0;
+                }
 
                 // Handle edges
                 for (var i = 0; i < p.allSprites.length; i++) {
@@ -254,7 +277,17 @@
                     circle.box = box;
                     circles.remove(circle);
                     absorbed.add(circle);
-                    receptorsBinded += 1;
+                    if (canvas == "gamma1_tissue") {
+                        $receptorsBound1 += 1;
+                    }
+
+                    if (canvas == "gamma2_tissue") {
+                        $receptorsBound2 += 1;
+                    }
+
+                    if (canvas == "gamma3_tissue") {
+                        $receptorsBound3 += 1;
+                    }
                 }
 
                 if (circle != box.circle) {
@@ -308,11 +341,26 @@
                 }
             };
 
-            p.bindRate = () =>{
-                let ratePerSec = (receptorsBinded/p.frameCount)*(p.frameRate());
-                let ratePerMin = ratePerSec*60
-                return ratePerMin;
-            }
+            p.bindRate = () => {
+                let receptorCounter = 0;
+                if (canvas == "gamma1_tissue") {
+                    receptorCounter = $receptorsBound1;
+                }
+
+                if (canvas == "gamma2_tissue") {
+                    receptorCounter = $receptorsBound2;
+                }
+
+                if (canvas == "gamma3_tissue") {
+                    receptorCounter = $receptorsBound3;
+                }
+
+                let ratePerSec =
+                    (receptorCounter / p.frameCount) * p.frameRate();
+                let ratePerMin = ratePerSec * 60;
+                //return parseFloat(ratePerMin.toFixed(2));
+                return Math.round(ratePerMin);
+            };
 
             p.createParticles = async (x, y) => {
                 for (let i = 0; i < 50; i++) {
@@ -504,9 +552,9 @@
 
             p.removeBox = () => {
                 const index = boxes.length - 1;
-                for(let i = 0; i < absorbed.length; i++){
-                    if(absorbed[i].box == boxes[index]){
-                        absorbed[i].remove()
+                for (let i = 0; i < absorbed.length; i++) {
+                    if (absorbed[i].box == boxes[index]) {
+                        absorbed[i].remove();
                     }
                 }
                 boxes[index].remove();
@@ -561,7 +609,7 @@
                     p.ellipse(210, 435, 30, 30);
                 };
                 inv2.depth = 1;
-                inv2.setCollider("circle", 210, 435, 400);
+                inv2.setCollider("circle", 210, 435, 463);
                 inv2.visible = false;
             };
 
