@@ -128,8 +128,6 @@ def hormoneModelStatRun(gammaIn: np.array = np.array([.1, 2, .3]),
         'ShistJ': ShistJ,
         'ShistConJ': ShistConJ,
     }
-    with open(outputFileName, "w") as f:
-         json.dump(results, f)
     # Write the JSON data to the file
 
     return results
