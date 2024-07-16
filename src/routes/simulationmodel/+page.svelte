@@ -462,7 +462,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues"
+            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues. The organism maximizes its lifetime success by finding the optimal level of the |ΔSᵢ, ₘₐₓ| at a given target."
             bind:inputVar={$delSmax}
         />
 
@@ -472,7 +472,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism"
+            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism. The organism will try to optimize this value to maximize its lifetime success."
             bind:inputVar={$delCmax}
         />
 
@@ -482,7 +482,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="Determines the food availible in the environment for the organism. "
+            modalMessage="Determines the food availible in the environment for the organism. Increasing the food availiability will increase the payoff when investing in foraging."
             bind:inputVar={$tau}
         />
         <!--
