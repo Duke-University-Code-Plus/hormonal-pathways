@@ -77,7 +77,7 @@
     });
 
     async function fetchData() {
-        if ($variableName === "Choose a Variable") {
+        if ($variableName === "Choose a Variable" && !statRun) {
             document
                 .getElementById("variableDropDown")
                 .classList.add("border-red-500");
