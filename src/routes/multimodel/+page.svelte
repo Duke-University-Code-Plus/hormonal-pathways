@@ -212,8 +212,8 @@
         return result;
     }
 
-    const startColor = [0, 0, 255]; // Blue
-    const endColor = [255, 0, 0]; // Red
+    const endColor = [0, 0, 255]; // Blue
+    const startColor = [255, 0, 0]; // Red
     let color = startColor;
     let dataSetRet, YminCon, YmaxCon;
 
@@ -563,12 +563,12 @@ function bruh() {
         <!-- Container for food shortage sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Food Shortage"
+                id="Food Availability Multiplier"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$foodShort}
-                modalMessage="A multiplier of current food."
+                modalMessage="A multiplier of current food. The lower the value, the lower the food available to the organism."
             />
 
             <SliderTwoInput
