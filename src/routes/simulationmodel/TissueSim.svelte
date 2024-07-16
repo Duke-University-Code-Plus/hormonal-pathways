@@ -65,8 +65,8 @@
             let setheight = 672;
 
             // Hormone and receptor count
-            let g = 10 // hormone
-            let h = 0 // receptor
+            g = 10 // hormone
+            h = 0 // receptor
 
             p.setup = () => {
                 p.createCanvas(setwidth/2, setheight/2);
