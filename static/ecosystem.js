@@ -52,6 +52,10 @@ var peck;
 var sing; 
 var music; 
 
+// behaviors 
+var matingTrait; 
+var parentalTrait; 
+
 //mating
 //mating conditions
 var matingCondition = false; 
@@ -79,43 +83,43 @@ var perchRightX;
 var perchRightY;
 var babybirdX;
 
-//scavenge 
-var searchDirection; 
-var preyLocation;
-var numPrey = 5;
-var caughtPrey;
-var removedPrey;
-var preySide; 
-var rightPreys; 
-var leftPreys;
-var peckColliderY = 0; 
-var randomPrey = -1; 
-
-//player location
-var birdPosition; 
-var groundHeight;
-var nestVicinity;
-var effcientScavenge = true; 
-var atNest;
-var matesVicinity; 
-var underNest; 
-
-//frames
-var time = 0; 
-var timeStep = 10; 
-var scavengeFrameCount = 0; 
+//mating love animation 
 var fadeEffect = 0; 
 var fadeEffectCondition = true; 
 var fadeEffectComplete = false; 
 
-//inputs
-var behavior; 
+//scavenge 
+//conditions 
 var foodCondition = false; 
-var scavengeChange = false; 
+
+//worm
+var numPrey = 5;
+var caughtPrey;
+var removedPrey;
+var peckColliderY = 0; 
+var randomPrey = -1; 
+
+//malebird location conditions
+var birdPosition; 
+var groundHeight;
+var nestVicinity;
+var atNest;
+var underNest; 
+var effcientScavenge = true; 
+
+//frames
+var scavengeFrameCount = 0; 
+
+//inputs
+var time = 0; 
+var timeStepCycle = 25; 
+var timeStep = 0; 
+var behavior; 
+var mu = 10; 
+var shortageSlider; 
+var foodCondition = false; 
 var mortalityCondition = false; 
 var imagePath = '/sprites_haruta/';
-var shortageSlider; 
-
 
 /*
 loads spritesheets and its json files 
@@ -162,10 +166,16 @@ function draw() {
   background(135, 206, 250);
 
   //keeps track of time (in seconds)
-  time = millis() / 1000; 
+  time = int(millis() / 1000); 
 
   //inputs
   updateText();
+
+  //decide behavior 
+  if ((time % timeStepCycle == 0 || time == 0)
+    && (foodCondition == false && matingCondition == false && mortalityCondition == false)) {
+    malebirdBehavior();
+  }
 
   //constant traits for malebird
   //the malebird faces the direction that it's moving towards
@@ -186,19 +196,11 @@ function draw() {
   }
 
   //constant traits for femalebird
-if (femalebird != null) {
-  femalebirdMovement();
-}
-
-// if (foodCondition && babybirds != null)
-
+  if (femalebird != null) {
+    femalebirdMovement();
+  }
   //bird's parental behavior
   if (foodCondition) { 
-    //initializes the direction the malebird scavenges 
-    if (!scavengeChange) { 
-      searchDirection = random(["left", "right"]);    
-      scavengeChange = true; 
-    }
     birdScavenge(); 
   }
 
@@ -254,6 +256,9 @@ if (femalebird != null) {
       loveCondition = false; 
     }
   }
+  console.log("matingCondition", matingCondition);
+  console.log("foodCondition", foodCondition);
+  console.log("mortalityCondition", mortalityCondition);
 }
 
 /*
@@ -356,9 +361,19 @@ function updateText() {
 /*
 takes in the trait values from the simulation and determines what behavior is expressed by the malebird
 */
-function malebirdBehavior() {
-  if (time % timeStep == 0) {
-    behavior = "";
+function malebirdBehavior() {    
+  timeStep++; 
+  matingTrait = random(0,100);
+  parentalTrait = random(0, 100); 
+  deathProbability = random(0, 100); 
+  if (mu > deathProbability) {
+    mortalityCondition = true; 
+  }
+  else if (parentalTrait / matingTrait > 1 && babybirdCount > 0) {
+    foodCondition = true; 
+  }
+  else {
+    matingCondition = true; 
   }
 }
 
@@ -514,7 +529,7 @@ creates and initializes babybird
 */
 function createBabybird() { 
   //the x coordinate of babybird, initalized so the birds do not overlap 
-  babybirdX = nest.position.x - nest.originalWidth / 4 + ((malebird.originalWidth / 4) * babybirdCount);
+  babybirdX = nest.position.x - nest.originalWidth / 4 + ((malebird.originalWidth / 8) * babybirdCount);
   if (babybirdX <= nest.position.x + nest.originalWidth / 2) { 
     babybird = createSprite(babybirdX, nest.position.y - nest.originalWidth / 8);
     babybird.addAnimation('normal', imagePath + 'babybird0001.png', imagePath + 'babybird0002.png');
@@ -729,9 +744,7 @@ function createPrey() {
 removes random worm from all groups 
 */
 function removePrey() { 
-  removedPrey = preys[preys.length - 1]; 
-  preys.remove(removedPrey); 
-  removedPrey.remove(); 
+  preys[preys.length - 1].remove(); 
 }
 
 /*
@@ -791,7 +804,7 @@ animates the malebird's scavenging behavior
 */
 function birdScavenge() { 
   birdLocation(); 
-
+  malebird.changeAnimation('walk');
   //chooses a random worm
   if (randomPrey == -1) {
     randomPrey = int(random(1, preys.length)); 
@@ -947,7 +960,7 @@ function createPredator() {
 
 function predatorMovement() { 
   //accounts for predator 
-  predator.attractionPoint (0.1, malebird.position.x,  malebird.position.y);
+  predator.attractionPoint (0.4, malebird.position.x,  malebird.position.y);
 }
 
 function malebirdDeath() { 
@@ -1010,14 +1023,14 @@ class Heart {
   fade() {
     //fades the heart in until the alpha reaches 255
     if (this.fadeEffectCondition) {
-      this.fadeEffect += 2;
+      this.fadeEffect += 5;
       if (this.fadeEffect >= 255) {
         this.fadeEffect = 255;
         this.fadeEffectCondition = false;
       }
     //fades the heart out until the alpha reaches 0, then exits the function
     } else {
-      this.fadeEffect -= 2;
+      this.fadeEffect -= 5;
       if (this.fadeEffect <= 0) {
         this.fadeEffect = 0;
         this.fadeEffectCondition = true;
