@@ -44,13 +44,15 @@ var bird2;
 var bird3;
 
 //inputs
-var scavengeCheckbox;
-var foodCondition //used in if statement to determine if scavenge behavior should be exhibited
-var foodChange //keeps track of whether bird is in process of carrying 
+var scavengeButton1;
+var scavengeButton2
+var scavengeButton3 
 
-var matingCheckBox;
-var matingCondition
-var mateCreated
+var matingButton1;
+var matingButton2;
+var matingButton3;
+
+
 
 //spritesheets
 var malebird_fly_spritesheet;
@@ -204,38 +206,94 @@ function createEnvironment() {
     let nest3_xy = nest3_locations[index3];
 
     //creating nest sprites using index
-    nest1 = new Nest(nest1_xy[0], nest1_xy[1], 0.3)
-    nest2 = new Nest(nest2_xy[0], nest2_xy[1], 0.25)
-    nest3 = new Nest(nest3_xy[0], nest3_xy[1], 0.3)
+    nest1 = new Nest(nest1_xy[0], nest1_xy[1], 0.3, bird1)
+    nest2 = new Nest(nest2_xy[0], nest2_xy[1], 0.25, bird2)
+    nest3 = new Nest(nest3_xy[0], nest3_xy[1], 0.3, bird3)
 
 }
 
 function createInputs() {
-    scavengeCheckbox = createButton(" Scavenge Food");
-    scavengeCheckbox.position(10, 10);
-    scavengeCheckbox.mousePressed(() => {
+    scavengeButton1 = createButton(" Scavenge Food");
+    scavengeButton1.position(70, 10);
+    scavengeButton1.mousePressed(() => {
         bird1.foodCondition = true
     })
 
-    scavengeCheckbox.style('font-size', '14px');
-    scavengeCheckbox.style('background-color', 'pink');
-    scavengeCheckbox.style('color', 'white');
-    scavengeCheckbox.style('padding', '5px 5px');
-    scavengeCheckbox.style('border', 'none');
-    scavengeCheckbox.style('border-radius', '12px');
+    scavengeButton1.style('font-size', '14px');
+    scavengeButton1.style('background-color', 'pink');
+    scavengeButton1.style('color', 'white');
+    scavengeButton1.style('padding', '5px 5px');
+    scavengeButton1.style('border', 'none');
+    scavengeButton1.style('border-radius', '12px');
 
-    matingCheckbox = createButton(" Mating Behavior");
-    matingCheckbox.position(10, 40);
-    matingCheckbox.mousePressed(() => {
+    matingButton1 = createButton(" Mating Behavior");
+    matingButton1.position(70, 40);
+    matingButton1.mousePressed(() => {
         bird1.matingCondition = true
     })
 
-    matingCheckbox.style('font-size', '14px');
-    matingCheckbox.style('background-color', 'blue');
-    matingCheckbox.style('color', 'white');
-    matingCheckbox.style('padding', '5px 5px');
-    matingCheckbox.style('border', 'none');
-    matingCheckbox.style('border-radius', '12px');
+    matingButton1.style('font-size', '14px');
+    matingButton1.style('background-color', 'blue');
+    matingButton1.style('color', 'white');
+    matingButton1.style('padding', '5px 5px');
+    matingButton1.style('border', 'none');
+    matingButton1.style('border-radius', '12px');
+
+    //bird 2
+
+    scavengeButton2 = createButton(" Scavenge Food");
+    scavengeButton2.position(330, 10);
+    scavengeButton2.mousePressed(() => {
+        bird2.foodCondition = true
+    })
+
+    scavengeButton2.style('font-size', '14px');
+    scavengeButton2.style('background-color', 'pink');
+    scavengeButton2.style('color', 'white');
+    scavengeButton2.style('padding', '5px 5px');
+    scavengeButton2.style('border', 'none');
+    scavengeButton2.style('border-radius', '12px');
+
+    matingButton2 = createButton(" Mating Behavior");
+    matingButton2.position(330, 40);
+    matingButton2.mousePressed(() => {
+        bird2.matingCondition = true
+    })
+
+    matingButton2.style('font-size', '14px');
+    matingButton2.style('background-color', 'blue');
+    matingButton2.style('color', 'white');
+    matingButton2.style('padding', '5px 5px');
+    matingButton2.style('border', 'none');
+    matingButton2.style('border-radius', '12px');
+
+    //bird 3
+
+    scavengeButton3 = createButton(" Scavenge Food");
+    scavengeButton3.position(600, 10);
+    scavengeButton3.mousePressed(() => {
+        bird3.foodCondition = true
+    })
+
+    scavengeButton3.style('font-size', '14px');
+    scavengeButton3.style('background-color', 'pink');
+    scavengeButton3.style('color', 'white');
+    scavengeButton3.style('padding', '5px 5px');
+    scavengeButton3.style('border', 'none');
+    scavengeButton3.style('border-radius', '12px');
+
+    matingButton3 = createButton(" Mating Behavior");
+    matingButton3.position(600, 40);
+    matingButton3.mousePressed(() => {
+        bird3.matingCondition = true
+    })
+
+    matingButton3.style('font-size', '14px');
+    matingButton3.style('background-color', 'blue');
+    matingButton3.style('color', 'white');
+    matingButton3.style('padding', '5px 5px');
+    matingButton3.style('border', 'none');
+    matingButton3.style('border-radius', '12px');
 }
 
 function createAnimals() {
@@ -250,8 +308,8 @@ function createAnimals() {
     let femaleperch3 = female3_perch_locations[index3]
 
     bird1 = new maleBird(nest1.sprite.position.x, nest1.sprite.position.y - 20, 0.1, nest1, perch1, femaleperch1)
-    //bird2 = new maleBird(nest2.sprite.position.x, nest2.sprite.position.y - 20, 0.1, nest2, perch2, femaleperch2)
-    //bird3 = new maleBird(nest3.sprite.position.x, nest3.sprite.position.y - 20, 0.1, nest3, perch3, femaleperch3)
+    bird2 = new maleBird(nest2.sprite.position.x, nest2.sprite.position.y - 20, 0.1, nest2, perch2, femaleperch2)
+    bird3 = new maleBird(nest3.sprite.position.x, nest3.sprite.position.y - 20, 0.1, nest3, perch3, femaleperch3)
 
 }
 
@@ -264,301 +322,21 @@ function loadAnimations() {
     notes_flipped_play = loadAnimation(notes_flipped_spritesheet);
 }
 
-class maleBird {
-    constructor(x, y, scale, nest, perch, femaleperch) {
-        this.sprite = createSprite(x, y);
+class babyBird {
+    constructor(x, y, scale, nest) {
+        this.sprite = createSprite(x, y)
         this.sprite.scale = scale
-        this.nest = nest;
-        this.perchX = perch[0]
-        this.perchY = perch[1]
+        this.nest = nest
+        babyBirdsArray.push(this)
 
-        this.femaleperchX = femaleperch[0]
-        this.femaleperchY = femaleperch[1]
+        this.sprite.addAnimation('normal', imagePath + 'babybird0001.png', imagePath + 'babybird0002.png');
+        this.sprite.addAnimation('grown', imagePath + 'babybird_grown0001.png', imagePath + 'babybird_grown0002.png');
+        this.sprite.addAnimation('fly', babybird_fly);
 
-        console.log('male perch x', this.perchX)
-        console.log('male perch y', this.perchY)
-
-        console.log('female perch x', this.femaleperchX)
-        console.log('female perch y', this.femaleperchY)
-
-        this.scavengeCondition = false
-        this.scavengeChange = false; //keeps track of whether bird is in the process of scavenging
-
-        this.matingCondition = false
-        this.mateCreated = false
-
-        this.matingStage = 0 //keeps track of mating stage 
-        // if = 1, bird is singing and female bird is flying to it
-        //if = 2, female bird is at its perch spot
-        //if = 3, heart is created
-
-        //animations
-        this.sprite.addAnimation('fly', malebird_fly);
-        this.sprite.addAnimation('stand', imagePath + 'malebird_stand.png'); sing = this.sprite.addAnimation('sing', imagePath + 'malebird_sing0001.png', imagePath + 'malebird_sing0002.png');
-        peck = this.sprite.addAnimation('peck', imagePath + 'malebird_peck0001.png', imagePath + 'malebird_peck0002.png');
-        this.sprite.addAnimation('transformed', imagePath + 'malebird_death.png');
-
-        this.sprite.changeAnimation('stand');
-
-        peck.frameDelay = peckFrameCycle / 2;
-        sing.frameDelay = singFrameCycle / 4;
-
-        this.notes;
-        this.notes_flipped
-
-        this.love;
-
-        // create collider for player 
-        this.sprite.setCollider('circle', 0, 0, 200);
-        this.sprite.depth = 20;
-        this.sprite.friction = 0.05;
-
-        this.mate = null;
-
-        maleBirdsArray.push(this)
+        this.sprite.depth = 50;
+        babyBirdsArray.push(this); //keeps track of all baby birds
+        this.nest.babyBirdsArray.push(this) //keeps track of this nest's baby birds
     }
 
-    mateBehavior() {
-
-        // if = 1, bird is singing and female bird is flying to it
-        //if = 2, heart shows 
-        //if = 3, heart disappeared and femae bird flies out of frame
-
-        this.mate.mateBehavior();
-
-        if (this.matingStage == 0) {
-        if ((abs(this.sprite.position.y - this.perchY) < 1) && (abs(this.sprite.position.x - this.perchX) < 1)) { //if close to perch stop
-            this.sprite.velocity.x = 0; //stop moving
-            this.sprite.velocity.y = 0;
-            this.sprite.changeAnimation('stand')
-
-            //facing mate
-            if (this.mate.sprite.perchX < this.sprite.perchX) {
-                this.sprite.mirrorX(-1);
-            } else {
-                this.sprite.mirrorX(1);
-            }
-
-            this.matingStage = 1
-            this.mate.matingStage = 1
-
-        } else {
-            this.sprite.changeAnimation('fly')
-            this.sprite.attractionPoint(0.1, this.perchX, this.perchY)
-        }
-    }
-
-
-        if (this.matingStage == 1) { //start to sing 
-            this.sprite.changeAnimation('sing')
-            if (this.notes == null && this.notes_flipped == null) {
-                this.createNotes();
-            }
-        }
-
-        if (this.matingStage == 3) { //heart will appear 
-            if (this.notes != null) {
-                this.notes.remove();
-            }
-            if (this.notes_flipped != null) {
-                this.notes_flipped.remove()
-            }
-            this.sprite.changeAnimation('stand')
-            this.createLove();
-            if(!this.love.loveCondition) {
-                this.matingStage = 4
-                this.mate.matingStage = 4
-            }
-        }
-
-        if (this.matingStage ==4) {
-            console.log('matingStage', this.matingStage)
-            //create baby bird 
-            //baby bird count increase 
-            //female bird flies away 
-            //mating change = false 
-            //mating condition = false 
-
-            //need a create baby Bird functin
-            //need baby bird movement function
-
-        }
-    }
-
-    createNotes() {
-
-        if (this.notes != null) this.notes.remove();
-        if (this.notes_flipped != null) this.notes_flipped.remove()
-
-        if (this.mate.sprite.perchX < this.sprite.perchX) {
-            this.notes = createSprite(this.sprite.position.x + 0.3 * this.sprite.originalWidth, this.sprite.position.y - 0.3 * this.sprite.originalHeight);
-            music = this.notes.addAnimation('normal', notes_play);
-            this.notes.scale = 0.1;
-            music.frameDelay = singFrameCycle / 4;
-        }
-        else {
-            this.notes_flipped = createSprite(this.sprite.position.x - 0.3 * this.sprite.originalWidth, this.sprite.position.y - 0.3 * this.sprite.originalHeight);
-            music_flipped = this.notes_flipped.addAnimation('normal', notes_flipped_play);
-            this.notes_flipped.scale = 0.1;
-            music_flipped.frameDelay = singFrameCycle / 4;
-        }
-    }
-
-    createLove() {
-        if (this.love == null) {
-            var midpointX = abs(this.mate.sprite.position.x - this.sprite.position.x) / 2;
-            if (this.mate.sprite.position.x <= this.sprite.position.x)
-                this.love = new Heart(this.mate.sprite.position.x + midpointX, this.mate.sprite.position.y - 20);
-            if (this.mate.sprite.position.x > this.sprite.position.x)
-                this.love = new Heart(this.sprite.position.x + midpointX, this.mate.sprite.position.y - 20);
-        }
-        this.love.fade();
-        this.love.show();
-    }
-}
-class femaleBird {
-    constructor(x, y, scale, mate, perch) {
-        this.initialX = x
-        this.initialY = y
-
-        this.sprite = createSprite(x, y);
-        this.sprite.scale = scale;
-
-        this.perchX = perch[0]
-        this.perchY = perch[1]
-
-        this.matingStage = 0;
-
-        // Animations
-        this.sprite.addAnimation('fly', femalebird_fly);
-        this.sprite.addAnimation('stand', imagePath + 'femalebird_stand.png');
-
-        this.sprite.friction = 0.1;
-        this.sprite.depth = 20;
-
-        this.mate = mate; // Assign the sprite of the maleBird
-
-        femaleBirdsArray.push(this);
-
-        this.singFrameCount = 0;
-    }
-
-    mateBehavior() {
-
-        // if = 1, bird is singing and female bird is flying to it
-        //if = 2, male bird sings for 5 more cycles
-        //if = 3, heart shows 
-        //if = 4, heart disappeared and femae bird flies out of frame
-
-        if (this.matingStage == 1) { //female bird flying to male bid
-            console.log('matingStage', this.matingStage)
-            if ((abs(this.sprite.position.y - this.perchY) < 1) && (abs(this.sprite.position.x - this.perchX) < 1)) { //if close to perch stop
-                this.sprite.velocity.x = 0; //stop moving
-                this.sprite.velocity.y = 0
-                this.sprite.changeAnimation('stand')
-
-                if (this.mate.sprite.position.x < this.sprite.position.x) {
-                    this.sprite.mirrorX(1);
-                } else {
-                    this.sprite.mirrorX(-1);
-                }
-
-                this.matingStage = 2;
-                this.mate.matingStage = 2;
-            } else {
-                this.sprite.changeAnimation('fly')
-                this.sprite.attractionPoint(0.2, this.perchX, this.perchY)
-            }
-        }
-
-        if (this.matingStage == 2) { //bird sings for 1 more frame cycles
-            console.log('matingStage', this.matingStage)
-            this.sprite.changeAnimation('stand')
-            console.log('sing frame count', this.singFrameCount)
-            this.singFrameCount++
-            if (this.singFrameCount > singFrameCycle) {
-                this.matingStage = 3;
-                this.mate.matingStage = 3;
-            }
-        }
-
-        if (this.matingStage == 3) {
-            console.log('matingStage', this.matingStage)
-        }
-
-
-    }
-}
-
-class Nest {
-    constructor(x, y, scale) {
-        this.sprite = createSprite(x, y);
-        this.sprite.scale = scale
-        this.sprite.addAnimation('normal', imagePath + 'nest.png');
-    }
-
-    addBabyBird() {
-        console.log('in add baby bird')
-    }
-
-    removeBabyBird() {
-        console.log('in remove baby bird')
-    }
-}
-
-
-class Heart {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.loveX = 100;
-        this.loveY = 3 * (cos(100) + sin(100 / 2)) + 110;
-        this.fadeEffect = 1;
-        this.fadeEffectCondition = true;
-        this.loveCondition = true;
-    }
-
-
-
-    fade() {
-        if (!this.loveCondition) return
-        if (this.fadeEffectCondition) {
-            this.fadeEffect += 2;
-            if (this.fadeEffect >= 255) {
-                this.fadeEffect = 255;
-                this.fadeEffectCondition = false;
-            }
-        } else {
-            this.fadeEffect -= 2;
-            if (this.fadeEffect <= 0) {
-                this.fadeEffect = 0;
-                this.fadeEffectCondition = true;
-                this.loveCondition = false;
-            }
-        }
-    }
-
-    show() {
-        push();
-        fill(250, 0, 0, this.fadeEffect);
-        noStroke();
-        this.loveX += 54;
-        this.loveY = 3 * (cos(this.loveX) + sin(this.loveX / 2)) + 110;
-
-        translate(this.x, this.y);
-        rotate(45);
-        // Calculate sizes based on loveY
-        let sizeRect = this.loveY / 6;
-        let sizeEllipse = this.loveY / 6;
-
-        // Draw the rectangle
-        rectMode(CENTER);
-        rect(0, 0, sizeRect, sizeRect);
-
-        // Draw the semi-circles
-        arc(0, -sizeRect / 2, sizeEllipse, sizeEllipse, 180, 0, CHORD); // Right semi-circle
-        arc(-sizeRect / 2, 0, sizeEllipse, sizeEllipse, 90, -90, CHORD); // Top semi-circle
-        pop();
-
-    }
+    //need baby bird fly away function
 }
