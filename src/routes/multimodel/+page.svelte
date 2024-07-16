@@ -252,8 +252,6 @@
             fill: false,
         };
     });
-
-    console.log(datasets);
     return datasets;
 }
 
@@ -460,7 +458,6 @@ const SenseChartoptions = [
 
 function bruh() {
             $statRun = !$statRun
-            console.log($statRun)
 }
 </script>
 
