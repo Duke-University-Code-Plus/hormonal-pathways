@@ -112,6 +112,7 @@
 
             p.draw = () => {
                 p.background(247, 211, 208);
+                p.scale(1);
 
                 // for (var i = 0; i < boxes.length; i++) {
                 //     boxes[i].debug = true;
@@ -167,9 +168,41 @@
                         s.velocity.y = -p.abs(s.velocity.y);
                     }
                 }
-
+                
                 p.drawSprites();
 
+
+                 //text inputs  
+                 p.textSize(30);
+                 p.fill('black');
+
+                 //line and text for cell
+                 p.text('cell', 200, 125);
+                 //p.line(218, 65, 295, 175);
+
+                 //line and text for nucleus
+                 p.text('nucleus', 120, 400);
+                 //p.line(123, 436, 100, 500);
+
+                 //line and text for dna
+                 p.text('DNA', 220, 640);
+                 //p.line(245, 586, 245, 623);
+
+                 //line and text for nuclear membrane
+                 p.text('nuclear membrane', 365, 260);
+                 p.line(420, 453, 500, 260);
+
+                 //line and text for outer membrane
+                 p.textSize(25);
+                 p.text('outer membrane', 685, 60);
+                 p.line(750, 60, 700, 250);
+                
+                 //line and text for extracellular fluid
+                 p.textSize(23);
+                 p.text('extracellular fluid', 785, 360);
+
+
+                //initialize particles 
                 for (let i = particles.length - 1; i >= 0; i--) {
                     particles[i].update();
                     particles[i].show(p);

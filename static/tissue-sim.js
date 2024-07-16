@@ -12,8 +12,12 @@ var inv2;
 var dna_strand, midDNA, leftDNA, rightDNA;
 const particles = [];
 
-function setup() {
-    createCanvas(960, 672);
+var canvas1 = function( sketch ) {
+    
+    sketch.setup = function() {
+    let image1 = sketch.createCanvas(960, 672);
+    image1.position(0,0);
+
 
     // Initialize images
     bg = loadImage('cell-images/tissue-sim-background.png');
@@ -68,7 +72,7 @@ function setup() {
     
 }
 
-function draw() {
+sketch.draw = function() {
     background(247, 211, 208);
 
     for (var i = 0; i < boxes.length; i++) {
@@ -520,3 +524,20 @@ class Particle {
     }
 
 }
+}
+new p5(canvas1);
+
+var canvas2 = function (sketch) {
+    sketch.setup = function() {
+    let image2 = createCanvas(100, 672);
+    image2.postion(1072,1000)
+    }
+
+
+sketch.draw = function() {
+
+  sketch.background(220);
+}
+
+};
+new p5(s2); 
