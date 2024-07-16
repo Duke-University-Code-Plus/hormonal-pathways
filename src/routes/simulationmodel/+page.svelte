@@ -5,7 +5,7 @@
     import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
-    import TissueSim from "./TissueSim.svelte";
+    import TissueSim, {currRate} from "./TissueSim.svelte";
     import {
         gamma1,
         gamma2,
@@ -54,7 +54,9 @@
 
     let canvas1 = "gamma1_tissue";
     let canvas2 = "gamma2_tissue";
-    let canvas3 = "gamma3_tissue"
+    let canvas3 = "gamma3_tissue";
+
+    let tissueSimKey = 0;
 
     onMount(() => {
         fetchData();
@@ -278,6 +280,37 @@
         $gamma3_tissue = 9;
         $hormoneCount = 20;
     }
+
+    function returnData() {
+        //will call billys function here which updates tissue-stores based on delSmax and gamma vals?
+        $gamma1_tissue = 5;
+        $gamma2_tissue = 3;
+        $gamma3_tissue = 9;
+        $hormoneCount = 20;
+    }
+
+    function reset() {
+        tissueSimKey += 1;
+        $gamma1_tissue = 0;
+        $gamma2_tissue = 0;
+        $gamma3_tissue = 0;
+        $hormoneCount = 0;
+    }
+
+    let selectedBird = null;
+
+    function updateSmax(bird) {
+        console.log("bird button clicked", bird);
+        reset();
+        selectedBird = bird;
+        // if (bird == 1) {
+        //     $delSmax = 10;
+        // } else if (bird == 2) {
+        //     $delSmax = 20;
+        // } else if (bird == 3) {
+        //     $delSmax = 30;
+        // }
+    }
 </script>
 
 <NavBar multiPage="Single" />
@@ -289,11 +322,10 @@
 </h1>
 
 <!--Input Parameters -->
-<div class="flex flex-wrap justify-center flex-row">
+<!-- <div class="flex flex-wrap justify-center flex-row">
     <div
         class="flex flex-wrap justify-center grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-1"
     >
-        <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full flex-col">
             <SliderInput
                 id="Selection against effort in trait i (γᵢ, ₜ)"
@@ -321,22 +353,7 @@
                 bind:inputVar={$gamma3}
             />
         </div>
-
-        <!-- Container for G and mu sliders-->
-        <!-- <div class="flex flex-wrap justify-center w-full">
-
-            <SliderInput
-                id="Death probability (µ)"
-                min="0"
-                max="1"
-                step="0.001"
-                bind:inputVar={$mu}
-                modalMessage="A fixed chance that the bird will die randomly."
-            />
-        </div> -->
     </div>
-
-    <!-- Form Inputs-->
     <div class="flex flex-wrap justify-center items-center">
         <FormInput
             id="Max change of sensitivity to hormone (|ΔSᵢ, ₘₐₓ|)"
@@ -348,18 +365,10 @@
             bind:inputVar={$delSmax}
         />
     </div>
-</div>
-
-<!-- Run Simulation Button-->
-<div class="text-center my-4">
-    <button
-        class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded"
-        on:click={fetchData}>Run</button
-    >
-</div>
+</div> -->
 
 <!-- Creating Charts-->
-<div class="flex flex-row flex-wrap gap-6 items-center justify-center">
+<!-- <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -383,22 +392,118 @@
         <h2 class="text-center text-xl font-semibold mb-4">Trait Values</h2>
         <canvas id="traitChart"></canvas>
     </div>
+</div> -->
+
+<!-- <button on:click={fakeReturnData}>Fake Data Update</button> -->
+
+<SliderInput
+    id="hormoneCount"
+    min="0"
+    max="30"
+    step="1"
+    bind:inputVar={$hormoneCount}
+    modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+/>
+
+<SliderInput
+    id="gamma1_tissue"
+    min="0"
+    max="10"
+    step="1"
+    bind:inputVar={$gamma1_tissue}
+    modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+/>
+
+<SliderInput
+    id="gamma2_tissue"
+    min="0"
+    max="10"
+    step="1"
+    bind:inputVar={$gamma2_tissue}
+    modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+/>
+
+<SliderInput
+    id="gamma3_tissue"
+    min="0"
+    max="10"
+    step="1"
+    bind:inputVar={$gamma3_tissue}
+    modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+/>
+
+
+
+<!-- Bird buttons -->
+<div class=" flex space-x-2 justify-center">
+    <button
+        class="px-4 py-2 border rounded transition-colors duration-200"
+        class:bg-gray-400={selectedBird === 1}
+        class:text-white={selectedBird === 1}
+        class:bg-white={selectedBird !== 1}
+        class:text-black={selectedBird !== 1}
+        on:click={() => updateSmax(1)}
+    >
+        Bird 1
+    </button>
+    <button
+        class="px-4 py-2 border rounded transition-colors duration-200"
+        class:bg-gray-400={selectedBird === 2}
+        class:text-white={selectedBird === 2}
+        class:bg-white={selectedBird !== 2}
+        class:text-black={selectedBird !== 2}
+        on:click={() => updateSmax(2)}
+    >
+        Bird 2
+    </button>
+    <button
+        class="px-4 py-2 border rounded transition-colors duration-200"
+        class:bg-gray-400={selectedBird === 3}
+        class:text-white={selectedBird === 3}
+        class:bg-white={selectedBird !== 3}
+        class:text-black={selectedBird !== 3}
+        on:click={() => updateSmax(3)}
+    >
+        Bird 3
+    </button>
 </div>
 
-<button on:click={fakeReturnData}>Fake Data Update</button>
+<!-- Run Simulation Button-->
+<div class="text-center my-4">
+    <button
+        class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded"
+        on:click={returnData}>Run</button
+    >
+</div>
 
 <!-- Simulations -->
-<div class="flex flex-row flex-wrap items-center justify-center p-10 space-x-10">
-    <div class="rounded-lg overflow-hidden shadow-md">
-        <TissueSim canvas={canvas1}/>
+<!-- {#key tissueSimKey} -->
+<div class="flex flex-row flex-wrap items-center justify-center p-5 space-x-10">
+    <div class="flex flex-col">
+        <h2 class="text-center text-xl font-semibold">
+            Gamete Maturation <em>(V<sub>g</sub> ,<sub>t</sub>)</em>
+        </h2>
+        <div class="rounded-lg overflow-hidden shadow-md my-5">
+            <TissueSim canvas={canvas1} />
+        </div>
     </div>
 
-    <div class="rounded-lg overflow-hidden shadow-md">
-        <TissueSim canvas={canvas2}/>
+    <div class="flex flex-col">
+        <h2 class="text-center text-xl font-semibold">
+            Parental Effort <em>(V<sub>m</sub> ,<sub>t</sub>)</em>
+        </h2>
+        <div class="rounded-lg overflow-hidden shadow-md my-5">
+            <TissueSim canvas={canvas2} />
+        </div>
     </div>
 
-    <div class="rounded-lg overflow-hidden shadow-md">
-        <TissueSim canvas={canvas3}/>
+    <div class="flex flex-col">
+        <h2 class="text-center text-xl font-semibold">
+            Mating Effort <em>(V<sub>p</sub> ,<sub>t</sub>)</em>
+        </h2>
+        <div class="rounded-lg overflow-hidden shadow-md my-5">
+            <TissueSim canvas={canvas3} />
+        </div>
     </div>
 </div>
-
+<!-- {/key} -->

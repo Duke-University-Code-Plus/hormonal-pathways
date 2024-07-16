@@ -53,6 +53,7 @@
     const createSketch = () => {
         new p5((p) => {
             var circles,
+                absorbed,
                 boxes,
                 proteins,
                 outer,
@@ -83,6 +84,9 @@
 
             let scaleFactor = 1 / 2.5;
 
+            let receptorsBinded = 0;
+            let currRate = 0;
+
             p.setup = () => {
                 p.createCanvas(setwidth * scaleFactor, setheight * scaleFactor);
 
@@ -111,6 +115,7 @@
                 circles = new p.Group();
                 boxes = new p.Group();
                 proteins = new p.Group();
+                absorbed = new p.Group();
 
                 function hormoneSliderchange() {
                     console.log(hormoneSlider.value());
@@ -128,6 +133,9 @@
             };
 
             p.draw = () => {
+                // console.log(p.frameCount);
+                // console.log(p.frameRate());
+
                 if (canvas == "gamma1_tissue") {
                     p.background(247, 211, 208);
                 }
@@ -158,12 +166,16 @@
                     h = $gamma3_tissue;
                 }
 
-                if (g > circles.length) {
+                if (g > circles.length + absorbed.length) {
                     p.createCircle();
                 }
 
-                if (g < circles.length) {
-                    p.removeCircle();
+                if (g < circles.length + absorbed.length) {
+                    if (circles.length != 0) {
+                        p.removeCircle();
+                    } else {
+                        p.removeAbsorbed();
+                    }
                 }
 
                 if (h > boxes.length) {
@@ -177,12 +189,19 @@
                 p.updateCircles();
 
                 // Circles bounce against each other
-                circles.bounce(circles, p.circleBounce);
+                circles.bounce(circles);
 
                 // Circles p.absorb boxes
                 circles.overlap(boxes, p.absorb);
 
+                absorbed.overlap(boxes, p.absorb);
+
+                p.updateAbsorbed();
+
                 p.moveBackBoxes();
+
+                currRate = p.bindRate()
+                //console.log(currRate);
 
                 // Handle edges
                 for (var i = 0; i < p.allSprites.length; i++) {
@@ -216,26 +235,36 @@
                 }
             };
 
+            p.updateAbsorbed = () => {
+                for (var i = 0; i < absorbed.length; i++) {
+                    const a = absorbed[i];
+                    a.attractionPoint(
+                        5,
+                        a.box.position.x,
+                        a.box.position.y - 20,
+                    );
+                    a.maxSpeed = 7;
+                }
+            };
+
             p.absorb = (circle, box) => {
                 if (!box.circle && !circle.absorbed && !box.movingBack) {
                     box.circle = circle;
+                    circle.absorbed = true;
+                    circle.box = box;
+                    circles.remove(circle);
+                    absorbed.add(circle);
+                    receptorsBinded += 1;
                 }
 
                 if (circle != box.circle) {
                     return;
                 }
 
-                circle.attractionPoint(20, box.position.x, box.position.y - 20);
-                circle.maxSpeed = 7;
-                circle.absorbed = true;
-
-                p.toDNA(circle, box);
-            };
-
-            p.circleBounce = (circle1, circle2) => {
-                if (circle1.absorbed || circle2.absorbed) {
+                if (box != circle.box) {
                     return;
                 }
+                p.toDNA(circle, box);
             };
 
             p.toDNA = (circle, box) => {
@@ -272,19 +301,21 @@
                 } else {
                     box.movingBack = true;
                     box.circle = null;
-                    circle.velocity.x = -2;
-                    circle.velocity.y = -5;
-                    circle.absorbed = false;
-                    circle.leaving = true;
                     box.dnaPos = null;
                     circle.remove();
-                    p.createCircle();
+                    //p.createCircle();
                     p.createParticles(box.position.x, box.position.y);
                 }
             };
 
+            p.bindRate = () =>{
+                let ratePerSec = (receptorsBinded/p.frameCount)*(p.frameRate());
+                let ratePerMin = ratePerSec*60
+                return ratePerMin;
+            }
+
             p.createParticles = async (x, y) => {
-                for (let i = 0; i < 200; i++) {
+                for (let i = 0; i < 50; i++) {
                     let particle = new Particle(x, y);
                     particles.push(particle);
                     await p.sleep(50);
@@ -345,8 +376,8 @@
                 circle.setCollider("circle", 0, 0, 25);
                 circle.setSpeed(p.random(2, 3), 180);
                 circle.enteredCell = false;
-                circle.scale = 0.5;
-                circle.mass = 5;
+                circle.scale = 0.6;
+                circle.mass = 6;
                 circle.depth = 5;
                 circle.absorbed = false;
                 circle.leaving = false;
@@ -355,12 +386,19 @@
 
             p.removeCircle = () => {
                 const index = circles.length - 1;
+                circles[index].remove();
+            };
+
+            p.removeAbsorbed = () => {
+                const index = absorbed.length - 1;
                 for (let i = 0; i < boxes.length; i++) {
-                    if (boxes[i].circle == circles[index]) {
+                    if (boxes[i].circle == absorbed[index]) {
                         boxes[i].circle = null;
+                        boxes[i].movingBack = true;
+                        boxes[i].dnaPos = null;
                     }
                 }
-                circles[index].remove();
+                absorbed[index].remove();
             };
 
             p.updateCircles = () => {
@@ -376,19 +414,35 @@
             };
 
             p.keepWithinCell = (circle) => {
-                if (circle.absorbed == true) {
-                    return;
-                }
+                // if (circle.absorbed == true) {
+                //     return;
+                // }
                 if (
-                    nucleus.overlapPixel(
-                        circle.position.x,
-                        circle.position.y,
-                    ) ||
-                    outer.overlapPixel(circle.position.x, circle.position.y)
+                    nucleus.overlapPixel(circle.position.x, circle.position.y)
                 ) {
                     // Reverse the velocity
                     circle.velocity.y = -circle.velocity.y;
                     circle.velocity.x = -circle.velocity.x;
+
+                    circle.attractionPoint(
+                        10,
+                        circle.position.x + 1,
+                        circle.position.y - 1,
+                    );
+                    circle.maxSpeed = 3;
+                }
+
+                if (outer.overlapPixel(circle.position.x, circle.position.y)) {
+                    // Reverse the velocity
+                    circle.velocity.y = -circle.velocity.y;
+                    circle.velocity.x = -circle.velocity.x;
+
+                    circle.attractionPoint(
+                        10,
+                        circle.position.x - 1,
+                        circle.position.y,
+                    );
+                    circle.maxSpeed = 3;
                 }
             };
 
@@ -421,7 +475,7 @@
                     )
                         return;
                 }
-                console.log("Passed first test: No overlap with other boxes");
+                //console.log("Passed first test: No overlap with other boxes");
 
                 // Check if coordinates overlap with background sprites
                 // Create temporary box for location checking
@@ -429,9 +483,9 @@
                 box.setCollider("rectangle");
                 if (!p.isCorrectReceptorLocation(box)) return box.remove();
                 box.remove();
-                console.log(
-                    "Passed second test: No overlap with background sprites",
-                );
+                // console.log(
+                //     "Passed second test: No overlap with background sprites",
+                // );
 
                 // Create box
                 box = p.createSprite(bx, by);
@@ -450,6 +504,11 @@
 
             p.removeBox = () => {
                 const index = boxes.length - 1;
+                for(let i = 0; i < absorbed.length; i++){
+                    if(absorbed[i].box == boxes[index]){
+                        absorbed[i].remove()
+                    }
+                }
                 boxes[index].remove();
             };
 
