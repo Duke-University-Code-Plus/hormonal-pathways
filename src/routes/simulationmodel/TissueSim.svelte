@@ -95,7 +95,7 @@
             let scaleFactor = 1 / 2.5;
 
             let frameCounter = 0;
-            let receptorCounter = 0;
+            let receptorBoundCounter = 0;
 
             p.setup = () => {
                 p.createCanvas(setwidth * scaleFactor, setheight * scaleFactor);
@@ -211,19 +211,21 @@
                 p.moveBackBoxes();
 
                 frameCounter += 1;
-                if (frameCounter == 20) {
+                let framesMax = 300;
+                if (frameCounter == framesMax) {
                     if (canvas == "gamma1_tissue") {
-                        $currRate1 = p.bindRate();
+                        $currRate1 = p.bindRate(framesMax);
                     }
 
                     if (canvas == "gamma2_tissue") {
-                        $currRate2 = p.bindRate();
+                        $currRate2 = p.bindRate(framesMax);
                     }
 
                     if (canvas == "gamma3_tissue") {
-                        $currRate3 = p.bindRate();
+                        $currRate3 = p.bindRate(framesMax);
                     }
                     frameCounter = 0;
+                    receptorBoundCounter = 0;
                 }
 
                 // Handle edges
@@ -288,6 +290,7 @@
                     if (canvas == "gamma3_tissue") {
                         $receptorsBound3 += 1;
                     }
+                    receptorBoundCounter += 1;
                 }
 
                 if (circle != box.circle) {
@@ -341,22 +344,21 @@
                 }
             };
 
-            p.bindRate = () => {
-                let receptorCounter = 0;
-                if (canvas == "gamma1_tissue") {
-                    receptorCounter = $receptorsBound1;
-                }
+            p.bindRate = (frames) => {
+                // let receptorCounter = 0;
+                // if (canvas == "gamma1_tissue") {
+                //     receptorCounter = $receptorsBound1;
+                // }
 
-                if (canvas == "gamma2_tissue") {
-                    receptorCounter = $receptorsBound2;
-                }
+                // if (canvas == "gamma2_tissue") {
+                //     receptorCounter = $receptorsBound2;
+                // }
 
-                if (canvas == "gamma3_tissue") {
-                    receptorCounter = $receptorsBound3;
-                }
-
+                // if (canvas == "gamma3_tissue") {
+                //     receptorCounter = $receptorsBound3;
+                // }
                 let ratePerSec =
-                    (receptorCounter / p.frameCount) * p.frameRate();
+                    (receptorBoundCounter / frames) * p.frameRate();
                 let ratePerMin = ratePerSec * 60;
                 //return parseFloat(ratePerMin.toFixed(2));
                 return Math.round(ratePerMin);
