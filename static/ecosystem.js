@@ -256,9 +256,6 @@ function draw() {
       loveCondition = false; 
     }
   }
-  console.log("matingCondition", matingCondition);
-  console.log("foodCondition", foodCondition);
-  console.log("mortalityCondition", mortalityCondition);
 }
 
 /*
