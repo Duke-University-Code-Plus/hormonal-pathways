@@ -6,5 +6,4 @@ export var chartDescriptions = writable([
     '',
     '',
     '',
-    ''
 ]);

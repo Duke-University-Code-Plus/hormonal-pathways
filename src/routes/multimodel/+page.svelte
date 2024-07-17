@@ -212,8 +212,8 @@
         return result;
     }
 
-    const startColor = [0, 0, 255]; // Blue
-    const endColor = [255, 0, 0]; // Red
+    const endColor = [0, 0, 255]; // Blue
+    const startColor = [255, 0, 0]; // Red
     let color = startColor;
 
     const datasets = Array.from({ length: numRunsValue }, (_, runIndex) => {
@@ -479,61 +479,61 @@ function bruh() {
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Selection against effort in trait i (γᵢ, ₜ)"
+                id="Investment cost for Gamete Maturation Trait(γ₉, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma1}
-                modalMessage="A variable that determines the negative weight of a trait. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for the first trait, the more costly it is to the organism to invest in the first trait. Therefore, there is lower value of the first trait, and will get picked less."
+                modalMessage="A variable that determines the negative weight of gamete maturation. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for gamete maturation, the more costly it is to the organism to invest in gamete maturation. Therefore, there is lower value for gamete maturation, and will get picked less."
             />
 
             <SliderInput
-                id="Selection against effort in trait j (γⱼ, ₜ)"
+                id="Investment cost for Mating Effort Trait (γₘ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma2}
-                modalMessage="A variable that determines the negative weight of a trait. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for the second trait, the more costly it is to the organism to invest in the second trait. Therefore, there is lower value of the second trait, and will get picked less."
+                modalMessage="A variable that determines the negative weight of mating effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for mating effort, the more costly it is to the organism to invest in mating effort. Therefore, there is lower value for mating effort, and will get picked less."
             />
 
             <SliderInput
-                id="Selection against effort in trait k (γₖ, ₜ)"
+                id="Investment cost for Parental Effort Trait (γₚ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma3}
-                modalMessage="A variable that determines the negative weight of a trait. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for the third trait, the more costly it is to the organism to invest in the third trait. Therefore, there is lower value of the third trait, and will get picked less."
+                modalMessage="A variable that determines the negative weight of parental effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for parental effort, the more costly it is to the organism to invest in parental effort. Therefore, there is lower value for parental effort, and will get picked less."
             />
         </div>
 
         <!-- Container for Z sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Weight of first Trait (zᵢ)"
+                id="Weight of Gamete Maturation Trait (z₉)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$z1}
-                modalMessage="The weight of the first trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
+                modalMessage="The weight of the gamete maturation trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
             />
             
 
             <SliderInput
-                id="Weight of second trait (zⱼ)"
+                id="Weight of Mating Effort Trait (zₘ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$z2}
-                modalMessage="The weight of the second trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
+                modalMessage="The weight of the mating effort trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
             />
 
             <SliderInput
-                id="Weight of third trait (zₖ)"
+                id="Weight of Parental Effort Trait (zₚ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$z3}
-                modalMessage="The weight of the third trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
+                modalMessage="The weight of the parental effort trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
             />
         </div>
 
@@ -544,7 +544,7 @@ function bruh() {
                 max="1"
                 step="0.1" 
                 bind:inputVar={$G} 
-                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization. This is the minimum production of hormone that has to be present in the first trait (the first trait in our code) in order for gamete maturation to occur. A lower treshhold of hormone level (G) will result in lower costs in the energy level of the organism, and lower costs investing into parental effort."/>
+                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization. This is the minimum production of hormone that has to be present in the gamete maturation trait in order for gamete maturation to occur. A lower treshhold of hormone level (G) will result in lower costs in the energy level of the organism, and lower costs investing into parental effort."/>
 
             <SliderInput
                 id="Death probability (µ)"
@@ -563,12 +563,12 @@ function bruh() {
         <!-- Container for food shortage sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Food Shortage"
+                id="Food Availability Multiplier"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$foodShort}
-                modalMessage="A multiplier of current food."
+                modalMessage="A multiplier of current food. The lower the value, the lower the food available to the organism."
             />
 
             <SliderTwoInput

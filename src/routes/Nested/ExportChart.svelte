@@ -1,13 +1,12 @@
 <script>
     import Modal from './Modal.svelte';
-    import { chartDescriptions } from '../message_store';
+    import { chartDescriptions } from '../message_store.js';
 
-    let chartMessage = chartDescriptions;
     let showModal = false;
     let modalMessage = null;
     let isLoading  = false;
 
-    async function runLlavaScript(base64Data) {
+    async function runLlavaScript(index, base64Data) {
         isLoading = true;
         try {
             const response = await fetch('http://localhost:5000/llavaserver', {
@@ -15,7 +14,11 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ base64: base64Data })
+                body: JSON.stringify({ 
+                    index: index,
+                    base64: base64Data 
+
+                })
             });
             const result = await response.json();
             return result.message;
@@ -31,7 +34,7 @@
     }
 
     async function handleDataChange(index, imageData) {
-        const message = await runLlavaScript(imageData);
+        const message = await runLlavaScript(index, imageData);
         modalMessage = message;
         $chartDescriptions[index] = message
         }
@@ -54,7 +57,7 @@
                 {#if isLoading}
                     Loading...
                 {:else}
-                    is this pizza?
+                    What is this chart?
                 {/if}
             </h2>
             <div class="flex ms-auto inline-flex m-8">

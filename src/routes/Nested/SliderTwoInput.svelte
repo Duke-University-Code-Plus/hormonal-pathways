@@ -90,7 +90,7 @@
           </h2>
           <div class="flex ms-auto inline-flex m-8">
             <p class="font-sans text-sm font-normal text-blue-gray-500">
-              Choose the beginning and end of the food shortage
+              Choose the beginning and end of the food shortage.
             </p>
           </div>
         </Modal>
