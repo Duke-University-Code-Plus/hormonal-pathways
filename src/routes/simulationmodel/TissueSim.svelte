@@ -12,6 +12,7 @@
         receptorsBound1,
         receptorsBound2,
         receptorsBound3,
+        labelToggle,
     } from "../tissue_store.js";
     export let canvas;
 
@@ -144,7 +145,9 @@
 
             p.draw = () => {
                 // console.log(p.frameCount);
-                // console.log(p.frameRate());
+                if ($labelToggle) {
+                    console.log("show labels");
+                }
 
                 if (canvas == "gamma1_tissue") {
                     p.background(247, 211, 208);
@@ -248,6 +251,7 @@
                         s.velocity.y = -p.abs(s.velocity.y);
                     }
                 }
+                
 
                 p.drawSprites();
 
@@ -258,6 +262,67 @@
                         particles.splice(i, 1);
                     }
                 }
+
+                if ($labelToggle) {
+                    p.showLabels();
+                }
+
+                
+            };
+
+            p.showLabels = () => {
+                p.textFont("Arial");
+
+                // Define a helper function to draw labels with background
+                const drawLabel = (
+                    text,
+                    x,
+                    y,
+                    lineXStart = null,
+                    lineYStart = null,
+                    lineXEnd = null,
+                    lineYEnd = null,
+                    textSize = 30,
+                    bgColor = "white",
+                    textColor = "black",
+                ) => {
+                    p.textSize(textSize);
+                    p.fill(bgColor);
+                    p.noStroke();
+                    let textWidth = p.textWidth(text);
+                    let textHeight = textSize * 1.2;
+                    p.rect(x - 5, y - textSize, textWidth + 10, textHeight, 5); // Background with padding and rounded corners
+
+                    p.fill(textColor);
+                    p.text(text, x, y);
+
+                    if (lineXStart !== null && lineYStart !== null) {
+                        p.stroke(textColor);
+                        p.strokeWeight(3);
+                        p.line(
+                            lineXStart,
+                            lineYStart,
+                            lineXEnd,
+                            lineYEnd,
+                        );
+                    }
+                };
+
+                // Labels and optional lines
+                drawLabel("cell", 200, 125);
+                // p.line(218, 65, 295, 175); // Adjust coordinates as needed
+
+                drawLabel("nucleus", 120, 400);
+                // p.line(123, 436, 100, 500); // Adjust coordinates as needed
+
+                drawLabel("DNA", 220, 640);
+                // p.line(245, 586, 245, 623); // Adjust coordinates as needed
+
+                drawLabel("nuclear membrane", 365, 260, 420, 453, 500, 270);
+
+                drawLabel("outer membrane", 685, 60, 750, 70, 700, 250);
+
+                drawLabel("extracellular fluid", 785, 360, null, null, null, null, 23);
             };
 
             p.updateAbsorbed = () => {

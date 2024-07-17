@@ -39,7 +39,8 @@
         currRate3,
         receptorsBound1,
         receptorsBound2,
-        receptorsBound3
+        receptorsBound3,
+        labelToggle,
     } from "../tissue_store";
 
     let Xhist = [];
@@ -98,7 +99,7 @@
             // Data from API
             Xhist = data.Xhist;
             Shist = data.Shist;
-            console.log(Shist);
+            //console.log(Shist);
             Chist = data.Chist;
             Whist = data.Whist;
             Wcuml = data.Wcuml;
@@ -288,6 +289,7 @@
 
     function returnData() {
         //will call billys function here which updates tissue-stores based on delSmax and gamma vals?
+        reset();
         $gamma1_tissue = 5;
         $gamma2_tissue = 3;
         $gamma3_tissue = 9;
@@ -296,10 +298,17 @@
 
     function reset() {
         //tissueSimKey += 1;
-        $gamma1_tissue = 0;
-        $gamma2_tissue = 0;
-        $gamma3_tissue = 0;
-        $hormoneCount = 0;
+        // $gamma1_tissue = 0;
+        // $gamma2_tissue = 0;
+        // $gamma3_tissue = 0;
+        // $hormoneCount = 0;
+        $currRate1 = 0;
+        $currRate2 = 0;
+        $currRate3 = 0;
+
+        $receptorsBound1 = 0;
+        $receptorsBound2 = 0;
+        $receptorsBound3 = 0;
     }
 
     let selectedBird = null;
@@ -320,11 +329,11 @@
 
 <NavBar multiPage="Single" />
 
-<h1
+<!-- <h1
     class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
 >
     Simulations
-</h1>
+</h1> -->
 
 <!--Input Parameters -->
 <!-- <div class="flex flex-wrap justify-center flex-row">
@@ -447,11 +456,29 @@
 </div>
 
 <!-- Run Simulation Button-->
-<div class="text-center my-4">
-    <button
-        class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded"
-        on:click={returnData}>Run</button
-    >
+<div class="flex flex-row justify-center">
+    <div class="text-center my-4">
+        <button
+            class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded"
+            on:click={returnData}>Run</button
+        >
+    </div>
+
+    <label class="inline-flex items-center cursor-pointer ml-4">
+        <!-- Added margin-left here -->
+        <input
+            type="checkbox"
+            value=""
+            class="sr-only peer"
+            on:click={() => ($labelToggle = !$labelToggle)}
+        />
+        <div
+            class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+        ></div>
+        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Show Simulation Labels</span
+        >
+    </label>
 </div>
 
 <!-- Simulations -->
@@ -461,7 +488,7 @@
             Gamete Maturation <em>(V<sub>g</sub> ,<sub>t</sub>)</em>
         </h2>
         <div class="rounded-lg overflow-hidden shadow-md my-5">
-            <TissueSim canvas={canvas1}/>
+            <TissueSim canvas={canvas1} />
             <p>Current Rate: {$currRate1} receptors bound/min</p>
             <p>Total Number of Receptors Bound: {$receptorsBound1}</p>
         </div>
@@ -480,7 +507,7 @@
             Parental Effort <em>(V<sub>m</sub> ,<sub>t</sub>)</em>
         </h2>
         <div class="rounded-lg overflow-hidden shadow-md my-5">
-            <TissueSim canvas={canvas2}/>
+            <TissueSim canvas={canvas2} />
             <p>Current Rate: {$currRate2} receptors bound/min</p>
             <p>Total Number of Receptors Bound: {$receptorsBound2}</p>
         </div>
@@ -499,7 +526,7 @@
             Mating Effort <em>(V<sub>p</sub> ,<sub>t</sub>)</em>
         </h2>
         <div class="rounded-lg overflow-hidden shadow-md my-5">
-            <TissueSim canvas={canvas3}/>
+            <TissueSim canvas={canvas3} />
             <p>Current Rate: {$currRate3} receptors bound/min</p>
             <p>Total Number of Receptors Bound: {$receptorsBound3}</p>
         </div>
