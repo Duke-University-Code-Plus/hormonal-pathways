@@ -5,8 +5,9 @@
     import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
+    import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
     import Dropdown from "../Nested/Dropdown.svelte";
-    import { LineWithErrorBarsChart } from 'chartjs-chart-error-bars';
+
     
     import {
         gamma1,
@@ -76,7 +77,7 @@
     });
 
     async function fetchData() {
-        if ($variableName === "Choose a Variable") {
+        if ($variableName === "Choose a Variable" && !$statRun) {
             document
                 .getElementById("variableDropDown")
                 .classList.add("border-red-500");
@@ -189,7 +190,7 @@
                 },
                 y: {
                     beginAtZero: true,
-                    title: { display: true, text: "y label" },
+                    title: { display: true},
                     //max: maxValue
                 },
             },
@@ -211,50 +212,137 @@
         return result;
     }
 
-    const startColor = [0, 0, 255]; // Blue
-    const endColor = [255, 0, 0]; // Red
+    const endColor = [0, 0, 255]; // Blue
+    const startColor = [255, 0, 0]; // Red
     let color = startColor;
-    let dataSetRet, YminCon, YmaxCon;
 
     const datasets = Array.from({ length: numRunsValue }, (_, runIndex) => {
         const factor = runIndex / (numRunsValue - 1);
         if (!$statRun) {
             color = interpolateColor(startColor, endColor, factor);
-            dataSetRet = data.map((point) => point[runIndex]);
-            YminCon = 0;
-            YmaxCon = 0;
+            return {
+                label: `${labelPrefix} ${runIndex + 1}`,
+                data: data.map((point) => point[runIndex]),
+                borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
+                borderWidth: 1,
+                radius: 0,
+                fill: false,
+            };
         } else {
-            dataSetRet = data;
-            YminCon = data.map((point, idx) => {
-                if (idx % 5 === 0) {
-                    return point[idx] - ConfidenceData[idx];
-                } else {
-                    return null; // No error bar for this point
-                }
-            });
-            YmaxCon = data.map((point, idx) => {
-                if (idx % 5 === 0) {
-                    return point[idx] + ConfidenceData[idx];
-                } else {
-                    return null; // No error bar for this point
-                }
-            });
-        }
-        return {
-            label: `${labelPrefix} ${runIndex + 1}`,
-            data: dataSetRet,
-            borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
-            borderWidth: 1,
-            radius: 0,
-            yMin: YminCon,
-            yMax: YmaxCon,
-            fill: false,
-        };
-    });
+            const mainDataset = {
+                label: labelPrefix,
+                data: data,
+                borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
+                borderWidth: 1,
+                radius: 0,
+                fill: '+2',
+                backgroundColor: 'rgba(0, 0, 255, 0.1)',
+            };
 
-    console.log(datasets);
+            const lowerBoundDataset = {
+                label: `${labelPrefix} Lower Bound`,
+                data: data.map((point, idx) =>  Math.max(point - ConfidenceData[idx],0)),
+                borderColor: 'rgba(75,0,130)', 
+                borderWidth: 1,
+                radius: 0,
+                fill: '-1',
+                backgroundColor: 'rgba(0, 0, 255, 0.1)',
+            };
+
+            const upperBoundDataset = {
+                label: `${labelPrefix} Upper Bound`,
+                data: data.map((point, idx) => point + ConfidenceData[idx]),
+                borderColor: 'rgba(75,0,130)', 
+                borderWidth: 1,
+                radius: 0,
+                fill: false,
+            };
+
+            return [mainDataset, lowerBoundDataset, upperBoundDataset];
+        }
+    }).flat(); // Flatten the array to merge all datasets
+
     return datasets;
 }
+
+function createCharts() {
+    if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
+    if (sensitivityChartInstance) sensitivityChartInstance.destroy();
+    if (productionChartInstance) productionChartInstance.destroy();
+    if (fitnessChartInstance) fitnessChartInstance.destroy();
+    if (cumulativeFitnessChartInstance)
+        cumulativeFitnessChartInstance.destroy();
+
+    // Create Body Condition Chart
+    bodyConditionChartInstance = new Chart(
+        document.getElementById("bodyConditionChart"),
+        {
+            type: "line",
+            data: {
+                labels: Array.from({ length: Xhist.length }, (_, i) => i),
+                datasets: createDatasets(Xhist, XhistCon, "Body Condition"),
+            },
+            options: chartOptions,
+        }
+    );
+
+    // Create Sensitivity Chart
+    if ($statRun) {
+        switchSensitivityGraphs();
+    } else {
+        sensitivityChartInstance = new Chart(
+            document.getElementById("sensitivityChart"),
+            {
+                type: "line",
+                data: {
+                    labels: Array.from({ length: Shist[0].length }, (_, i) => i),
+                    datasets: createSensitivityDatasets(Shist, "Sensitivity"),
+                },
+                options: chartOptions,
+            }
+        );
+    }
+
+    // Create Production Chart
+    productionChartInstance = new Chart(
+        document.getElementById("productionChart"),
+        {
+            type: "line",
+            data: {
+                labels: Array.from({ length: Chist.length }, (_, i) => i),
+                datasets: createDatasets(Chist, ChistCon, "Production"),
+            },
+            options: chartOptions,
+        }
+    );
+
+    // Create Fitness Chart
+    fitnessChartInstance = new Chart(
+        document.getElementById("fitnessChart"),
+        {
+            type: "line",
+            data: {
+                labels: Array.from({ length: Whist.length }, (_, i) => i),
+                datasets: createDatasets(Whist, WhistCon, "Fitness"),
+            },
+            options: chartOptions,
+        }
+    );
+
+    // Create Cumulative Fitness Chart
+    cumulativeFitnessChartInstance = new Chart(
+        document.getElementById("cumulativeFitnessChart"),
+        {
+            type: "line",
+            data: {
+                labels: Array.from({ length: Wcuml.length }, (_, i) => i),
+                datasets: createDatasets(Wcuml, WcumlCon, "Cumulative Fitness"),
+            },
+            options: chartOptions,
+        }
+    );
+}
+
 
 function createSensitivityDatasets(data, labelPrefix) {
     const numRunsValue = $numRuns;
@@ -280,93 +368,7 @@ function createSensitivityDatasets(data, labelPrefix) {
 
     return datasets;
 }
-    function createCharts() {
-        if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
-        if (sensitivityChartInstance) sensitivityChartInstance.destroy();
-        if (productionChartInstance) productionChartInstance.destroy();
-        if (fitnessChartInstance) fitnessChartInstance.destroy();
-        if (cumulativeFitnessChartInstance)
-            cumulativeFitnessChartInstance.destroy();
 
-        //create Body Condition Chart
-        bodyConditionChartInstance = new LineWithErrorBarsChart(
-            document.getElementById("bodyConditionChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from({ length: Xhist.length }, (_, i) => i),
-                    datasets: createDatasets(Xhist,XhistCon, "Body Condition"),
-                },
-                lineTension: .5,
-                options: chartOptions,
-            },
-        );
-
-        //createSensitivityChart if we are doing mutliRun else go to stat run sensitivity
-        if ($statRun){
-            switchSensitivityGraphs()
-        }
-        else{
-            sensitivityChartInstance = new LineWithErrorBarsChart(
-                document.getElementById("sensitivityChart"),
-                {
-                    type: "line",
-                    data: {
-                        labels: Array.from(
-                            { length: Shis[0].length },
-                            (_, i) => i,
-                        ),
-                        datasets: createSensitivityDatasets(Shist,"Sensitivity"),
-                    },
-                    lineTension: .5,
-                    options: chartOptions,
-                },
-            );
-        }
-
-        //create Production Chart
-        productionChartInstance = new LineWithErrorBarsChart(
-            document.getElementById("productionChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from({ length: Chist.length }, (_, i) => i),
-                    datasets: createDatasets(Chist,ChistCon, "Production"),
-                },
-                lineTension: .5,
-                options: chartOptions,
-            },
-        );
-
-        //create Fitness Chart
-        fitnessChartInstance = new LineWithErrorBarsChart(
-            document.getElementById("fitnessChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from({ length: Whist.length }, (_, i) => i),
-                    datasets: createDatasets(Whist,WhistCon, "Fitness"),
-                },
-                lineTension: .5,
-                options: chartOptions,
-            },
-        );
-
-        //create Cumulative Fitness Chart
-        cumulativeFitnessChartInstance = new LineWithErrorBarsChart(
-            document.getElementById("cumulativeFitnessChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from({ length: Wcuml.length }, (_, i) => i),
-                    datasets: createDatasets(Wcuml, WcumlCon, "Cumulative Fitness"),
-                },
-                lineTension: .5,
-                options: chartOptions,
-            },
-        );
-    }
-    
     function switchSensitivityGraphs(ChosenTrait) {
     if (sensitivityChartInstance) sensitivityChartInstance.destroy();
 
@@ -381,7 +383,7 @@ function createSensitivityDatasets(data, labelPrefix) {
         ShistConTemp = ShistConK;
     }
 
-    sensitivityChartInstance = new LineWithErrorBarsChart(
+    sensitivityChartInstance = new Chart(
         document.getElementById("sensitivityChart"),
         {
             type: "line",
@@ -456,6 +458,10 @@ const SenseChartoptions = [
     { value: 'J', label: 'Trait J' },
     { value: 'K', label: 'Trait K' }
 ];
+
+function bruh() {
+            $statRun = !$statRun
+}
 </script>
 
 <NavBar multiPage="Multi" />
@@ -473,95 +479,64 @@ const SenseChartoptions = [
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Selection against effort in trait i (γᵢ, ₜ)"
+                id="Investment cost for Gamete Maturation Trait(γ₉, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma1}
-                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+                modalMessage="A variable that determines the negative weight of gamete maturation. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for gamete maturation, the more costly it is to the organism to invest in gamete maturation. Therefore, there is lower value for gamete maturation, and will get picked less."
             />
 
             <SliderInput
-                id="Selection against effort in trait j (γⱼ, ₜ)"
+                id="Investment cost for Mating Effort Trait (γₘ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma2}
-                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the second trait."
+                modalMessage="A variable that determines the negative weight of mating effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for mating effort, the more costly it is to the organism to invest in mating effort. Therefore, there is lower value for mating effort, and will get picked less."
             />
 
             <SliderInput
-                id="Selection against effort in trait k (γₖ, ₜ)"
+                id="Investment cost for Parental Effort Trait (γₚ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma3}
-                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the third trait."
+                modalMessage="A variable that determines the negative weight of parental effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for parental effort, the more costly it is to the organism to invest in parental effort. Therefore, there is lower value for parental effort, and will get picked less."
             />
         </div>
 
         <!-- Container for Z sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Weight of first Trait (zᵢ)"
+                id="Weight of Gamete Maturation Trait (z₉)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$z1}
-                modalMessage="The weight of the first trait in the role of the fitness function."
+                modalMessage="The weight of the gamete maturation trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
             />
             
 
             <SliderInput
-                id="Weight of second trait (zⱼ)"
+                id="Weight of Mating Effort Trait (zₘ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$z2}
-                modalMessage="The weight of the second trait in the role of the fitness function."
+                modalMessage="The weight of the mating effort trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
             />
 
             <SliderInput
-                id="Weight of third trait (zₖ)"
+                id="Weight of Parental Effort Trait (zₚ)"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$z3}
-                modalMessage="The weight of the third trait in the role of the fitness function."
+                modalMessage="The weight of the parental effort trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
             />
         </div>
 
-        <!-- Container for food shortage sliders-->
-        <div class="flex flex-wrap justify-center w-full">
-            <SliderInput
-                id="Food Shortage"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$foodShort}
-                modalMessage="A multiplier of current food."
-            />
-
-            <SliderInput
-                id="Food shortage begins"
-                min="0"
-                max={$foodShortend}
-                step="1"
-                bind:inputVar={$foodShortbegin}
-                modalMessage="Reproductive cycle when the food shortage begins"
-            />
-
-            <SliderInput
-                id="Food shortage ends"
-                min="0"
-                max={$N}
-                step="1"
-                bind:inputVar={$foodShortend}
-                modalMessage="Reproductive cycle when the food shortage ends"
-            />
-        </div>
-
-        <!-- Container for G and mu sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput 
                 id="Hormone level for gamete maturation (G)" 
@@ -569,7 +544,7 @@ const SenseChartoptions = [
                 max="1"
                 step="0.1" 
                 bind:inputVar={$G} 
-                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization."/>
+                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization. This is the minimum production of hormone that has to be present in the gamete maturation trait in order for gamete maturation to occur. A lower treshhold of hormone level (G) will result in lower costs in the energy level of the organism, and lower costs investing into parental effort."/>
 
             <SliderInput
                 id="Death probability (µ)"
@@ -580,6 +555,35 @@ const SenseChartoptions = [
                 modalMessage="A fixed chance that the bird will die randomly."
             />
         </div>
+
+        <hr
+        class="m-auto w-[90%] h-px my-6 border-1 border-indigo-500 opacity-50"
+        />
+
+        <!-- Container for food shortage sliders-->
+        <div class="flex flex-wrap justify-center w-full">
+            <SliderInput
+                id="Food Availability Multiplier"
+                min="0"
+                max="1"
+                step="0.1"
+                bind:inputVar={$foodShort}
+                modalMessage="A multiplier of current food. The lower the value, the lower the food available to the organism."
+            />
+
+            <SliderTwoInput
+                bind:inputVarHigh={$foodShortend}
+                bind:maxForVarHigh={$N}
+                bind:inputVarLow={$foodShortbegin}
+                inputVarHighName="Food Shortage End"
+                inputVarLowName="Food Shortage Begin"
+                minForVarLow=0
+                step=1
+            />
+        </div>
+
+        <!-- Container for G and mu sliders-->
+        
     </div>
 
     <!-- Form Inputs -->
@@ -608,7 +612,7 @@ const SenseChartoptions = [
             min="0"
             max="10000"
             step="1"
-            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by energy function"
+            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by the cost function. Decreasing the minimum energy required for reproduction will reduce the costs of investing more into mating effort. However, this is at the expense of investing into parental effort, and at the expense of accumulating energy."
             bind:inputVar={$Xmin}
         />
 
@@ -618,7 +622,7 @@ const SenseChartoptions = [
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues"
+            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues. The organism maximizes its lifetime success by finding the optimal level of the |ΔSᵢ, ₘₐₓ| at a given target."
             bind:inputVar={$delSmax}
         />
 
@@ -628,7 +632,7 @@ const SenseChartoptions = [
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism"
+            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism. The organism will try to optimize this value to maximize its lifetime success."
             bind:inputVar={$delCmax}
         />
 
@@ -638,7 +642,7 @@ const SenseChartoptions = [
             min="0"
             max="10000"
             step="1"
-            modalMessage="Determines the food availible in the environment for the organism. "
+            modalMessage="Determines the food availible in the environment for the organism. Increasing the food availiability will increase the payoff when investing in foraging."
             bind:inputVar={$tau}
         />
 
@@ -808,6 +812,18 @@ const SenseChartoptions = [
         />
     </div>
 </div>
+<div class="flex items-center text-center justify-center ">
+<button
+  on:click={bruh}
+  class="px-4 py-2 rounded-md focus:outline-none transition-colors duration-300"
+  class:bg-indigo-500={!$statRun}
+  class:text-white={!$statRun}
+  class:bg-indigo-600={$statRun}
+  class:text-gray-100={$statRun}
+>
+  {!$statRun ? 'Multple Lines Graph' : 'Median and Confidence Interval Graph'}
+</button>
+</div>
 
 <div class="text-center my-4">
     <button
@@ -817,7 +833,7 @@ const SenseChartoptions = [
 </div>
 
 {#if initialRun}
-    <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
+    <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
         <div
             class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
         >

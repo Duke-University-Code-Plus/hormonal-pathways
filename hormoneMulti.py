@@ -118,6 +118,7 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
     return results
 
 def forwardModel(X_t, beta_t, z_t, S_t, C_t, K, E_t1, gamma_t, delCmax, delSmax, Xmin, G):
+    """moves the model forward"""
     def fitness_wrapped(delCS):
         return fitness_function(beta_t, z_t, S_t, C_t, K, X_t, E_t1, gamma_t, delCS, Xmin, G)
 
