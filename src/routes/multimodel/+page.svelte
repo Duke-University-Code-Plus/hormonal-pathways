@@ -7,7 +7,7 @@
     import SliderInput from "../Nested/SliderInput.svelte";
     import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
     import Dropdown from "../Nested/Dropdown.svelte";
-    import { LineWithErrorBarsChart } from 'chartjs-chart-error-bars';
+
     
     import {
         gamma1,
@@ -77,7 +77,7 @@
     });
 
     async function fetchData() {
-        if ($variableName === "Choose a Variable") {
+        if ($variableName === "Choose a Variable" && !$statRun) {
             document
                 .getElementById("variableDropDown")
                 .classList.add("border-red-500");
@@ -179,7 +179,7 @@
     const chartOptions = {
             plugins: {
                 legend: {
-                    display: true, // no legend
+                    display: false, // no legend
                 },
             },
             scales: {
@@ -190,7 +190,7 @@
                 },
                 y: {
                     beginAtZero: true,
-                    title: { display: true, text: "y label" },
+                    title: { display: true},
                     //max: maxValue
                 },
             },
@@ -215,47 +215,134 @@
     const endColor = [0, 0, 255]; // Blue
     const startColor = [255, 0, 0]; // Red
     let color = startColor;
-    let dataSetRet, YminCon, YmaxCon;
 
     const datasets = Array.from({ length: numRunsValue }, (_, runIndex) => {
         const factor = runIndex / (numRunsValue - 1);
         if (!$statRun) {
             color = interpolateColor(startColor, endColor, factor);
-            dataSetRet = data.map((point) => point[runIndex]);
-            YminCon = 0;
-            YmaxCon = 0;
+            return {
+                label: `${labelPrefix} ${runIndex + 1}`,
+                data: data.map((point) => point[runIndex]),
+                borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
+                borderWidth: 1,
+                radius: 0,
+                fill: false,
+            };
         } else {
-            dataSetRet = data;
-            YminCon = data.map((point, idx) => {
-                if (idx % 5 === 0) {
-                    return point[idx] - ConfidenceData[idx];
-                } else {
-                    return null; // No error bar for this point
-                }
-            });
-            YmaxCon = data.map((point, idx) => {
-                if (idx % 5 === 0) {
-                    return point[idx] + ConfidenceData[idx];
-                } else {
-                    return null; // No error bar for this point
-                }
-            });
-        }
-        return {
-            label: `${labelPrefix} ${runIndex + 1}`,
-            data: dataSetRet,
-            borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
-            borderWidth: 1,
-            radius: 0,
-            yMin: YminCon,
-            yMax: YmaxCon,
-            fill: false,
-        };
-    });
+            const mainDataset = {
+                label: labelPrefix,
+                data: data,
+                borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
+                borderWidth: 1,
+                radius: 0,
+                fill: '+2',
+                backgroundColor: 'rgba(0, 0, 255, 0.1)',
+            };
 
-    console.log(datasets);
+            const lowerBoundDataset = {
+                label: `${labelPrefix} Lower Bound`,
+                data: data.map((point, idx) =>  Math.max(point - ConfidenceData[idx],0)),
+                borderColor: 'rgba(75,0,130)', 
+                borderWidth: 1,
+                radius: 0,
+                fill: '-1',
+                backgroundColor: 'rgba(0, 0, 255, 0.1)',
+            };
+
+            const upperBoundDataset = {
+                label: `${labelPrefix} Upper Bound`,
+                data: data.map((point, idx) => point + ConfidenceData[idx]),
+                borderColor: 'rgba(75,0,130)', 
+                borderWidth: 1,
+                radius: 0,
+                fill: false,
+            };
+
+            return [mainDataset, lowerBoundDataset, upperBoundDataset];
+        }
+    }).flat(); // Flatten the array to merge all datasets
+
     return datasets;
 }
+
+function createCharts() {
+    if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
+    if (sensitivityChartInstance) sensitivityChartInstance.destroy();
+    if (productionChartInstance) productionChartInstance.destroy();
+    if (fitnessChartInstance) fitnessChartInstance.destroy();
+    if (cumulativeFitnessChartInstance)
+        cumulativeFitnessChartInstance.destroy();
+
+    // Create Body Condition Chart
+    bodyConditionChartInstance = new Chart(
+        document.getElementById("bodyConditionChart"),
+        {
+            type: "line",
+            data: {
+                labels: Array.from({ length: Xhist.length }, (_, i) => i),
+                datasets: createDatasets(Xhist, XhistCon, "Body Condition"),
+            },
+            options: chartOptions,
+        }
+    );
+
+    // Create Sensitivity Chart
+    if ($statRun) {
+        switchSensitivityGraphs();
+    } else {
+        sensitivityChartInstance = new Chart(
+            document.getElementById("sensitivityChart"),
+            {
+                type: "line",
+                data: {
+                    labels: Array.from({ length: Shist[0].length }, (_, i) => i),
+                    datasets: createSensitivityDatasets(Shist, "Sensitivity"),
+                },
+                options: chartOptions,
+            }
+        );
+    }
+
+    // Create Production Chart
+    productionChartInstance = new Chart(
+        document.getElementById("productionChart"),
+        {
+            type: "line",
+            data: {
+                labels: Array.from({ length: Chist.length }, (_, i) => i),
+                datasets: createDatasets(Chist, ChistCon, "Production"),
+            },
+            options: chartOptions,
+        }
+    );
+
+    // Create Fitness Chart
+    fitnessChartInstance = new Chart(
+        document.getElementById("fitnessChart"),
+        {
+            type: "line",
+            data: {
+                labels: Array.from({ length: Whist.length }, (_, i) => i),
+                datasets: createDatasets(Whist, WhistCon, "Fitness"),
+            },
+            options: chartOptions,
+        }
+    );
+
+    // Create Cumulative Fitness Chart
+    cumulativeFitnessChartInstance = new Chart(
+        document.getElementById("cumulativeFitnessChart"),
+        {
+            type: "line",
+            data: {
+                labels: Array.from({ length: Wcuml.length }, (_, i) => i),
+                datasets: createDatasets(Wcuml, WcumlCon, "Cumulative Fitness"),
+            },
+            options: chartOptions,
+        }
+    );
+}
+
 
 function createSensitivityDatasets(data, labelPrefix) {
     const numRunsValue = $numRuns;
@@ -281,93 +368,7 @@ function createSensitivityDatasets(data, labelPrefix) {
 
     return datasets;
 }
-    function createCharts() {
-        if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
-        if (sensitivityChartInstance) sensitivityChartInstance.destroy();
-        if (productionChartInstance) productionChartInstance.destroy();
-        if (fitnessChartInstance) fitnessChartInstance.destroy();
-        if (cumulativeFitnessChartInstance)
-            cumulativeFitnessChartInstance.destroy();
 
-        //create Body Condition Chart
-        bodyConditionChartInstance = new LineWithErrorBarsChart(
-            document.getElementById("bodyConditionChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from({ length: Xhist.length }, (_, i) => i),
-                    datasets: createDatasets(Xhist,XhistCon, "Body Condition"),
-                },
-                lineTension: .5,
-                options: chartOptions,
-            },
-        );
-
-        //createSensitivityChart if we are doing mutliRun else go to stat run sensitivity
-        if ($statRun){
-            switchSensitivityGraphs()
-        }
-        else{
-            sensitivityChartInstance = new LineWithErrorBarsChart(
-                document.getElementById("sensitivityChart"),
-                {
-                    type: "line",
-                    data: {
-                        labels: Array.from(
-                            { length: Shist[0].length },
-                            (_, i) => i,
-                        ),
-                        datasets: createSensitivityDatasets(Shist,"Sensitivity"),
-                    },
-                    lineTension: .5,
-                    options: chartOptions,
-                },
-            );
-        }
-
-        //create Production Chart
-        productionChartInstance = new LineWithErrorBarsChart(
-            document.getElementById("productionChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from({ length: Chist.length }, (_, i) => i),
-                    datasets: createDatasets(Chist,ChistCon, "Production"),
-                },
-                lineTension: .5,
-                options: chartOptions,
-            },
-        );
-
-        //create Fitness Chart
-        fitnessChartInstance = new LineWithErrorBarsChart(
-            document.getElementById("fitnessChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from({ length: Whist.length }, (_, i) => i),
-                    datasets: createDatasets(Whist,WhistCon, "Fitness"),
-                },
-                lineTension: .5,
-                options: chartOptions,
-            },
-        );
-
-        //create Cumulative Fitness Chart
-        cumulativeFitnessChartInstance = new LineWithErrorBarsChart(
-            document.getElementById("cumulativeFitnessChart"),
-            {
-                type: "line",
-                data: {
-                    labels: Array.from({ length: Wcuml.length }, (_, i) => i),
-                    datasets: createDatasets(Wcuml, WcumlCon, "Cumulative Fitness"),
-                },
-                lineTension: .5,
-                options: chartOptions,
-            },
-        );
-    }
-    
     function switchSensitivityGraphs(ChosenTrait) {
     if (sensitivityChartInstance) sensitivityChartInstance.destroy();
 
@@ -382,7 +383,7 @@ function createSensitivityDatasets(data, labelPrefix) {
         ShistConTemp = ShistConK;
     }
 
-    sensitivityChartInstance = new LineWithErrorBarsChart(
+    sensitivityChartInstance = new Chart(
         document.getElementById("sensitivityChart"),
         {
             type: "line",
@@ -460,7 +461,6 @@ const SenseChartoptions = [
 
 function bruh() {
             $statRun = !$statRun
-            console.log($statRun)
 }
 </script>
 

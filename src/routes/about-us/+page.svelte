@@ -1,38 +1,82 @@
 <script>
-import FormInput from "../Nested/FormInput.svelte";
-import NavBar from "../Nested/navigation.svelte"
-
+    import FormInput from "../Nested/FormInput.svelte";
+    import NavBar from "../Nested/navigation.svelte";
 </script>
 
 <NavBar multiPage="about-us" />
+
 <div>
-<h1
-    class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
-    What is the Hormone Model simulation project?
-</h1>
+    <h1
+        class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
+        What is the Hormone Model simulation project?
+    </h1>
 </div>
 <div class="flex flex-wrap m-5">
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Bibendum arcu vitae elementum curabitur vitae nunc sed. Euismod in pellentesque massa placerat duis ultricies lacus sed turpis. Lectus proin nibh nisl condimentum id venenatis. Sit amet est placerat in egestas erat imperdiet. Tellus in metus vulputate eu. Pellentesque habitant morbi tristique senectus et netus. Tellus elementum sagittis vitae et leo. Non tellus orci ac auctor. Ultrices in iaculis nunc sed augue lacus viverra vitae. Arcu risus quis varius quam. Mauris commodo quis imperdiet massa. Vestibulum morbi blandit cursus risus at ultrices mi. Platea dictumst quisque sagittis purus sit amet volutpat consequat. Volutpat diam ut venenatis tellus in.
+    <p>
+        The Hormone Model simulation project otherwise known as the Hormonal Pathways and Trait Expression in Songbirds Simulator was developed the summer of 2024 by a team of students from Davidson, Duke, and North Carolina Central University. The team worked with Duke’s Office of Information Technology, a faculty researcher from Davidson University, and other stakeholders to build an interactive app to allow exploration of a model of hormone influence on traits, with particular examples in songbirds.
+    </p>
+    <p>
+        The project was spun out of a research paper called A Dynamic State Variable Model of Hormonal Pleiotropy that was written by Nicole M. Baran, H.K. Reeve, F. Havlak, and E. Adkins-Regan.
+    </p>
+    <p>
+    </p>
+</div>
+<div>
+    <h2
+        class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
+        Resources
+    </h2>
+    <p class="text-center"><a href="https://github.com/your-repository-link" class="text-indigo-500 underline">Our GitHub Repository</a></p>
+</div>
+<div>
+    <h3
+        class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
+        Meet the Team
+    </h3>
+</div>
+<div class="flex flex-wrap justify-center m-5">
+    <div class="m-5 p-5 border rounded shadow-lg">
+        <!-- svelte-ignore a11y-img-redundant-alt -->
+        <img src="/AaronPic.png" alt="Photo of Aaron Kutnick, the Team Lead" class="rounded-full w-32 h-32 mx-auto object-cover">
+        <h4 class="text-center text-xl font-bold mt-4">Team Lead: Aaron Kutnick</h4>
+        <p class="text-center mt-2">Best Team Lead in Code+ <br> in his free time he codes</p>
+    </div>
+    <div class="m-5 p-5 border rounded shadow-lg">
+        <!-- svelte-ignore a11y-img-redundant-alt -->
+        <img src="/BillyPic.png" alt="Photo of Billy McCune" class="rounded-full w-32 h-32 mx-auto object-cover">
+        <h4 class="text-center text-xl font-bold mt-4">Billy McCune</h4>
+        <p class="text-center mt-2">"I'm on the cut" <br> Frat Lord</p>
+    </div>
+    <div class="m-5 p-5 border rounded shadow-lg">
+        <!-- svelte-ignore a11y-img-redundant-alt -->
+        <img src="/BrandonPic.png" alt="Photo of Brandon Rivera" class="rounded-full w-32 h-32 mx-auto object-cover">
+        <h4 class="text-center text-xl font-bold mt-4">Brandon Rivera</h4>
+        <p class="text-center mt-2">Elite AI Programmer <br> his features will not be implemented</p>
+    </div>
+    <div class="m-5 p-5 border rounded shadow-lg">
+        <!-- svelte-ignore a11y-img-redundant-alt -->
+        <img src="/HarutaPic.png" alt="Photo of Haruta Otaki" class="rounded-full w-32 h-32 mx-auto object-cover">
+        <h4 class="text-center text-xl font-bold mt-4">Haruta Otaki</h4>
+        <p class="text-center mt-2">"Goat of the Game" <br> - Haruta and no one else</p>
+    </div>
+    <div class="m-5 p-5 border rounded shadow-lg">
+        <!-- svelte-ignore a11y-img-redundant-alt -->
+        <img src="/KarismaPic.png" alt="Photo of Karisma Lavana" class="rounded-full w-32 h-32 mx-auto object-cover">
+        <h4 class="text-center text-xl font-bold mt-4">Karisma Lavana</h4>
+        <p class="text-center mt-2">pro speed walker <br> rizz lord</p>
+    </div>
+    <div class="m-5 p-5 border rounded shadow-lg">
+        <!-- svelte-ignore a11y-img-redundant-alt -->
+        <img src="/NelsonPic.png" alt="Photo of Nelson Anderson" class="rounded-full w-32 h-32 mx-auto object-cover">
+        <h4 class="text-center text-xl font-bold mt-4">Nelson Anderson</h4>
+        <p class="text-center mt-2">Pepsi Goblin</p>
+    </div>
+    <div class="m-5 p-5 border rounded shadow-lg">
+        <!-- svelte-ignore a11y-img-redundant-alt -->
+        <img src="/VanessaPic.png" alt="Photo of Vanessa Lin" class="rounded-full w-32 h-32 mx-auto object-cover">
+        <h4 class="text-center text-xl font-bold mt-4">Vanessa Lin</h4>
+        <p class="text-center mt-2">definitely went to a wedding</p>
+    </div>
+</div>
 
-    Dolor sit amet consectetur adipiscing elit pellentesque. Feugiat nisl pretium fusce id velit ut tortor pretium viverra. Dictum sit amet justo donec enim diam. Enim eu turpis egestas pretium aenean pharetra. Amet justo donec enim diam vulputate. Consectetur lorem donec massa sapien faucibus et molestie ac feugiat. Lacus sed viverra tellus in hac. Faucibus ornare suspendisse sed nisi lacus sed. Euismod lacinia at quis risus sed vulputate odio ut. Etiam non quam lacus suspendisse faucibus interdum posuere lorem ipsum. Arcu risus quis varius quam quisque id diam vel. Odio eu feugiat pretium nibh ipsum consequat nisl vel. Dignissim convallis aenean et tortor. Libero enim sed faucibus turpis in eu. Enim nec dui nunc mattis.
     
-    Amet massa vitae tortor condimentum lacinia quis. Feugiat nisl pretium fusce id velit. Enim sit amet venenatis urna cursus eget nunc scelerisque. Fusce ut placerat orci nulla. Convallis tellus id interdum velit laoreet. Dui accumsan sit amet nulla facilisi morbi tempus iaculis. Sit amet purus gravida quis blandit. Habitant morbi tristique senectus et netus et malesuada. Diam quam nulla porttitor massa id neque aliquam vestibulum morbi. Condimentum lacinia quis vel eros donec ac odio tempor orci. Auctor eu augue ut lectus arcu. Quis viverra nibh cras pulvinar mattis. Felis imperdiet proin fermentum leo vel orci porta non pulvinar. Massa sed elementum tempus egestas sed sed risus pretium. Pellentesque habitant morbi tristique senectus et.
-</div>
-<div>
-<h2
-class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
-    Resources
-</h2>
-</div>
-<div>
-<h3
-class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
-    Meet the Team
-</h3>
-</div>
-<div>
-</div>
-
-
-
-
