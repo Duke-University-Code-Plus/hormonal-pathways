@@ -190,7 +190,7 @@
                 },
                 y: {
                     beginAtZero: true,
-                    title: { display: true, text: "y label" },
+                    title: { display: true},
                     //max: maxValue
                 },
             },
