@@ -14,7 +14,7 @@
                         <a href="/about-us">About Us</a>
                     </li>
                     <li class="{$page.url.pathname == '/research' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
-                        <a href="/research'">Research</a>
+                        <a href="/research">Research</a>
                     </li>
                     <li class="{$page.url.pathname == '/singlemodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
                         <a href="/singlemodel">Single Run</a>
