@@ -13,3 +13,5 @@ export const currRate3 = writable(0);
 export const receptorsBound1 = writable(0);
 export const receptorsBound2 = writable(0);
 export const receptorsBound3 = writable(0);
+
+export const labelToggle = writable(false);
