@@ -7,7 +7,7 @@ class Nest {
         this.babyBirdCount = 0;
         this.bird = bird;
 
-        this.babyBirdsArray = [];
+        this.babyBirdsInNest = [];
     }
 
     addBabyBird() {
@@ -20,5 +20,6 @@ class Nest {
 
     removeBabyBird() {
         console.log('in remove baby bird')
+        //baby bird movement function
     }
 }
