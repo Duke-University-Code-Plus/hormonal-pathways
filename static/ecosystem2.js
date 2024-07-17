@@ -138,6 +138,7 @@ function createFemaleBird(bird) {
     var femalebirdLocation = random(["left", "right"]);
 
     if (femalebirdLocation == "left") {
+//why 25? 
         var femalebirdX = -25;
         var femalebirdY = random(0, height / 4);
     } else if (femalebirdLocation == "right") {

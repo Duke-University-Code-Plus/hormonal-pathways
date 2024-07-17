@@ -6,6 +6,7 @@
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
     import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
+    import ecosystem from "../ecosystem/EcosystemCanvas.svelte";
     import {
         gamma1,
         gamma2,
@@ -28,6 +29,7 @@
         foodShortend
     } from "../data_store.js";
     import {apiEndpoint} from "../state_store.js"
+    import EcosystemCanvas from "../ecosystem/EcosystemCanvas.svelte";
 
     let Xhist = [];
     let Shist = [];
@@ -45,6 +47,7 @@
     let fitnessChartInstance = null;
     let cumulativeFitnessChartInstance = null;
     let traitChartInstance = null;
+
 
     onMount(() => {
         fetchData();
@@ -631,4 +634,5 @@
         </h2>
         <canvas id="traitChart"></canvas>
     </div> 
+    <div> <EcosystemCanvas></EcosystemCanvas></div>
 </div>

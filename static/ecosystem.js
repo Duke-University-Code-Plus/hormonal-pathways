@@ -110,15 +110,22 @@ var effcientScavenge = true;
 //frames
 var scavengeFrameCount = 0; 
 
+//mortality
+var mortalityCondition = false; 
+
+//food shortage 
+var foodAvailability; 
+var defaultFoodAvailability = 10;
+
 //inputs
 var time = 0; 
 var timeStepCycle = 25; 
 var timeStep = 0; 
 var behavior; 
 var mu = 10; 
-var shortageSlider; 
-var foodCondition = false; 
-var mortalityCondition = false; 
+var shortageStart = 2; 
+var shortageEnd = 3; 
+var tau = 0.5; 
 var imagePath = '/sprites_haruta/';
 
 /*
@@ -151,7 +158,6 @@ creates the canvas and initializes all of the inputs and objects in the simulati
 */
 function setup() {
   createCanvas(800, 400);
-  createInputs();
   createEnvironment()
   createAnimals();
 }
@@ -175,6 +181,14 @@ function draw() {
   if ((time % timeStepCycle == 0 || time == 0)
     && (foodCondition == false && matingCondition == false && mortalityCondition == false)) {
     malebirdBehavior();
+  }
+
+  //food shortage 
+  if (shortageStart <= timeStep && timeStep <= shortageEnd) {
+    foodShortage();
+  }
+  else {
+    foodAvailability = defaultFoodAvailability; 
   }
 
   //constant traits for malebird
@@ -222,9 +236,9 @@ function draw() {
   //bird's death behavior
   else if (mortalityCondition) { 
     //creates and initializes objects for the death behavior 
-    if (predator == null)
-      createPredator();
-    predatorMovement();
+    // if (predator == null)
+    //   createPredator();
+    // predatorMovement();
     malebirdDeath(); 
   }
   //bird's default behavior
@@ -256,34 +270,6 @@ function draw() {
       loveCondition = false; 
     }
   }
-}
-
-/*
-creates a slider for the food shortage
-*/
-function createInputs() {
-  var foodCheckbox = createCheckbox("Scavenge Food", false); 
-  foodCheckbox.position(0, 0); 
-  foodCheckbox.changed(() => {
-    foodCondition = true; 
-  });
-
-  var mortalityCheckbox = createCheckbox("End Simulation", false); 
-  mortalityCheckbox.position(0, 30); 
-  mortalityCheckbox.changed(() => {
-    mortalityCondition = true; 
-  });
-
-  var matingCheckbox = createCheckbox("Mating Behavior", false); 
-  matingCheckbox.position(0, 60); 
-  matingCheckbox.changed(() => {
-    matingCondition = true; 
-  });
-  
-  //creates the slider for food shortage
-  shortageSlider = createSlider(2, 10, 5, 0);
-  shortageSlider.position(10, 90);
-  shortageSlider.size(80);
 }
 
 /*
@@ -342,8 +328,9 @@ function createAnimals() {
 
   //creates and adds animations for a group of worms 
   preys = new Group();
+  foodAvailability = defaultFoodAvailability; 
   // Create the prey sprite and add it's animations
-  for (var i = 0; i < numPrey; i++) { 
+  for (var i = 0; i < foodAvailability; i++) { 
     createPrey();
   }
 
@@ -351,8 +338,8 @@ function createAnimals() {
 }
 
 function updateText() {
-  text(floor(shortageSlider.value()), 100, 100);
-  text("Reproductive Success: " + babybirdCount, 0, 120);
+  text("Reproductive Success: " + babybirdCount, 10, 20);
+  text("time step: " + timeStep, 10, 40);
 }
 
 /*
@@ -448,7 +435,7 @@ function createBox(x, y) {
   collisionBox.setCollider('rectangle', 0, 0, 5, 5);
   collisionBox.debug = true;
   //make the collider invisible 
-  //collisionBox.visible = false;
+  collisionBox.visible = false;
   return collisionBox
 }
 
@@ -712,10 +699,10 @@ updates the number of worms to equal the slider value
 function updatenumPrey() {
   //create a new worm if the slider value is larger than the current number of worms 
   //remove if less
-  while (preys.length < shortageSlider.value()) {
+  while (preys.length < foodAvailability) {
     createPrey(); 
   }
-  while (preys.length > shortageSlider.value()) { 
+  while (preys.length > foodAvailability) { 
     removePrey();
   }
 }
@@ -744,6 +731,11 @@ function removePrey() {
   preys[preys.length - 1].remove(); 
 }
 
+function foodShortage() {
+  if (foodAvailability == defaultFoodAvailability) {
+    foodAvailability *= tau; 
+  }
+}
 /*
 tracks the location of the bird
 */
@@ -929,46 +921,50 @@ function birdScavenge() {
   }
 }
 
-function createPredator() { 
-  //create predator sprite and add animation
-  var predatorLocation = random(["left", "top", "right"]); 
-  var predatorX; 
-  var predatorY;
-  if (predatorLocation == "left") { 
-    predatorX = 0 - 64; 
-    predatorY = random(0, height / 4);
-  }
-  else if (predatorLocation == "right") { 
-    predatorX = width + 64; 
-    predatorY = random(0, height / 4);
-  }
-  else {
-    predatorX = random(0, width); 
-    predatorY = 0 - 64;
-  }
-  predator = createSprite(predatorX, predatorY);
-  predator.addAnimation('normal', imagePath + 'cloud_breathing0001.png', imagePath + 'cloud_breathing0002.png');
-  predator.attractionPoint (0.1, malebird.position.x,  malebird.position.y);
-  predator.debug = false;
-  predator.friction = 0.1;
-  predator.depth = 25;
-  predator.scale = 0.5; 
-}
+// function createPredator() { 
+//   //create predator sprite and add animation
+//   var predatorLocation = random(["left", "top", "right"]); 
+//   var predatorX; 
+//   var predatorY;
+//   if (predatorLocation == "left") { 
+//     predatorX = 0 - 64; 
+//     predatorY = random(0, height / 4);
+//   }
+//   else if (predatorLocation == "right") { 
+//     predatorX = width + 64; 
+//     predatorY = random(0, height / 4);
+//   }
+//   else {
+//     predatorX = random(0, width); 
+//     predatorY = 0 - 64;
+//   }
+//   predator = createSprite(predatorX, predatorY);
+//   predator.addAnimation('normal', imagePath + 'cloud_breathing0001.png', imagePath + 'cloud_breathing0002.png');
+//   predator.attractionPoint (0.1, malebird.position.x,  malebird.position.y);
+//   predator.debug = false;
+//   predator.friction = 0.1;
+//   predator.depth = 25;
+//   predator.scale = 0.5; 
+// }
 
-function predatorMovement() { 
-  //accounts for predator 
-  predator.attractionPoint (0.4, malebird.position.x,  malebird.position.y);
-}
+// function predatorMovement() { 
+//   //accounts for predator 
+//   predator.attractionPoint (0.4, malebird.position.x,  malebird.position.y);
+// }
 
 function malebirdDeath() { 
   // if bird collides with predator 
-  if (predator.overlapPoint(malebird.position.x, malebird.position.y)) { 
-    malebird.changeAnimation('transformed');
-    malebird.velocity.x = 0;
-    malebird.velocity.y = 2;
-    predator.velocity.x = 0;
-    predator.velocity.y = 0;
-  }
+  // if (predator.overlapPoint(malebird.position.x, malebird.position.y)) { 
+  //   malebird.changeAnimation('transformed');
+  //   malebird.velocity.x = 0;
+  //   malebird.velocity.y = 2;
+  //   predator.velocity.x = 0;
+  //   predator.velocity.y = 0;
+  // }
+  malebird.changeAnimation('transformed');
+  malebird.velocity.x = 0;
+  malebird.velocity.y = 2;
+
   if (malebird.position.y >= height - dirt.originalHeight / 2 && malebird.getAnimationLabel() == 'transformed') 
     malebird.remove();
 }
