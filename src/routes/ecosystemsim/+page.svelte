@@ -230,9 +230,9 @@
 
     function createCharts() {
         // Destroy existing charts if they exist
-        if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
-        if (sensitivityChartInstance) sensitivityChartInstance.destroy();
-        if (productionChartInstance) productionChartInstance.destroy();
+        //if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
+        //if (sensitivityChartInstance) sensitivityChartInstance.destroy();
+        //if (productionChartInstance) productionChartInstance.destroy();
         if (fitnessChartInstance) fitnessChartInstance.destroy();
         if (cumulativeFitnessChartInstance)
             cumulativeFitnessChartInstance.destroy();
@@ -248,42 +248,42 @@
         // );
 
         // Create Sensitivity Chart
-        sensitivityChartInstance = makeChart(
-            "sensitivityChart",
-            "Sensitivity",
-            Shist,
-            "rgba(255, 99, 132, 1)",
-            20,
-            "Sensitivity to hormone"
-        );
+        // sensitivityChartInstance = makeChart(
+        //     "sensitivityChart",
+        //     "Sensitivity",
+        //     Shist,
+        //     "rgba(255, 99, 132, 1)",
+        //     20,
+        //     "Sensitivity to hormone"
+        // );
 
-        // Create Production Chart
-        productionChartInstance = makeChart(
-            "productionChart",
-            "Production",
-            Chist,
-            "rgba(153, 102, 255, 1)",
-            20,
-            "Hormone concentration"
-        );
+        // // Create Production Chart
+        // productionChartInstance = makeChart(
+        //     "productionChart",
+        //     "Production",
+        //     Chist,
+        //     "rgba(153, 102, 255, 1)",
+        //     20,
+        //     "Hormone concentration"
+        // );
 
         // Create Fitness Chart
-        // fitnessChartInstance = makeChart(
-        //     "fitnessChart",
-        //     "Fitness",
-        //     Whist,
-        //     "rgba(255, 159, 64, 1)",
-        //     1.2
-        // );
+        fitnessChartInstance = makeChart(
+            "fitnessChart",
+            "Fitness",
+            Whist,
+            "rgba(255, 159, 64, 1)",
+            1.2
+        );
 
         // Create Cumulative Fitness Chart
-        // cumulativeFitnessChartInstance = makeChart(
-        //     "cumulativeFitnessChart",
-        //     "Cumulative Fitness",
-        //     Wcuml,
-        //     "rgba(255, 206, 86, 1)",
-        //     20
-        // );
+        cumulativeFitnessChartInstance = makeChart(
+            "cumulativeFitnessChart",
+            "Cumulative Fitness",
+            Wcuml,
+            "rgba(255, 206, 86, 1)",
+            20
+        );
 
         traitChartInstance = makeChart(
             "traitChart",
@@ -456,7 +456,7 @@
         />
         -->
 
-        <FormInput
+        <!-- <FormInput
             id="Max change of sensitivity to hormone (|ΔSᵢ, ₘₐₓ|)"
             inputType="number"
             min="0"
@@ -474,7 +474,7 @@
             step="1"
             modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism"
             bind:inputVar={$delCmax}
-        />
+        /> -->
 
         <FormInput
             id="Food availability (τ)"
@@ -586,16 +586,16 @@
 
 <!-- Creating Charts-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
-    <!--
-    <div
+    <!-- <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
         <h2 class="text-center text-xl font-semibold mb-4">
             Energy of Organism
         </h2>
         <canvas id="bodyConditionChart"></canvas>
-    </div>
-    -->
+    </div> -->
+
+    <!--
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -608,7 +608,7 @@
         <h2 class="text-center text-xl font-semibold mb-4">Circulating Level Of Hormone </h2>
         <canvas id="productionChart"></canvas>
     </div>
-    <!--
+    -->
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -623,7 +623,6 @@
         </h2>
         <canvas id="cumulativeFitnessChart"></canvas>
     </div>
-    -->
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -631,5 +630,5 @@
             Trait Values
         </h2>
         <canvas id="traitChart"></canvas>
-    </div>
+    </div> 
 </div>
