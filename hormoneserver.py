@@ -104,8 +104,9 @@ def get_stat_arrays():
     
 @app.route('/llavaserver', methods=['POST'])
 def run_script():
+    index = request.json.get('index')
     data = request.json.get('base64')
-    response = llava.run_analysis(data)
+    response = llava.run_analysis(index, data)
     print(response)
     # Return some result
     return jsonify({"message": response})
