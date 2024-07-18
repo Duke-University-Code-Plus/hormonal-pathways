@@ -6,6 +6,11 @@
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
     import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
+
+    
+    import BirdButton from '../tissue/BirdButton.svelte';
+
+
     import TissueSim from './TissueSim.svelte';
     import {
         gamma1,
@@ -599,13 +604,29 @@
     </div>
 </div>
 
+
 <!-- Run Simulation Button-->
 <div class="text-center my-4">
-    <button
-        class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded"
-        on:click={fetchData}>Run</button
-    >
-</div>
+    <div class="inline-block bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded">
+      
+    </div>
+    <BirdButton />
+  </div>
+  <style>
+    .text-center .inline-block {
+      width: 200px;
+      height: 100px;
+      position: relative;
+      display: inline-block;
+      /*background-color: #6366f1;*/ /* bg-indigo-500 */
+      border-radius: 0.25rem; /* rounded */
+      overflow: hidden;
+    }
+  
+    .text-center .inline-block:hover {
+      background-color: #4f46e5; /* bg-indigo-400 */
+    }
+  </style>
 
 <!-- Creating Charts-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center">
