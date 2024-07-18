@@ -316,13 +316,15 @@
         console.log("bird button clicked", bird);
         //reset();
         selectedBird = bird;
-        // if (bird == 1) {
-        //     $delSmax = 10;
-        // } else if (bird == 2) {
-        //     $delSmax = 20;
-        // } else if (bird == 3) {
-        //     $delSmax = 30;
-        // }
+         if (bird == 1) {
+            $delSmax = 0.6;
+        } else if (bird == 2) {
+            $delSmax = 1;
+        } else if (bird == 3) {
+            $delSmax = 20;
+        }
+        fetchData()
+        returnData()
     }
 </script>
 
