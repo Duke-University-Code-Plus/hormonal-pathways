@@ -16,8 +16,8 @@ class maleBird {
         // create collider for player 
         this.sprite.setCollider('circle', 0, 0, 200);
         this.sprite.depth = 20;
-        this.sprite.friction = 0.05;
-        this.sprite.debug = true;
+        this.sprite.friction = 0.1;
+        this.sprite.debug = false;
 
 
         //mating variables
@@ -39,6 +39,8 @@ class maleBird {
         this.love = null;
         this.babyBirdChange = false; //true if baby bird has already been created for current mating cycle, false otherwise
         this.mate = null;
+        this.fullNest = false;
+        this.babyBirdFlying = false
 
 
         //scavenge variables
@@ -110,17 +112,38 @@ class maleBird {
             this.sprite.changeAnimation('stand')
             this.createLove();
             if (!this.love.loveCondition) {
+                if (this.nest.babyBirdsInNest.length == 2) {
+                    this.fullNest = true
+                }
                 this.matingStage = 4
                 this.mate.matingStage = 4
-
             }
+        }
+
+        if (this.babyBirdFlying) {
+            this.nest.babyBirdToRemove.leaveNest()  
         }
 
         if (this.matingStage == 4) { //baby bird created
             console.log('matingStage', this.matingStage)
 
-            if (!this.babyBirdChange) { //if baby bird hasnt already been created
-                this.nest.addBabyBird(); //create baby bird
+            if (!this.babyBirdChange && this.fullNest) { //if baby bird hasnt already been created and there's two baby birds in the nest 
+                
+                this.nest.removeBabyBird() //remove baby bird
+                this.babyBirdFlying = true
+
+                if (this.nest.babyBirdsInNest.length == 1) { //once baby bird sprite is out of frame 
+                    this.nest.addBabyBird(this.nest.emptySpaceX) //add baby bird at the x position of bird that left 
+                    this.babyBirdChange = true;
+                    this.matingStage = 5;
+                    this.mate.matingStage = 5;
+                }
+            }
+
+            if (!this.babyBirdChange && !this.fullNest) {
+
+                var babybirdX = this.nest.sprite.position.x - this.nest.sprite.originalWidth / 4 + ((this.nest.sprite.originalWidth / 5) * this.nest.babyBirdCount);
+                this.nest.addBabyBird(babybirdX); //create baby bird
                 this.babyBirdChange = true;
                 this.matingStage = 5;
                 this.mate.matingStage = 5;
@@ -137,7 +160,7 @@ class maleBird {
                 this.sprite.velocity.x = 0; //stop moving
                 this.sprite.velocity.y = 0;
                 this.sprite.changeAnimation('stand')
-                if (this.mate == null) {
+                if (this.mate == null && !this.babyBirdFlying ) {
                     this.matingCondition = false
                     this.mateCreated = false
                     this.matingStage = 0;
@@ -145,7 +168,6 @@ class maleBird {
                     this.notes = null
                     this.notes_flipped = null
                     this.love = null
-
                 }
             }
         }
@@ -196,7 +218,7 @@ class maleBird {
         if (this.scavengeState == 1) { // if = 1, fly to worm
             console.log('scavengeState', this.scavengeState)
             this.sprite.changeAnimation('fly')
-            this.sprite.attractionPoint(0.1, this.scavengeX, this.scavengeY)
+            this.sprite.attractionPoint(0.2, this.scavengeX, this.scavengeY)
 
             if ((abs(this.sprite.position.y - this.scavengeY) < 1) && (abs(this.sprite.position.x - this.scavengeX) < 1)) { //if close to scavenge stop
 
@@ -219,7 +241,7 @@ class maleBird {
 
             this.sprite.changeAnimation('peck')
 
-            const peckNum = int(random(2,4))
+            const peckNum = int(random(2, 4))
             if (this.scavengeFrameCount > peckNum * peckFrameCycle) {
                 this.worm.sprite.changeAnimation('dead') //worm dies
                 this.caughtPrey = true; //caught prey 
@@ -296,13 +318,12 @@ class maleBird {
             this.scavengeCondition = false;
 
             console.log('array lengt', wormsArray.length)
-        
+
+        }
     }
-}
 
     findWorm() {
         this.worm = random(wormsArray)
-        console.log('index', this.worm)
 
         /*
         while (wormsArray[index].chosen == true) {
@@ -313,7 +334,6 @@ class maleBird {
 
         const index = wormsArray.indexOf(this.worm)
         wormsArray.splice(index, 1)
-
 
         this.worm.sprite.velocity.x = 0.05
 
