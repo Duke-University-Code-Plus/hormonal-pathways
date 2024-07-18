@@ -94,7 +94,7 @@
             // Data from API
             Xhist = data.Xhist;
             Shist = data.Shist;
-            console.log(Shist);
+            //console.log(Shist);
             Chist = data.Chist;
             Whist = data.Whist;
             Wcuml = data.Wcuml;
