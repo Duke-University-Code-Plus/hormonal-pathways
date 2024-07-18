@@ -27,7 +27,7 @@
         foodShort,
         foodShortbegin,
         foodShortend,
-    } from "../data_store.js";
+    } from "../data_state_store.js";
     import { apiEndpoint } from "../state_store.js";
     import {
         gamma1_tissue,
@@ -53,12 +53,7 @@
     let gamma = [$gamma1, $gamma2, $gamma3];
     let z = [$z1, $z2, $z3];
 
-    let bodyConditionChartInstance = null;
-    let sensitivityChartInstance = null;
-    let productionChartInstance = null;
-    let fitnessChartInstance = null;
-    let cumulativeFitnessChartInstance = null;
-    let traitChartInstance = null;
+
 
     let canvas1 = "gamma1_tissue";
     let canvas2 = "gamma2_tissue";
@@ -99,7 +94,7 @@
             // Data from API
             Xhist = data.Xhist;
             Shist = data.Shist;
-            //console.log(Shist);
+            console.log(Shist);
             Chist = data.Chist;
             Whist = data.Whist;
             Wcuml = data.Wcuml;
@@ -290,10 +285,14 @@
     function returnData() {
         //will call billys function here which updates tissue-stores based on delSmax and gamma vals?
         reset();
-        $gamma1_tissue = 5;
-        $gamma2_tissue = 3;
-        $gamma3_tissue = 9;
-        $hormoneCount = 20;
+        $gamma1_tissue = Math.ceil(Shist[0][Shist[0].length-1]/2);
+        console.log($gamma1_tissue)
+        $gamma2_tissue = Math.ceil(Shist[1][Shist[1].length-1]/2);
+        console.log($gamma2_tissue)
+        $gamma3_tissue = Math.ceil(Shist[2][Shist[2].length-1]/2);
+        console.log($gamma2_tissue)
+        $hormoneCount = Math.ceil(Chist[Chist.length-1]);
+        console.log($hormoneCount)
     }
 
     function reset() {
