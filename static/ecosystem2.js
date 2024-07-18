@@ -11,17 +11,17 @@ var numPrey = 10;
 //Array of locations for nests
 //Nests numbered as 1-3 from left to right
 let nest1_locations = [[125, 272], [290, 320]];
-let nest2_locations = [[330, 410], [440, 376]]
-let nest3_locations = [[680, 360], [525, 315]];
-
-//Arrays of positions for male perch spots
 let male1_perch_locations = [[300, 320], [205, 275]];
-let male2_perch_locations = [[470, 375], [390, 365]];
-let male3_perch_locations = [[618, 350], [700, 357]];
+let female1_perch_locations = [[250, 312], [155, 275]];
 
-let female1_perch_locations = [[250, 310], [155, 275]];
-let female2_perch_locations = [[420, 375], [340, 365]];
-let female3_perch_locations = [[568, 350], [655, 360]];
+
+let nest2_locations = [[330, 410], [440, 376]]
+let male2_perch_locations = [[470, 372], [390, 405]];
+let female2_perch_locations = [[420, 375], [340, 405]];
+
+let nest3_locations = [[680, 360], [525, 315]];
+let male3_perch_locations = [[618, 350], [700, 357]];
+let female3_perch_locations = [[568, 350], [655, 357]];
 
 //index for determining nest and perch positions
 var index1;
@@ -406,7 +406,7 @@ class babyBird {
         this.sprite.addAnimation('grown', imagePath + 'babybird_grown0001.png', imagePath + 'babybird_grown0002.png');
         this.sprite.addAnimation('fly', babybird_fly);
 
-        this.sprite.depth = 50;
+        this.sprite.depth = 15;
         babyBirdsArray.push(this); //keeps track of all baby birds
 
         // Check if babyBirdsInNest is an array

@@ -3,6 +3,7 @@ class Nest {
         this.sprite = createSprite(x, y);
         this.sprite.scale = scale
         this.sprite.addAnimation('normal', imagePath + 'nest.png');
+        this.depth = 10
 
         this.babyBirdCount = 0;
         this.bird = bird;

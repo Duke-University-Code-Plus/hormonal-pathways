@@ -20,7 +20,7 @@ class femaleBird {
         //if = 5 male flies back to nest and variables all reinitialized
         //its mate's perch spot
         this.sprite.friction = 0.1;
-        this.sprite.depth = 20;
+        this.sprite.depth = 40;
         this.singFrameCount = 0; //keeps track of how many times male has sung to it
         this.mate = mate; // Assign the sprite of the maleBird
 
