@@ -5,22 +5,23 @@ let maleBirdsArray = []
 let femaleBirdsArray = []
 let babyBirdsArray = []
 let wormsArray = []
-
+let nestArray = []
+var numPrey = 10;
 
 //Array of locations for nests
 //Nests numbered as 1-3 from left to right
 let nest1_locations = [[125, 272], [290, 320]];
-let nest2_locations = [[330, 410], [440, 376]]
-let nest3_locations = [[680, 360], [525, 315]];
-
-//Arrays of positions for male perch spots
 let male1_perch_locations = [[300, 320], [205, 275]];
-let male2_perch_locations = [[470, 375], [390, 385]];
-let male3_perch_locations = [[618, 310], [700, 352]];
+let female1_perch_locations = [[250, 312], [155, 275]];
 
-let female1_perch_locations = [[220, 320], [155, 275]];
-let female2_perch_locations = [[425, 375], [355, 385]];
-let female3_perch_locations = [[585, 315], [655, 365]];
+
+let nest2_locations = [[330, 410], [440, 376]]
+let male2_perch_locations = [[470, 372], [390, 405]];
+let female2_perch_locations = [[420, 375], [340, 405]];
+
+let nest3_locations = [[680, 360], [525, 315]];
+let male3_perch_locations = [[618, 350], [700, 357]];
+let female3_perch_locations = [[568, 350], [655, 357]];
 
 //index for determining nest and perch positions
 var index1;
@@ -46,13 +47,13 @@ var bird3;
 //inputs
 var scavengeButton1;
 var scavengeButton2
-var scavengeButton3 
+var scavengeButton3
 
 var matingButton1;
 var matingButton2;
 var matingButton3;
 
-
+var foodSlider
 
 //spritesheets
 var malebird_fly_spritesheet;
@@ -84,6 +85,9 @@ var music_flipped
 
 var peckFrameCycle = 20;
 var singFrameCycle = 60;
+
+var wormBorder = 100
+
 
 //preload all json files and sprite sheets 
 function preload() {
@@ -121,7 +125,9 @@ function draw() {
     background(135, 206, 250);
     drawSprites();
     maleBirdMovement()
+    preyMovement();
     femaleBirdMovement();
+    updateNumPrey()
 
     for (let bird of maleBirdsArray) { //go through male birds
         if (bird.matingCondition) { //if should be mating
@@ -131,8 +137,30 @@ function draw() {
             }
             bird.mateBehavior();
         }
+        if (bird.scavengeCondition) { //if should be scavenging
+            bird.scavengeBehavior();
+        }
     }
 }
+
+function updateNumPrey() {
+    numPrey = foodSlider.value()
+
+    if (wormsArray.length < numPrey) {
+        createPrey();
+    }
+    if (wormsArray.length > numPrey) {
+        removePrey()
+    }
+}
+
+function removePrey() {
+    const index = wormsArray.length - 1
+    let worm = wormsArray[index]
+    wormsArray.splice(index, 1) //splice is to remove at certain index, pop removes the last one
+    worm.sprite.remove()
+}
+
 
 function createFemaleBird(bird) {
     var femalebirdLocation = random(["left", "right"]);
@@ -152,6 +180,7 @@ function createFemaleBird(bird) {
 
     return femalebird;
 }
+
 
 function maleBirdMovement() {
     for (let bird of maleBirdsArray) {
@@ -174,10 +203,10 @@ function femaleBirdMovement() {
 }
 
 function createEnvironment() {
-    dirt = createSprite(width / 2, 560);
-    dirt.addAnimation('normal', imagePath + 'ground.png');
-    dirt.scale = 1;
-    dirt.depth = 3;
+    ground = createSprite(width / 2, 555);
+    ground.addAnimation('normal', imagePath + 'ground.png');
+    ground.scale = 1;
+    ground.depth = 3;
 
     //left most tree
     tree1 = createSprite(width / 4, 320);
@@ -208,18 +237,18 @@ function createEnvironment() {
 
     //creating nest sprites using index
     nest1 = new Nest(nest1_xy[0], nest1_xy[1], 0.3, bird1)
-    nest2 = new Nest(nest2_xy[0], nest2_xy[1], 0.25, bird2)
+    nest2 = new Nest(nest2_xy[0], nest2_xy[1], 0.3, bird2)
     nest3 = new Nest(nest3_xy[0], nest3_xy[1], 0.3, bird3)
 
 }
 
 function createInputs() {
+    //bird 1
     scavengeButton1 = createButton(" Scavenge Food");
     scavengeButton1.position(70, 10);
     scavengeButton1.mousePressed(() => {
-        bird1.foodCondition = true
+        if (bird1.matingCondition != true) bird1.scavengeCondition = true
     })
-
     scavengeButton1.style('font-size', '14px');
     scavengeButton1.style('background-color', 'pink');
     scavengeButton1.style('color', 'white');
@@ -230,9 +259,8 @@ function createInputs() {
     matingButton1 = createButton(" Mating Behavior");
     matingButton1.position(70, 40);
     matingButton1.mousePressed(() => {
-        bird1.matingCondition = true
+        if (bird1.scavengeCondition != true) bird1.matingCondition = true
     })
-
     matingButton1.style('font-size', '14px');
     matingButton1.style('background-color', 'blue');
     matingButton1.style('color', 'white');
@@ -241,13 +269,11 @@ function createInputs() {
     matingButton1.style('border-radius', '12px');
 
     //bird 2
-
     scavengeButton2 = createButton(" Scavenge Food");
     scavengeButton2.position(330, 10);
     scavengeButton2.mousePressed(() => {
-        bird2.foodCondition = true
+        if (bird2.matingCondition != true) bird2.scavengeCondition = true
     })
-
     scavengeButton2.style('font-size', '14px');
     scavengeButton2.style('background-color', 'pink');
     scavengeButton2.style('color', 'white');
@@ -258,9 +284,8 @@ function createInputs() {
     matingButton2 = createButton(" Mating Behavior");
     matingButton2.position(330, 40);
     matingButton2.mousePressed(() => {
-        bird2.matingCondition = true
+        if (bird2.scavengeCondition != true) bird2.matingCondition = true
     })
-
     matingButton2.style('font-size', '14px');
     matingButton2.style('background-color', 'blue');
     matingButton2.style('color', 'white');
@@ -273,7 +298,7 @@ function createInputs() {
     scavengeButton3 = createButton(" Scavenge Food");
     scavengeButton3.position(600, 10);
     scavengeButton3.mousePressed(() => {
-        bird3.foodCondition = true
+        if (bird3.matingCondition != true) bird3.scavengeCondition = true
     })
 
     scavengeButton3.style('font-size', '14px');
@@ -286,7 +311,7 @@ function createInputs() {
     matingButton3 = createButton(" Mating Behavior");
     matingButton3.position(600, 40);
     matingButton3.mousePressed(() => {
-        bird3.matingCondition = true
+        if (bird3.scavengeCondition != true) bird3.matingCondition = true
     })
 
     matingButton3.style('font-size', '14px');
@@ -295,6 +320,10 @@ function createInputs() {
     matingButton3.style('padding', '5px 5px');
     matingButton3.style('border', 'none');
     matingButton3.style('border-radius', '12px');
+
+    foodSlider = createSlider(3, 10, 3, 1);
+    foodSlider.position(10, 10);
+    foodSlider.size(80);
 }
 
 function createAnimals() {
@@ -308,11 +337,34 @@ function createAnimals() {
     let femaleperch2 = female2_perch_locations[index2]
     let femaleperch3 = female3_perch_locations[index3]
 
-    bird1 = new maleBird(nest1.sprite.position.x, nest1.sprite.position.y - 20, 0.1, nest1, perch1, femaleperch1)
-    bird2 = new maleBird(nest2.sprite.position.x, nest2.sprite.position.y - 20, 0.1, nest2, perch2, femaleperch2)
-    bird3 = new maleBird(nest3.sprite.position.x, nest3.sprite.position.y - 20, 0.1, nest3, perch3, femaleperch3)
+    bird1 = new maleBird(nest1.sprite.position.x + 20, nest1.sprite.position.y - 20, 0.1, nest1, perch1, femaleperch1)
+    bird2 = new maleBird(nest2.sprite.position.x + 20, nest2.sprite.position.y - 20, 0.1, nest2, perch2, femaleperch2)
+    bird3 = new maleBird(nest3.sprite.position.x + 20, nest3.sprite.position.y - 20, 0.1, nest3, perch3, femaleperch3)
+    
+    nest1.bird = bird1; 
+    nest2.bird = bird2; 
+    nest3.bird = bird3
 
+    for (let nest of nestArray) {
+        var babyBirdX = nest.sprite.position.x - nest.sprite.originalWidth / 8 + ((nest.sprite.originalWidth / 3) * nest.babyBirdsInNest.length)
+        nest.addBabyBird(babyBirdX)
+    }
 }
+
+function createPrey() {
+    var wormX = random(wormBorder, width - wormBorder)
+    var wormY = random(ground.position.y - 20, ground.position.y)
+    new Worm(wormX, wormY, 0.1)
+}
+
+function preyMovement() {
+    for (let worm of wormsArray) {
+        if (worm.sprite.position.x <= wormBorder || worm.sprite.position.x >= width - wormBorder) {
+            worm.sprite.velocity.x *= -1
+        }
+    }
+}
+
 
 //load the animations into variables
 function loadAnimations() {
@@ -323,21 +375,67 @@ function loadAnimations() {
     notes_flipped_play = loadAnimation(notes_flipped_spritesheet);
 }
 
+class Worm {
+    constructor(x, y, scale) {
+        this.sprite = createSprite(x, y)
+        this.sprite.scale = scale;
+        this.sprite.depth = 25;
+        this.sprite.debug = false
+
+        this.sprite.addAnimation('normal', imagePath + 'worm.png');
+        this.sprite.addAnimation('dead', imagePath + 'worm.png');
+
+        this.sprite.setSpeed(random(random(-0.3, -0.2), random(0.2, 0.3)));
+        this.sprite.velocity.y = 0;
+
+        this.sprite.setCollider('circle', 0, 0, 150)
+
+        wormsArray.push(this)
+    }
+}
 class babyBird {
     constructor(x, y, scale, nest) {
         this.sprite = createSprite(x, y)
+        this.initialX = x
         this.sprite.scale = scale
         this.nest = nest
-        babyBirdsArray.push(this)
+        this.removeX = random([-10, width + 10]) //where bird should fly to
+        this.removeY = random (0, height / 5)
+        this.sprite.mirrorX(random([1, -1]))
 
         this.sprite.addAnimation('normal', imagePath + 'babybird0001.png', imagePath + 'babybird0002.png');
         this.sprite.addAnimation('grown', imagePath + 'babybird_grown0001.png', imagePath + 'babybird_grown0002.png');
         this.sprite.addAnimation('fly', babybird_fly);
 
-        this.sprite.depth = 50;
+        this.sprite.depth = 15;
         babyBirdsArray.push(this); //keeps track of all baby birds
-        this.nest.babyBirdsArray.push(this) //keeps track of this nest's baby birds
+
+        // Check if babyBirdsInNest is an array
+        if (Array.isArray(this.nest.babyBirdsInNest)) {
+            this.nest.babyBirdsInNest.push(this);
+        } else {
+            console.error('babyBirdsInNest is not an array:', this.nest.babyBirdsInNest);
+        }
+
     }
 
-    //need baby bird fly away function
+    leaveNest() {
+        console.log('in babybird leave nest')
+            if (this.sprite.velocity.x > 0) {
+                this.sprite.mirrorX(-1);
+            } else if (this.sprite.velocity.x < 0) {
+                this.sprite.mirrorX(1);
+            }
+
+        this.sprite.changeAnimation('fly');  //baby bird fly to remove location
+        this.sprite.friction = 0.1
+        this.sprite.attractionPoint(0.2, this.removeX, this.removeY)
+
+        if ((abs(this.sprite.position.y - this.removeY) < 1) && (abs(this.sprite.position.x - this.removeX) < 1)) { //if baby bird at remove location
+            this.sprite.velocity.x = 0; 
+            this.sprite.velocity.y = 0;
+            this.nest.bird.babyBirdFlying = false;
+            this.sprite.remove();
+        }
+    }
 }

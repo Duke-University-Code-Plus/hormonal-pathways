@@ -5,5 +5,9 @@
   <!-- link p5.play.js -->
   <script src="/p5.play.js" type="text/javascript"></script>
   <!-- link your javascript sketch -->
-  <script src="ecosystem.js" type="text/javascript"></script>
+  <script src="heart.js" type="text/javascript"></script>
+  <script src="malebird.js" type="text/javascript"></script>
+  <script src="femalebird.js" type="text/javascript"></script>
+  <script src="nest.js" type="text/javascript"></script>
+  <script src="ecosystem2.js" type="text/javascript"></script>
 </svelte:head>
