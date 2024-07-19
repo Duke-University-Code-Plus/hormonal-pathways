@@ -112,8 +112,8 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
         'Wcuml': Wcuml.tolist()
     }
 
-    with open(outputFileName, "w") as f:
-         json.dump(results, f)
+    # with open(outputFileName, "w") as f:
+    #      json.dump(results, f)
 
     return results
 
