@@ -1,5 +1,5 @@
 class maleBird {
-    constructor(x, y, scale, nest, perch, femaleperch) {
+    constructor(x, y, scale, nest, perch, femaleperch, color) {
         this.sprite = createSprite(x, y);
         this.sprite.scale = scale
         this.nest = nest;
@@ -7,10 +7,19 @@ class maleBird {
         this.perchX = perch[0]
         this.perchY = perch[1]
         //animations
-        this.sprite.addAnimation('fly', malebird_fly);
-        this.sprite.addAnimation('stand', imagePath + 'malebird_stand.png'); sing = this.sprite.addAnimation('sing', imagePath + 'malebird_sing0001.png', imagePath + 'malebird_sing0002.png');
-        peck = this.sprite.addAnimation('peck', imagePath + 'malebird_peck0001.png', imagePath + 'malebird_peck0002.png');
-        this.sprite.addAnimation('transformed', imagePath + 'malebird_death.png');
+        if (color == "blue/") {
+            this.sprite.addAnimation('fly', malebird1_fly);
+        }
+        else if (color == "purple/") {
+            this.sprite.addAnimation('fly', malebird2_fly);
+        }
+        else {
+            this.sprite.addAnimation('fly', malebird3_fly);
+        }
+        this.sprite.addAnimation('stand', imagePath + color + 'malebird_stand.png'); 
+        sing = this.sprite.addAnimation('sing', imagePath + color + 'malebird_sing0001.png', imagePath + color + 'malebird_sing0002.png');
+        peck = this.sprite.addAnimation('peck', imagePath + color + 'malebird_peck0001.png', imagePath + color + 'malebird_peck0002.png');
+        this.sprite.addAnimation('transformed', imagePath + color + 'malebird_death.png');
 
         this.sprite.changeAnimation('stand');
         // create collider for player 

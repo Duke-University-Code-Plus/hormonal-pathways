@@ -1,5 +1,8 @@
-// assets file path
+// assets file paths
 var imagePath = '/sprites_haruta/';
+var bluePath = 'blue/'; 
+var purplePath = 'purple/'; 
+var redPath = 'red/'; 
 
 let maleBirdsArray = []
 let femaleBirdsArray = []
@@ -55,8 +58,11 @@ var matingButton3;
 
 var foodSlider
 
+
 //spritesheets
-var malebird_fly_spritesheet;
+var malebird1_fly_spritesheet;
+var malebird2_fly_spritesheet;
+var malebird3_fly_spritesheet;
 var malebird_sing_spritesheet;
 var femalebird_fly_spritesheet;
 var babybird_fly_spritesheet;
@@ -64,7 +70,9 @@ var notes_spritesheet;
 var notes_flipped_spritesheet;
 
 //animation names
-var malebird_fly;
+var malebird1_fly;
+var malebird2_fly;
+var malebird3_fly;
 var malebird_sing;
 var femalebird_fly;
 var babybird_fly;
@@ -92,9 +100,17 @@ var wormBorder = 100
 //preload all json files and sprite sheets 
 function preload() {
     // Load the json for the tiles sprite sheet
-    loadJSON(imagePath + 'malebird_fly.json', function (malebird_fly_frames) {
+    loadJSON(imagePath + bluePath + 'malebird_fly.json', function (malebird1_fly_frames) {
         // Load tiles sprite sheet from frames array once frames array is ready
-        malebird_fly_spritesheet = loadSpriteSheet(imagePath + 'malebird_fly_spritesheet.png', malebird_fly_frames);
+        malebird1_fly_spritesheet = loadSpriteSheet(imagePath + bluePath + 'malebird_fly_spritesheet.png', malebird1_fly_frames);
+    });
+    loadJSON(imagePath + purplePath + 'malebird_fly.json', function (malebird2_fly_frames) {
+        // Load tiles sprite sheet from frames array once frames array is ready
+        malebird2_fly_spritesheet = loadSpriteSheet(imagePath + purplePath + 'malebird_fly_spritesheet.png', malebird2_fly_frames);
+    });
+    loadJSON(imagePath + redPath + 'malebird_fly.json', function (malebird3_fly_frames) {
+        // Load tiles sprite sheet from frames array once frames array is ready
+        malebird3_fly_spritesheet = loadSpriteSheet(imagePath + redPath + 'malebird_fly_spritesheet.png', malebird3_fly_frames);
     });
 
     loadJSON(imagePath + 'femalebird_fly.json', function (femalebird_fly_frames) {
@@ -337,9 +353,9 @@ function createAnimals() {
     let femaleperch2 = female2_perch_locations[index2]
     let femaleperch3 = female3_perch_locations[index3]
 
-    bird1 = new maleBird(nest1.sprite.position.x + 20, nest1.sprite.position.y - 20, 0.1, nest1, perch1, femaleperch1)
-    bird2 = new maleBird(nest2.sprite.position.x + 20, nest2.sprite.position.y - 20, 0.1, nest2, perch2, femaleperch2)
-    bird3 = new maleBird(nest3.sprite.position.x + 20, nest3.sprite.position.y - 20, 0.1, nest3, perch3, femaleperch3)
+    bird1 = new maleBird(nest1.sprite.position.x + 20, nest1.sprite.position.y - 20, 0.1, nest1, perch1, femaleperch1, "blue/")
+    bird2 = new maleBird(nest2.sprite.position.x + 20, nest2.sprite.position.y - 20, 0.1, nest2, perch2, femaleperch2, "purple/")
+    bird3 = new maleBird(nest3.sprite.position.x + 20, nest3.sprite.position.y - 20, 0.1, nest3, perch3, femaleperch3, "red/")
     
     nest1.bird = bird1; 
     nest2.bird = bird2; 
@@ -368,7 +384,9 @@ function preyMovement() {
 
 //load the animations into variables
 function loadAnimations() {
-    malebird_fly = loadAnimation(malebird_fly_spritesheet);
+    malebird1_fly = loadAnimation(malebird1_fly_spritesheet);
+    malebird2_fly = loadAnimation(malebird2_fly_spritesheet);
+    malebird3_fly = loadAnimation(malebird3_fly_spritesheet);
     femalebird_fly = loadAnimation(femalebird_fly_spritesheet);
     babybird_fly = loadAnimation(babybird_fly_spritesheet);
     notes_play = loadAnimation(notes_spritesheet);
