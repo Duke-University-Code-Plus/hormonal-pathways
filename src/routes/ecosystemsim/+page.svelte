@@ -117,7 +117,7 @@
 
 <div class="flex justify-center">
     <div class="flex flex-col items-center m-5 p-5 ">
-        <h4 class="text-center text-l font-semibold">High Hormone Sensitivity</h4>
+        <h4 class="text-center text-l font-semibold">Low Hormone Sensitivity</h4>
         <img src="/bird_red.png" alt="Red Bird" class="w-32 h-32 object-cover">
         <div id="bird1Offspring" class="mt-1">Offspring Count: 1</div>
     </div>
@@ -129,7 +129,7 @@
     </div>
 
     <div class="flex flex-col items-center m-5 p-5">
-        <h4 class="text-center text-l font-semibold">Low Hormone Sensitivity</h4>
+        <h4 class="text-center text-l font-semibold">High Hormone Sensitivity</h4>
         <img src="/bird_blue.png" alt="Blue Bird" class="w-32 h-32 object-cover">
         <div id="bird3Offspring" class="mt-1">Offspring Count: 1</div>
     </div>
