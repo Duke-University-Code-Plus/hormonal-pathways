@@ -115,12 +115,24 @@
     >
 </div>
 
-<div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
-    <div id="bird1Offspring">Offspring Count: 1</div>
+<div class="flex justify-center">
+    <div class="flex flex-col items-center m-5 p-5 ">
+        <h4 class="text-center text-l font-semibold">High Hormone Sensitivity</h4>
+        <img src="/bird_red.png" alt="Red Bird" class="w-32 h-32 object-cover">
+        <div id="bird1Offspring" class="mt-1">Offspring Count: 1</div>
+    </div>
 
-    <div id="bird2Offspring">Offspring Count: 1</div>
+    <div class="flex flex-col items-center m-5 p-5">
+        <h4 class="text-center text-l font-semibold">Average Hormone Sensitivity</h4>
+        <img src="/bird_purple.png" alt="Purple Bird" class="w-32 h-32 object-cover">
+        <div id="bird2Offspring" class="mt-1">Offspring Count: 1</div>
+    </div>
 
-    <div id="bird3Offspring">Offspring Count: 1</div>
+    <div class="flex flex-col items-center m-5 p-5">
+        <h4 class="text-center text-l font-semibold">Low Hormone Sensitivity</h4>
+        <img src="/bird_blue.png" alt="Blue Bird" class="w-32 h-32 object-cover">
+        <div id="bird3Offspring" class="mt-1">Offspring Count: 1</div>
+    </div>
 </div>
 
 <!-- Animation stuff-->
