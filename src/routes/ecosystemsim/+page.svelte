@@ -12,7 +12,9 @@
         gamma3,
         G,
         Xmin,
-        delSmax,
+        delSmax1,
+        delSmax2,
+        delSmax3,
         delCmax,
         tau,
         K,
@@ -29,30 +31,20 @@
     } from "../data5_store.js";
     import {apiEndpoint} from "../state_store.js"
 
-    let Xhist = [];
-    let Shist = [];
-    let Chist = [];
-    let Whist = [];
-    let Wcuml = [];
-    let Vhist1 = [];
-    let Vhist2 = [];
-    let Vhist3 = [];
-    let Vhist1Ratio = [];
-    let Vhist2Ratio = [];
-    let Vhist3Ratio = [];
+
+    let VhistBlue = [];
+    let VhistRed = [];
+    let VhistPurple = [];
+    let VhistBlueRatio = [];
+    let VhistRedRatio = [];
+    let VhistPurpleRatio = [];
 
     let gamma = [$gamma1, $gamma2, $gamma3];
     let z = [$z1, $z2, $z3];
 
-    let bodyConditionChartInstance = null;
-    let sensitivityChartInstance = null;
-    let productionChartInstance = null;
-    let fitnessChartInstance = null;
-    let cumulativeFitnessChartInstance = null;
-    let traitChartInstance = null;
-    let traitRatioOneChartInstance = null;
-    let traitRatioTwoChartInstance = null;
-    let traitRatioThreeChartInstance = null;
+    let traitBirdOneChartInstance = null;
+    let traitBirdTwoChartInstance = null;
+    let traitBirdThreeChartInstance = null;
 
     onMount(() => {
         fetchData();
@@ -62,11 +54,11 @@
         try {
             gamma = [$gamma1, $gamma2, $gamma3];
             z = [$z1, $z2, $z3];
-            const params1 = {
+            var params = {
                 gamma: gamma.join(","), // Convert array to comma-separated string
                 G: $G,
                 Xmin: $Xmin,
-                delSmax: .22,
+                delSmax: $delSmax3,
                 delCmax: $delCmax,
                 tau: $tau,
                 K: $K,
@@ -80,89 +72,49 @@
                 foodShortend: $foodShortend
             };
 
-            const queryString1 = new URLSearchParams(params1).toString();
-            const response1 = await axios.get(
-                `${$apiEndpoint}/hormonemodel?${queryString1}`,
+            // Making 3 Requests to the server in one Fetch
+            const queryStringBlue = new URLSearchParams(params).toString();
+            const responseBlue = await axios.get(
+                `${$apiEndpoint}/hormonemodel?${queryStringBlue}`,
             );
-            const data1 = response1.data;
+            const dataBlue = responseBlue.data;
 
-            Xhist = data1.Xhist;
-            Shist = data1.Shist;
-            Chist = data1.Chist;
-            Whist = data1.Whist;
-            Wcuml = data1.Wcuml;
-            Vhist1 = data1.Vhist;
+            params['gamma'] = [$gamma1, $gamma3, $gamma2].join(",");
+            params['z'] = [$z1, $z3, $z2].join(",");
+            params['delSmax'] = $delSmax1;
 
-
-            gamma = [$gamma1, $gamma3, $gamma2];
-            z = [$z1, $z3, $z2];
-
-            const params2 = {
-                gamma: gamma.join(","), // Convert array to comma-separated string
-                G: $G,
-                Xmin: $Xmin,
-                delSmax: 0.22,
-                delCmax: $delCmax,
-                tau: $tau,
-                K: $K,
-                alpha: $alpha,
-                beta: $beta,
-                mu: $mu,
-                z: z.join(","), // Convert array to comma-separated string
-                N: $N,
-                foodShort: $foodShort,
-                foodShortbegin: $foodShortbegin,
-                foodShortend: $foodShortend
-            };
-
-            const queryString2 = new URLSearchParams(params2).toString();
-            const response2 = await axios.get(
-                `${$apiEndpoint}/hormonemodel?${queryString2}`,
+            const queryStringRed = new URLSearchParams(params).toString();
+            const responseRed = await axios.get(
+                `${$apiEndpoint}/hormonemodel?${queryStringRed}`,
             );
-            const data2 = response2.data;
+            const dataRed = responseRed.data;
+            
+            params['gamma'] = [$gamma1, $gamma1, $gamma1].join(",");
+            params['z'] = [$z1, $z1, $z1].join(",");
+            params['delSmax'] = $delSmax2;
 
-            // Data from API
-            Vhist2 = data2.Vhist;
-
-            gamma = [$gamma1, $gamma1, $gamma1];
-            z = [$z1, $z1, $z1];
-
-            const params3 = {
-                gamma: gamma.join(","), // Convert array to comma-separated string
-                G: $G,
-                Xmin: $Xmin,
-                delSmax: 0.22,
-                delCmax: $delCmax,
-                tau: $tau,
-                K: $K,
-                alpha: $alpha,
-                beta: $beta,
-                mu: $mu,
-                z: z.join(","), // Convert array to comma-separated string
-                N: $N,
-                foodShort: $foodShort,
-                foodShortbegin: $foodShortbegin,
-                foodShortend: $foodShortend
-            };
-
-            const queryString3 = new URLSearchParams(params3).toString();
-            const response3 = await axios.get(
-                `${$apiEndpoint}/hormonemodel?${queryString3}`,
+            const queryStringPurple = new URLSearchParams(params).toString();
+            const responsePurple = await axios.get(
+                `${$apiEndpoint}/hormonemodel?${queryStringPurple}`,
             );
-            const data3 = response3.data;
+            const dataPurple = responsePurple.data;
 
-            // Data from API
-            Vhist3 = data3.Vhist;
+            // Making the bird data
+            VhistBlue = dataBlue.Vhist;
+            VhistRed = dataRed.Vhist;
+            VhistPurple = dataPurple.Vhist;
 
-            for (let i = 0; i < Vhist1[0].length; i++) {
-                Vhist1Ratio.push(Vhist1[1][i]/Vhist1[2][i]);
-                Vhist2Ratio.push(Vhist2[1][i]/Vhist2[2][i]);
-                Vhist3Ratio.push(Vhist3[1][i]/Vhist3[2][i]);
-                };
+            // Making the Bird Ratios
+            for (let i = 0; i < VhistBlue[0].length; i++) {
+                    VhistBlueRatio.push(VhistBlue[1][i]/VhistBlue[2][i]);
+                    VhistRedRatio.push(VhistRed[1][i]/VhistRed[2][i]);
+                    VhistPurpleRatio.push(VhistPurple[1][i]/VhistPurple[2][i]);
+                }
 
-            console.log(Vhist1Ratio);
-            console.log(Vhist2Ratio);
-            console.log(Vhist3Ratio);
+            // RATIOS OUTPUT TO CONSOLE
+            console.log(VhistBlueRatio);
+            console.log(VhistRedRatio);
+            console.log(VhistPurpleRatio);            
 
             createCharts();
         } catch (error) {
@@ -308,99 +260,35 @@
 
     function createCharts() {
         // Destroy existing charts if they exist
-        //if (bodyConditionChartInstance) bodyConditionChartInstance.destroy();
-        //if (sensitivityChartInstance) sensitivityChartInstance.destroy();
-        //if (productionChartInstance) productionChartInstance.destroy();
-        // if (fitnessChartInstance) fitnessChartInstance.destroy();
-        // if (cumulativeFitnessChartInstance)
-        //     cumulativeFitnessChartInstance.destroy();
-        // if (traitChartInstance) traitChartInstance.destroy();
-        if (traitRatioOneChartInstance) traitRatioOneChartInstance.destroy();
-        if (traitRatioTwoChartInstance) traitRatioTwoChartInstance.destroy();
-        if (traitRatioThreeChartInstance) traitRatioThreeChartInstance.destroy();
+        if (traitBirdOneChartInstance) traitBirdOneChartInstance.destroy();
+        if (traitBirdTwoChartInstance) traitBirdTwoChartInstance.destroy();
+        if (traitBirdThreeChartInstance) traitBirdThreeChartInstance.destroy();
 
-
-        // Create Body Condition Chart
-        // bodyConditionChartInstance = makeChart(
-        //     "bodyConditionChart",
-        //     "Body Condition",
-        //     Xhist,
-        //     "rgba(75, 192, 192, 1)",
-        //     3.5
-        // );
-
-        // Create Sensitivity Chart
-        // sensitivityChartInstance = makeChart(
-        //     "sensitivityChart",
-        //     "Sensitivity",
-        //     Shist,
-        //     "rgba(255, 99, 132, 1)",
-        //     20,
-        //     "Sensitivity to hormone"
-        // );
-
-        // // Create Production Chart
-        // productionChartInstance = makeChart(
-        //     "productionChart",
-        //     "Production",
-        //     Chist,
-        //     "rgba(153, 102, 255, 1)",
-        //     20,
-        //     "Hormone concentration"
-        // );
-
-        // Create Fitness Chart
-        // fitnessChartInstance = makeChart(
-        //     "fitnessChart",
-        //     "Fitness",
-        //     Whist,
-        //     "rgba(255, 159, 64, 1)",
-        //     1.2
-        // );
-
-        // // Create Cumulative Fitness Chart
-        // cumulativeFitnessChartInstance = makeChart(
-        //     "cumulativeFitnessChart",
-        //     "Cumulative Fitness",
-        //     Wcuml,
-        //     "rgba(255, 206, 86, 1)",
-        //     20
-        // );
-
-        // traitChartInstance = makeChart(
-        //     "traitChart",
-        //     "Trait Value",
-        //     Vhist1,
-        //     "rgba(210, 155, 90, 1)",
-        //     20,
-        //     "Trait Values"
-        // )
-
-        traitRatioOneChartInstance = makeChart(
-            "traitChartOne",
-            "Trait Ratio - First Bird",
-            Vhist1Ratio,
+        traitBirdOneChartInstance = makeChart(
+            "traitChartBirdOne",
+            "Trait Value",
+            VhistBlue,
             "rgba(210, 155, 90, 1)",
             5,
-            "Trait Values"
+            "Trait Values - Blue Bird"
         )
 
-        traitRatioTwoChartInstance = makeChart(
-            "traitChartTwo",
-            "Trait Ratio - Second Bird",
-            Vhist2Ratio,
+        traitBirdTwoChartInstance = makeChart(
+            "traitChartBirdTwo",
+            "Trait Value",
+            VhistRed,
             "rgba(210, 155, 90, 1)",
             5,
-            "Trait Values"
+            "Trait Values - Red Bird"
         )
 
-        traitRatioThreeChartInstance = makeChart(
-            "traitChartThree",
-            "Trait Ratio - Third Bird",
-            Vhist3Ratio,
+        traitBirdThreeChartInstance = makeChart(
+            "traitChartBirdThree",
+            "Trait Value",
+            VhistPurple,
             "rgba(210, 155, 90, 1)",
             5,
-            "Trait Values"
+            "Trait Values - Purple Bird"
         )
 
     }
@@ -424,68 +312,6 @@
     <div
         class="flex flex-wrap justify-center grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-1"
     >
-        <!-- Container for Gamma Sliders
-        <div class="flex flex-wrap justify-center w-full">
-            
-            <SliderInput
-                id="Selection against effort in trait i (γᵢ, ₜ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma1}
-                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
-            />
-
-            <SliderInput
-                id="Selection against effort in trait j (γⱼ, ₜ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma2}
-                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the second trait."
-            />
-        
-            <SliderInput
-                id="Selection against effort in each trait k (γₖ, ₜ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma3}
-            />
-            
-        </div>-->
-
-        <!-- Container for Z sliders
-        <div class="flex flex-wrap justify-center w-full">
-            
-            <SliderInput
-                id="Weight of first trait (zᵢ)" 
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z1}
-                modalMessage="The weight of the first trait in the role of the fitness function."
-            />
-
-            <SliderInput
-                id="Weight of second trait (zⱼ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z2}
-                modalMessage="The weight of the second trait in the role of the fitness function."
-            />
-            
-            <SliderInput
-                id="Weight of third trait (zₖ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z3}
-            />
-            
-        </div> -->
-
         <!-- Container for food shortage sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
@@ -496,193 +322,36 @@
                 bind:inputVar={$foodShort}
                 modalMessage="A multiplier of current food. The lower the value, the lower the food available to the organism."
             />
-
-            <!-- <SliderTwoInput
-                bind:inputVarHigh={$foodShortend}
-                bind:maxForVarHigh={$N}
-                bind:inputVarLow={$foodShortbegin}
-                inputVarHighName="Food Shortage End"
-                inputVarLowName="Food Shortage Begin"
-                minForVarLow=0
-                step=1 
-            />-->
         </div>
-
-        <!-- Container for G and mu sliders-->
-        <!-- <div class="flex flex-wrap justify-center w-full">
-            
-            <SliderInput 
-                id="Min hormone level for gamete maturation (G)" 
-                min="0" 
-                max="1" 
-                step="0.1" 
-                bind:inputVar={$G} />
-    
-
-            <SliderInput
-                id="Death probability (µ)"
-                min="0"
-                max="1"
-                step="0.001"
-                bind:inputVar={$mu}
-                modalMessage="A fixed chance that the bird will die randomly."
-            />
-        </div> -->
     </div>
 
-    <!-- Form Inputs-->
     <div class="flex flex-wrap justify-center">
-        <!--input for gamma-->
-        <!--
-        <FormInput
-            id="Gamma"
-            inputType="text"
-            bind:inputVar={$gamma}
-        />
-        -->
-
-        <!--input for G-->
-        <!--
-        <FormInput
-            id="G"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$G}
-        />
-        -->
-
-        <!--input for Xmin-->
-        <!--
-        <FormInput
-            id="Min energy level for reproduction (xᵣₑₚ)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by energy function"
-            bind:inputVar={$Xmin}
-        />
-        -->
-
-        <!-- <FormInput
-            id="Max change of sensitivity to hormone (|ΔSᵢ, ₘₐₓ|)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
+        <SliderInput
+            id="Max change of sensitivity to hormone - Blue Bird"
+            min="0.01"
+            max=".5"
+            step="0.01"
+            bind:inputVar={$delSmax3}
             modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues"
-            bind:inputVar={$delSmax}
         />
 
-        <FormInput
-            id="Max change of circulating hormone (|ΔCₘₐₓ|)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism"
-            bind:inputVar={$delCmax}
-        /> 
-
-        <FormInput
-            id="Food availability (τ)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Determines the food availible in the environment for the organism. "
-            bind:inputVar={$tau}
-        />
-        
-        <FormInput
-            id="Michaelis-Menten constant (K)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="A constant used by the Michaelis-Menten Equation. Equal across all tissues."
-            bind:inputVar={$K}
-        />
-        
-
-        <FormInput
-            id="First parameter of beta distribution (A)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
-            bind:inputVar={$alpha}
+        <SliderInput
+            id="Max change of sensitivity to hormone - Purple Bird"
+            min="0.01"
+            max=".5"
+            step="0.01"
+            bind:inputVar={$delSmax2}
+            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues"
         />
 
-        <FormInput
-            id="Second parameter of beta distribution (B)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
-            bind:inputVar={$beta}
+        <SliderInput
+            id="Max change of sensitivity to hormone - Red Bird"
+            min="0.01"
+            max=".5"
+            step="0.01"
+            bind:inputVar={$delSmax1}
+            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues"
         />
-        -->
-        <!--input for mu
-        <FormInput
-            id="Mu"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.001"
-            bind:inputVar={$mu}
-         />
-
-         <FormInput
-            id="Z"
-            inputType="text"
-            bind:inputVar={$z}
-        />
-        -->
-
-        <!-- <FormInput
-            id="Number of reproductive cycles (N)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Number of reproductive cycles the simulation goes through. Once reached, the organism dies."
-            bind:inputVar={$N}
-        /> -->
-
-        <!--
-
-         <FormInput
-            id="Food Short"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$foodShort}
-         />
-
-         <FormInput
-            id="Food Short Begin"
-            inputType="number"
-            min="0"
-            max={$foodShortend}
-            step="1"
-            bind:inputVar={$foodShortbegin}
-         />
-
-         <FormInput
-            id="Food Short End"
-            inputType="number"
-            min="0"
-            max={$N}
-            step="1"
-            bind:inputVar={$foodShortend}
-         />
-         -->
     </div>
 </div>
 
@@ -695,74 +364,31 @@
 </div>
 
 <!-- Creating Charts-->
-<div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
-    <!-- <div
+<div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">     
+    <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
         <h2 class="text-center text-xl font-semibold mb-4">
-            Energy of Organism
+            Trait Values - Blue Bird
         </h2>
-        <canvas id="bodyConditionChart"></canvas>
-    </div> -->
+        <canvas id="traitChartBirdOne"></canvas>
+    </div> 
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Trait Values - Purple Bird
+        </h2>
+        <canvas id="traitChartBirdThree"></canvas>
+    </div> 
 
-    <!--
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">Sensitivity to Hormone</h2>
-        <canvas id="sensitivityChart"></canvas>
-    </div>
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">Circulating Level Of Hormone </h2>
-        <canvas id="productionChart"></canvas>
-    </div>
-    -->
-    <!-- <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
-        <canvas id="fitnessChart"></canvas>
-    </div>
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
         <h2 class="text-center text-xl font-semibold mb-4">
-            Cumulative Fitness
+            Trait Values - Red Bird
         </h2>
-        <canvas id="cumulativeFitnessChart"></canvas>
-    </div>
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Trait Values
-        </h2>
-        <canvas id="traitChart"></canvas>
-    </div>  -->
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Trait Ratio One
-        </h2>
-        <canvas id="traitChartOne"></canvas>
+        <canvas id="traitChartBirdTwo"></canvas>
     </div> 
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Trait Ratio Two
-        </h2>
-        <canvas id="traitChartTwo"></canvas>
-    </div> 
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Trait Ratio Three
-        </h2>
-        <canvas id="traitChartThree"></canvas>
-    </div> 
+    
 </div>
