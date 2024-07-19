@@ -379,12 +379,12 @@
         <!-- Container for food shortage sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Food Shortage"
+                id="Food Availability Multiplier"
                 min="0"
                 max="1"
                 step="0.1"
                 bind:inputVar={$foodShort}
-                modalMessage="A multiplier of current food."
+                modalMessage="A multiplier of current food. The lower the value, the lower the food available to the organism."
             />
 
             <SliderTwoInput
@@ -462,7 +462,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues"
+            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues. The organism maximizes its lifetime success by finding the optimal level of the |ΔSᵢ, ₘₐₓ| at a given target."
             bind:inputVar={$delSmax}
         />
 
@@ -472,7 +472,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism"
+            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism. The organism will try to optimize this value to maximize its lifetime success."
             bind:inputVar={$delCmax}
         />
 
@@ -482,7 +482,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="Determines the food availible in the environment for the organism. "
+            modalMessage="Determines the food availible in the environment for the organism. Increasing the food availiability will increase the payoff when investing in foraging."
             bind:inputVar={$tau}
         />
         <!--
