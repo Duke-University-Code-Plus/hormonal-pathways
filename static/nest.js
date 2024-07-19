@@ -24,14 +24,11 @@ class Nest {
     }
 
     removeBabyBird() {
-        if (this.babyBirdsInNest.length > 0) {
+        if (this.babyBirdsInNest.length == 2) {
             this.babyBirdToRemove = this.babyBirdsInNest[0]; // First baby bird
             this.emptySpaceX = this.babyBirdToRemove.initialX; // Grab their x position
             const index = this.babyBirdsInNest.indexOf(this.babyBirdToRemove); // Grab index of baby bird
-            this.babyBirdsInNest.splice(index, 1); // Remove from array and remove sprite
-            this.babyBirdToRemove.remove(); // Ensure the sprite is removed
-            this.babyBirdCount--;
-            this.updateHTML();  // Update HTML after removing a baby bird
+            this.babyBirdsInNest.splice(index, 1); // Remove from array 
         }
     }
 

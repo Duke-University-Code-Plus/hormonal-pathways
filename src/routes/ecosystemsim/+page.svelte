@@ -44,7 +44,7 @@
         //send proportion data to iframe
         iframe = document.querySelector("#iframeID"); //caching dom element called iframe
 
-        const proportiondata = [0.3, 0.5, 0.7];
+        const proportiondata = [0.3, 0.5, 0.9];
         iframe.contentWindow.postMessage(JSON.stringify(proportiondata), "*"); // pushes message to the
 
         //listen for iframe
