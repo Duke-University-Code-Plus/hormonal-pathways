@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
 
-    let sketchcontainer;
+    let sketchContainer;
 
     class Particle {
         constructor(x, y) {
@@ -39,9 +39,11 @@
 
             let dna, receptor, hormone;
 
+            let paddingTop = 200
+
             const particles = [];
             p.setup = () => {
-                p.createCanvas(960 / 2, 75 / 2);
+                p.createCanvas(960 / 2, 75 / 2 + 100);
                 receptor = p.loadImage("cell-images/receptor.png");
                 hormone = p.loadImage("cell-images/hormone.png");
                 dna = p.loadImage("cell-images/dna.png");
@@ -53,16 +55,16 @@
             };
 
             p.draw = () => {
-                p.background(250, 250, 250);
+                p.background(255, 255, 255);
                 p.scale(0.5);
 
                 p.textSize(40);
                 p.fill("black");
-                p.text("dna", 70, 65);
+                p.text("dna", 70, 65+paddingTop);
 
-                p.text("receptor", 345, 60);
-                p.text("hormone", 565, 60);
-                p.text("mRNA", 800, 60);
+                p.text("receptor", 345, 60+paddingTop);
+                p.text("hormone", 565, 60+paddingTop);
+                p.text("mRNA", 800, 60+paddingTop);
 
                 p.shake(circle, inv1);
 
@@ -74,7 +76,7 @@
                         particles.splice(i, 1);
                     }
                 }
-                p.createParticles(770, 60);
+                p.createParticles(770, 60+paddingTop);
             };
 
             p.shake = (circle, inv1) => {
@@ -84,19 +86,19 @@
             };
 
             p.setDNA = () => {
-                dna_strand = p.createSprite(50, 30, 1, 1);
+                dna_strand = p.createSprite(50, 30+paddingTop, 1, 1);
                 dna_strand.addImage(dna);
                 dna_strand.immovable = true;
                 //dna_strand.depth = 3;
             };
             p.setReceptor = () => {
-                box = p.createSprite(300, 45, 1, 1);
+                box = p.createSprite(300, 45+paddingTop, 1, 1);
                 box.addImage(receptor);
                 box.immovable = true;
                 //box.depth = 3;
             };
             p.setHormone = () => {
-                circle = p.createSprite(535, 47, 1, 1);
+                circle = p.createSprite(535, 47+paddingTop, 1, 1);
                 circle.addImage(hormone);
                 circle.immovable = true;
                 circle.depth = 2;
@@ -111,7 +113,7 @@
             };
 
             p.invisibleSprite = () => {
-                inv1 = p.createSprite(535, 47, 20, 20);
+                inv1 = p.createSprite(535, 47+paddingTop, 20, 20);
                 //inv1.draw = function () {
                 //    p.ellipse(535, 47, 20, 20);
                 //};
@@ -125,7 +127,7 @@
                     setTimeout(resolve, millisecondsDuration);
                 });
             };
-        }, sketchcontainer);
+        }, sketchContainer);
     };
 </script>
 
@@ -140,3 +142,5 @@
     <!-- link p5.play.js -->
     <script src="/p5.play.js" type="text/javascript"></script>
 </svelte:head>
+
+<div bind:this={sketchContainer}></div>

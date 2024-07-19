@@ -147,7 +147,7 @@
     function updateSmax(bird) {
         console.log("bird button clicked", bird);
         //reset();
-        selectedBird = bird;
+        $selectedBird = bird;
          if (bird == 1) {
             $delSmax = 0.6;
         } else if (bird == 2) {
@@ -157,6 +157,10 @@
         }
         fetchData()
         returnData()
+    }
+
+    function handleSliderChange(){
+        console.log("Slider change")
     }
 </script>
 
@@ -240,6 +244,27 @@
         >
     </div> -->
 
+    <div>
+        <SliderInput
+            id="hormoneCount"
+            min="0"
+            max="30"
+            step="1"
+            bind:inputVar={$hormoneCount}
+            modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+        />
+    </div>
+
+</div>
+
+<hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700 z-[100]">
+
+<div class="flex flex-col justify-center items-center">
+
+    <div class="mt-[-80px] mb-5 z-[-1]">
+        <TissueLegend />
+    </div>
+
     <label class="inline-flex items-center cursor-pointer m-4">
         <!-- Added margin-left here -->
         <input
@@ -255,22 +280,6 @@
             >Show Simulation Labels</span
         >
     </label>
-</div>
-
-<div class="flex flex-col justify-center items-center">
-    <div>
-        <SliderInput
-            id="hormoneCount"
-            min="0"
-            max="30"
-            step="1"
-            bind:inputVar={$hormoneCount}
-            modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
-        />
-    </div>
-    <div>
-        <TissueLegend />
-    </div>
 </div>
 
 <!-- Simulations -->
@@ -291,6 +300,7 @@
             step="1"
             bind:inputVar={$gamma1_tissue}
             modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+            callback={handleSliderChange}
         />
     </div>
 
@@ -310,7 +320,6 @@
             step="1"
             bind:inputVar={$gamma2_tissue}
             modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
-            on:input={handleSliderChange}
         />
     </div>
 
@@ -330,7 +339,6 @@
             step="1"
             bind:inputVar={$gamma3_tissue}
             modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
-            oninput="handleSliderChange()"
         />
     </div>
 </div>
