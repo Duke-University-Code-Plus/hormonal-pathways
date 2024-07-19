@@ -1,11 +1,15 @@
 class maleBird {
-    constructor(name, x, y, scale, nest, perch, femaleperch, color) {
+    constructor(name, x, y, scale, nest, perch, femaleperch, color, neutralSpeed) {
+        this.neutralState = true
         this.name = name
         this.proportion = 0
-        
+
         this.sprite = createSprite(x, y);
         this.sprite.scale = scale
         this.nest = nest;
+        this.sprite.velocity.x = neutralSpeed;
+        console.log(this.sprite.velocity.x)
+
         //perch spot
         this.perchX = perch[0]
         this.perchY = perch[1]
@@ -328,13 +332,6 @@ class maleBird {
     findWorm() {
         this.worm = random(wormsArray)
 
-        /*
-        while (wormsArray[index].chosen == true) {
-            this.findWorm()
-            return;
-        }
-            */
-
         const index = wormsArray.indexOf(this.worm)
         wormsArray.splice(index, 1)
 
@@ -356,6 +353,11 @@ class maleBird {
         } else {
             this.scavengeCondition = true
         }
+    }
+
+    neutralStateBehavior() {
+        this.sprite.changeAnimation('fly')
+        this.sprite.friction = 0.0
     }
 }
 
