@@ -76,7 +76,7 @@
                 gamma: gamma.join(","), // Convert array to comma-separated string
                 G: $G,
                 Xmin: $Xmin,
-                delSmax: $delSmax,
+                delSmax: 0.6,
                 delCmax: $delCmax,
                 tau: $tau,
                 K: $K,
@@ -122,14 +122,13 @@
     function returnData() {
         //will call billys function here which updates tissue-stores based on delSmax and gamma vals?
         reset();
-        $gamma1_tissue = Math.ceil(Shist[0][Shist[0].length-1]/2);
+        $gamma1_tissue = Shist[0][Shist[0].length-1]/2;
         console.log($gamma1_tissue)
-        $gamma2_tissue = Math.ceil(Shist[1][Shist[1].length-1]/2);
+        $gamma2_tissue = Shist[1][Shist[1].length-1]/2;
         console.log($gamma2_tissue)
-        $gamma3_tissue = Math.ceil(Shist[2][Shist[2].length-1]/2);
+        $gamma3_tissue = Shist[2][Shist[2].length-1]/2;
         console.log($gamma2_tissue)
-        $hormoneCount = Math.ceil(Chist[Chist.length-1]);
-        console.log($hormoneCount)
+        $hormoneCount = Math.ceil(Chist[Chist.length-1]/2);
     }
 
     function reset() {
@@ -151,15 +150,22 @@
         console.log("bird button clicked", bird);
         //reset();
         $selectedBird = bird;
-         if (bird == 1) {
-            $delSmax = 0.6;
-        } else if (bird == 2) {
-            $delSmax = 1;
-        } else if (bird == 3) {
-            $delSmax = 20;
-        }
         fetchData()
         returnData()
+        if (bird == 1) {
+            $gamma1_tissue = Math.ceil(Math.min(10,$gamma1_tissue));
+            $gamma3_tissue = Math.ceil(Math.min(10,$gamma3_tissue));
+            $gamma2_tissue = Math.ceil(Math.min(10,$gamma2_tissue));
+        } else if (bird == 2) {
+            $gamma1_tissue = Math.ceil(Math.min(10,$gamma1_tissue*1.4));
+            $gamma3_tissue = Math.ceil(Math.min(10,$gamma3_tissue*1.4));
+            $gamma2_tissue = Math.ceil(Math.min(10,$gamma2_tissue*1.4));
+        } else if (bird == 3) {
+            $gamma1_tissue = Math.ceil(Math.min(10,$gamma1_tissue*2));
+            $gamma3_tissue = Math.ceil(Math.min(10,$gamma3_tissue*2));
+            $gamma2_tissue = Math.ceil(Math.min(10,$gamma2_tissue*2));
+        }
+        console.log($gamma1)
     }
 
     function handleSliderChange(){
