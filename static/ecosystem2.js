@@ -13,17 +13,17 @@ var numPrey = 10;
 
 //Array of locations for nests
 //Nests numbered as 1-3 from left to right
-let nest1_locations = [[125, 272], [290, 320]];
-let male1_perch_locations = [[300, 320], [205, 275]];
-let female1_perch_locations = [[250, 312], [155, 275]];
+let nest1_locations = [[125, 202], [290, 250]];
+let male1_perch_locations = [[300, 250], [205, 205]];
+let female1_perch_locations = [[250, 342], [155, 205]];
 
-let nest2_locations = [[330, 410], [440, 376]];
-let male2_perch_locations = [[470, 372], [390, 405]];
-let female2_perch_locations = [[420, 375], [340, 405]];
+let nest2_locations = [[330, 340], [440, 306]];
+let male2_perch_locations = [[470, 302], [390, 335]];
+let female2_perch_locations = [[420, 305], [340, 335]];
 
-let nest3_locations = [[680, 360], [525, 315]];
-let male3_perch_locations = [[618, 350], [700, 357]];
-let female3_perch_locations = [[568, 350], [655, 357]];
+let nest3_locations = [[680, 290], [525, 255]];
+let male3_perch_locations = [[618, 280], [700, 287]];
+let female3_perch_locations = [[568, 280], [655, 287]];
 
 //index for determining nest and perch positions
 var index1;
@@ -130,7 +130,7 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(800, 590);
+    createCanvas(800, 520);
     createEnvironment();
     //createInputs();
     createAnimals()
@@ -249,25 +249,25 @@ function femaleBirdMovement() {
 }
 
 function createEnvironment() {
-    ground = createSprite(width / 2, 555);
+    ground = createSprite(width / 2,485);
     ground.addAnimation('normal', imagePath + 'ground.png');
     ground.scale = 1;
     ground.depth = 3;
 
     //left most tree
-    tree1 = createSprite(width / 4, 320);
+    tree1 = createSprite(width / 4, 250);
     tree1.addAnimation('normal', imagePath + 'tree2.png');
     tree1.scale = 0.7;
     tree1.depth = 4;
 
     //middle tree
-    tree2 = createSprite(width / 2, 410);
+    tree2 = createSprite(width / 2, 340);
     tree2.addAnimation('normal', imagePath + 'tree1.png');
     tree2.scale = 0.5;
     tree2.depth = 2;
 
     //right most tree
-    tree3 = createSprite(3 * width / 4, 360);
+    tree3 = createSprite(3 * width / 4, 290);
     tree3.addAnimation('normal', imagePath + 'tree2.png');
     tree3.scale = 0.65;
     tree3.depth = 1;
@@ -396,9 +396,9 @@ function createAnimals() {
     let bird3_InitialX = random(0, width)
     let bird3_InitialY = random(20, height / 2)
 
-    bird1 = new maleBird('bird1', bird1_InitialX, bird1_InitialY, 0.1, nest1, perch1, femaleperch1, "blue/", random([random(1.25,2), random(-1.25,-2)]))
+    bird1 = new maleBird('bird1', bird1_InitialX, bird1_InitialY, 0.1, nest1, perch1, femaleperch1, "red/", random([random(1.25,2), random(-1.25,-2)]))
     bird2 = new maleBird('bird2', bird2_InitialX, bird2_InitialY, 0.1, nest2, perch2, femaleperch2, "purple/", random([random(1.25,2), random(-1.25,-2)]))
-    bird3 = new maleBird('bird3', bird3_InitialX, bird3_InitialY, 0.1, nest3, perch3, femaleperch3, "red/", random([random(1.25,2), random(-1.25,-2)]))
+    bird3 = new maleBird('bird3', bird3_InitialX, bird3_InitialY, 0.1, nest3, perch3, femaleperch3, "blue/", random([random(1.25,2), random(-1.25,-2)]))
 
     nest1.bird = bird1;
     nest2.bird = bird2;
