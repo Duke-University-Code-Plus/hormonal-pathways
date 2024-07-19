@@ -10,8 +10,7 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
                 zIn: np.array = np.array([0.2, 0.3, 0.3]), NIn: int = 100, 
                 foodShort: float = 0.5, foodShortbegin: int = 8, foodShortend: int = 20, numRuns: int = 2,
                 variableName: str = 'delSmax',
-                variableRangeBegin: float = 1, variableRangeEnd: float = 2,
-                outputFileName: str = 'results.txt'):
+                variableRangeBegin: float = 1, variableRangeEnd: float = 2):
 
     # define constants:
     gamma = gammaIn
@@ -111,9 +110,6 @@ def runMultiRun(gammaIn: np.array = np.array([.1, 2, .3]),
         'Whist': Whist.tolist(),
         'Wcuml': Wcuml.tolist()
     }
-
-    # with open(outputFileName, "w") as f:
-    #      json.dump(results, f)
 
     return results
 
