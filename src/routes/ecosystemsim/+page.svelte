@@ -78,6 +78,33 @@
     Ecosystem Simulation
 </h1>
 
+<!-- Instructions -->
+<div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
+    <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+        <h2 class="text-lg font-bold mb-2">Simulation Steps</h2>
+        <ul class="list-disc list-inside">
+            <li class="mb-2">
+                <strong>Step 1:</strong> Observe the behaviors expressed by the male bird. The birds optimize their chances of reproductive success
+                by choosing whether to invest on mating effort or parental effort. 
+            <li class="mb-2">
+                <strong>Step 2:</strong> Use the slider to change the food availability of the simulation. The change in the external environement
+                causes the birds to reconsider their trait expression. 
+            </li>
+            <li class="mb-2">
+                <strong>Step 3:</strong> Reference the Offspring Count to compare which bird is experiencing the most reproductive success. 
+            </li>
+        </ul>
+    </div>
+    <p class="text-xl font-semibold mt-4">
+        Each bird exhibits a unique level of receptor sensitivity, which
+        determines their flexiblilty in adapting to external changes. This adaptive capability 
+        directly reflects how successful a bird is in producing an offspring.
+    </p>
+</div>
+
+<div class="flex flex-col justify-center items-center">
+
+</div>
 <!-- Run Simulation Button-->
 <div class="text-center my-4">
     <button
