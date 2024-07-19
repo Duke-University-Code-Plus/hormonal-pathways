@@ -107,7 +107,7 @@
                 <span class="font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-indigo-700">HM</span>
             </a>
         </div>
-        <div class="sm:hidden flex items-center absolute right-5">
+        <div class="sm:hidden flex items-center absolute left-5">
             <button class="mobile-menu-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                     <title>bars-3-bottom-left</title>
@@ -117,11 +117,27 @@
                 </svg>
             </button>
         </div>
-        <div class="hidden sm:flex sm:flex-row flex-col items-center justify-start sm:space-x-1 navigation-menu pb-3 sm:pb-0 absolute right-0 top-16 bg-gray-100 w-full sm:w-auto">
-            <a href="/about-us" class="py-2 px-3 block">About Us</a>
-            <a href="/research" class="py-2 px-3 block">Research</a>
-            <!-- Dropdown Menu -->
-            <div class="relative">
+        <div class="hidden sm:flex sm:flex-row flex-col items-center justify-start sm:space-x-1 navigation-menu pb-3 sm:pb-0 absolute right-0 top-16 bg-gray-100 w-full sm:w-auto z-10 p-5">
+           <li class="{$page.url.pathname == '/about-us' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/about-us">About Us</a>
+                    </li>
+                    <li class="{$page.url.pathname == '/research' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/research">Research</a>
+                    </li>
+                    <li class="{$page.url.pathname == '/singlemodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/singlemodel">Single Run</a>
+                    </li>
+                    <li class="{$page.url.pathname == '/multimodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/multimodel">Multi Run</a>
+                    </li>
+                    <li class="{$page.url.pathname == '/simulationmodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/simulationmodel">Tissue</a>
+                    </li>
+                    <li class="{$page.url.pathname == '/ecosystemsim' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/ecosystemsim">Ecosystem</a>
+                    </li>
+            <!-- !! Old Dropdown Menu Code  !! -->
+            <!-- <div class="relative">
                 <button class="dropdown-toggle py-2 px-3 hover:bg-gray-700 flex items-center gap-2 rounded">
                     <span class="pointer-events-none">Graph Models</span>
                     <svg class="w-3 h-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -136,7 +152,7 @@
                     <a href="/multimodel" class="block px-6 py-2 hover:bg-gray-800">Multi Run</a>
                 </div>
             </div>
-            <!-- Dropdown Menu for visual -->
+             Dropdown Menu for visual
             <div class="relative">
                 <button class="dropdown-toggle py-2 px-3 hover:bg-gray-700 flex items-center gap-2 rounded">
                     <span class="pointer-events-none">Visual Models</span>
@@ -151,7 +167,7 @@
                     <a href="/simulationmodel" class="block px-6 py-2 hover:bg-gray-800">Tissue</a>
                     <a href="/ecosystemsim" class="block px-6 py-2 hover:bg-gray-800">Ecosystem</a>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </nav>
