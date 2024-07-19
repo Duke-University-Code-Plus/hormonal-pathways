@@ -1,8 +1,8 @@
 // assets file paths
 var imagePath = '/sprites_haruta/';
-var bluePath = 'blue/'; 
-var purplePath = 'purple/'; 
-var redPath = 'red/'; 
+var bluePath = 'blue/';
+var purplePath = 'purple/';
+var redPath = 'red/';
 
 let maleBirdsArray = []
 let femaleBirdsArray = []
@@ -134,6 +134,7 @@ function setup() {
     createEnvironment();
     //createInputs();
     createAnimals()
+    updateNumPrey()
 }
 
 function draw() {
@@ -150,22 +151,33 @@ function draw() {
     updateNumPrey()
 
     for (let bird of maleBirdsArray) { //go through male birds
-        if (bird.proportion != undefined) {
-            if (bird.matingCondition != true && bird.scavengeCondition != true) {
-                bird.determineBehavior()
-            }
-    
-            if (bird.matingCondition) { //if should be mating
-                if (!bird.mateCreated) { //and not in the process of mating
-                    bird.mate = createFemaleBird(bird); //create a female bird
-                    bird.mateCreated = true //set variable to indicate in process of mating
-                }
-                bird.mateBehavior();
-            }
-            if (bird.scavengeCondition) { //if should be scavenging
-                bird.scavengeBehavior();
-            }
 
+        if (window.birdNeutralState == false) { //if birds shouldnt be in neutrak state in set constructor value to false
+            bird.neutralState = false;
+            bird.sprite.friction = 0.1
+        }
+
+        if (bird.neutralState) {
+            bird.neutralStateBehavior();
+        }
+
+        if (!bird.neutralState) { //if bird isnt in neutral state 
+            if (bird.proportion != undefined) {
+                if (bird.matingCondition != true && bird.scavengeCondition != true) {
+                    bird.determineBehavior()
+                }
+
+                if (bird.matingCondition) { //if should be mating
+                    if (!bird.mateCreated) { //and not in the process of mating
+                        bird.mate = createFemaleBird(bird); //create a female bird
+                        bird.mateCreated = true //set variable to indicate in process of mating
+                    }
+                    bird.mateBehavior();
+                }
+                if (bird.scavengeCondition) { //if should be scavenging
+                    bird.scavengeBehavior();
+                }
+            }
         }
     }
 }
@@ -193,7 +205,7 @@ function createFemaleBird(bird) {
     var femalebirdLocation = random(["left", "right"]);
 
     if (femalebirdLocation == "left") {
-//why 25? 
+        //why 25? 
         var femalebirdX = -25;
         var femalebirdY = random(0, height / 4);
     } else if (femalebirdLocation == "right") {
@@ -211,11 +223,18 @@ function createFemaleBird(bird) {
 
 function maleBirdMovement() {
     for (let bird of maleBirdsArray) {
-        if (bird.sprite.velocity.x > 0) {
+        if (bird.sprite.velocity.x > 0 ) {
+            if (bird.sprite.position.x > width) {
+                bird.sprite.velocity.x *= -1
+            }
             bird.sprite.mirrorX(-1);
         } else if (bird.sprite.velocity.x < 0) {
+            if (bird.sprite.position.x < 0) {
+                bird.sprite.velocity.x *= -1
+            }
             bird.sprite.mirrorX(1);
         }
+
     }
 }
 
@@ -368,12 +387,21 @@ function createAnimals() {
     let femaleperch2 = female2_perch_locations[index2]
     let femaleperch3 = female3_perch_locations[index3]
 
-    bird1 = new maleBird('bird1', nest1.sprite.position.x + 20, nest1.sprite.position.y - 20, 0.1, nest1, perch1, femaleperch1, "blue/")
-    bird2 = new maleBird('bird2', nest2.sprite.position.x + 20, nest2.sprite.position.y - 20, 0.1, nest2, perch2, femaleperch2, "purple/")
-    bird3 = new maleBird('bird3', nest3.sprite.position.x + 20, nest3.sprite.position.y - 20, 0.1, nest3, perch3, femaleperch3, "red/")
-    
-    nest1.bird = bird1; 
-    nest2.bird = bird2; 
+    let bird1_InitialX = random(0, width)
+    let bird1_InitialY = random(20, height / 2)
+
+    let bird2_InitialX = random(0, width)
+    let bird2_InitialY = random(20, height / 2)
+
+    let bird3_InitialX = random(0, width)
+    let bird3_InitialY = random(20, height / 2)
+
+    bird1 = new maleBird('bird1', bird1_InitialX, bird1_InitialY, 0.1, nest1, perch1, femaleperch1, "blue/", random([random(1.25,2), random(-1.25,-2)]))
+    bird2 = new maleBird('bird2', bird2_InitialX, bird2_InitialY, 0.1, nest2, perch2, femaleperch2, "purple/", random([random(1.25,2), random(-1.25,-2)]))
+    bird3 = new maleBird('bird3', bird3_InitialX, bird3_InitialY, 0.1, nest3, perch3, femaleperch3, "red/", random([random(1.25,2), random(-1.25,-2)]))
+
+    nest1.bird = bird1;
+    nest2.bird = bird2;
     nest3.bird = bird3
 
     for (let nest of nestArray) {
@@ -433,7 +461,7 @@ class babyBird {
         this.sprite.scale = scale
         this.nest = nest
         this.removeX = random([-10, width + 10]) //where bird should fly to
-        this.removeY = random (0, height / 5)
+        this.removeY = random(0, height / 5)
         this.sprite.mirrorX(random([1, -1]))
 
         this.sprite.addAnimation('normal', imagePath + 'babybird0001.png', imagePath + 'babybird0002.png');
@@ -453,18 +481,18 @@ class babyBird {
     }
 
     leaveNest() {
-            if (this.sprite.velocity.x > 0) {
-                this.sprite.mirrorX(-1);
-            } else if (this.sprite.velocity.x < 0) {
-                this.sprite.mirrorX(1);
-            }
+        if (this.sprite.velocity.x > 0) {
+            this.sprite.mirrorX(-1);
+        } else if (this.sprite.velocity.x < 0) {
+            this.sprite.mirrorX(1);
+        }
 
         this.sprite.changeAnimation('fly');  //baby bird fly to remove location
         this.sprite.friction = 0.1
         this.sprite.attractionPoint(0.2, this.removeX, this.removeY)
 
         if ((abs(this.sprite.position.y - this.removeY) < 1) && (abs(this.sprite.position.x - this.removeX) < 1)) { //if baby bird at remove location
-            this.sprite.velocity.x = 0; 
+            this.sprite.velocity.x = 0;
             this.sprite.velocity.y = 0;
             this.nest.bird.babyBirdFlying = false;
             this.sprite.remove();

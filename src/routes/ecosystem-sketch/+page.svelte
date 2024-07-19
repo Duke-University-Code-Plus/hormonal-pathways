@@ -23,11 +23,16 @@
     <script>
         window.onmessage = function (e) {
             // inside the iframe
-            window.proportion = JSON.parse(e.data);
+            window.message = JSON.parse(e.data); //either proportion or start button
 
-            window.proportion1 = Number(window.proportion[0]);
-            window.proportion2 = Number(window.proportion[1]);
-            window.proportion3 = Number(window.proportion[2]);
+            if (window.message[0] == "proportion") {
+                window.proportion1 = Number(window.message[1]);
+                window.proportion2 = Number(window.message[2]);
+                window.proportion3 = Number(window.message[3]);
+            } else { //if message is to run
+                window.birdNeutralState = false; //then birds shouldnt be in neutral state
+            }
+
         };
     </script>
 </svelte:head>
