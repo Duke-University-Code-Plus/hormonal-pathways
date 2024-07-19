@@ -1,7 +1,6 @@
 <script>
     import Navbar from "../Nested/navigation.svelte";
     import GitHubIcon from "../Nested/GitHubIcon.svelte";
-    import DukeCodeLogo from "../Nested/Duke Code+ Logo.svelte";
 </script>
 <Navbar multiPage="aboutus" />
 <div>
@@ -22,16 +21,16 @@
     <h2 class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
         Resources
     </h2>
-    <p class="text-center items-center justify-center flex">
-        <a href="https://github.com/your-repository-link" class="ml-4">
+   <p class="text-center items-center justify-center flex">
+         <a href="https://github.com/your-repository-link" class="ml-4">
             <GitHubIcon width="64" height="64" fill="#24292f" />
         </a>
-        <a href="https://codeplus.duke.edu/" class="ml-4">
-            <DukeCodeLogo width="128" height="50"/>
-        </a>
+         <a href="https://codeplus.duke.edu/" class="ml-4">
+            <img src="/Code+logo.png" alt="Duke Code+ logo" height=auto width=200>
+       </a>
         <a href="https://www.davidson.edu/people/nicole-m-baran" class="ml-4">
-            <img src="/davidson.png" alt="davidson logo" height=0.8 width=0.8>
-        </a>
+            <img src="/davidson.png" alt="davidson logo" height=auto width=200 >
+        </a>  
     </p>
 </div>
 <div>
