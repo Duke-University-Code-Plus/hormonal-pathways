@@ -2,10 +2,8 @@
     import { onMount } from "svelte";
     import axios from "axios";
     import Chart from "chart.js/auto";
-    import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
-    import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
     import {
         gamma1,
         gamma2,

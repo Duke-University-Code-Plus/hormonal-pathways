@@ -26,7 +26,7 @@
         Resources
     </h2>
    <p class="text-center items-center justify-center flex">
-         <a href="https://github.com/your-repository-link" class="ml-4">
+         <a href="https:/github.com/aaronkutnick/hormonal-pathways" class="ml-4">
             <GitHubIcon width="64" height="64" fill="#24292f" />
         </a>
          <a href="https://codeplus.duke.edu/" class="ml-4">

@@ -4,11 +4,8 @@
 
     <NavBar/>
     <div class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
-        Introduction
+        Research Poster
     </div>
-    <div class="flex m-5 max-w-[1000px] m-auto flex-col gap-4">
-        put abstract here
-    </div>
-    <div class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
-        Research Handout
+    <div  class="items-center justify center">
+        <img src="/Poster.png" alt="The Research Poster that is attributed to the model">
     </div>
