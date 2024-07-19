@@ -28,7 +28,7 @@
         foodShort,
         foodShortbegin,
         foodShortend,
-    } from "../data_store.js";
+    } from "../data_state_store.js";
     import { apiEndpoint } from "../state_store.js";
     import {
         gamma1_tissue,
@@ -55,12 +55,7 @@
     let gamma = [$gamma1, $gamma2, $gamma3];
     let z = [$z1, $z2, $z3];
 
-    let bodyConditionChartInstance = null;
-    let sensitivityChartInstance = null;
-    let productionChartInstance = null;
-    let fitnessChartInstance = null;
-    let cumulativeFitnessChartInstance = null;
-    let traitChartInstance = null;
+
 
     let canvas1 = "gamma1_tissue";
     let canvas2 = "gamma2_tissue";
@@ -124,10 +119,14 @@
     function returnData() {
         //will call billys function here which updates tissue-stores based on delSmax and gamma vals?
         reset();
-        $gamma1_tissue = 5;
-        $gamma2_tissue = 3;
-        $gamma3_tissue = 9;
-        $hormoneCount = 20;
+        $gamma1_tissue = Math.ceil(Shist[0][Shist[0].length-1]/2);
+        console.log($gamma1_tissue)
+        $gamma2_tissue = Math.ceil(Shist[1][Shist[1].length-1]/2);
+        console.log($gamma2_tissue)
+        $gamma3_tissue = Math.ceil(Shist[2][Shist[2].length-1]/2);
+        console.log($gamma2_tissue)
+        $hormoneCount = Math.ceil(Chist[Chist.length-1]);
+        console.log($hormoneCount)
     }
 
     function reset() {
@@ -148,19 +147,16 @@
     function updateSmax(bird) {
         console.log("bird button clicked", bird);
         //reset();
-        $selectedBird = bird;
-        // if (bird == 1) {
-        //     $delSmax = 10;
-        // } else if (bird == 2) {
-        //     $delSmax = 20;
-        // } else if (bird == 3) {
-        //     $delSmax = 30;
-        // }
-        returnData();
-    }
-    function handleSliderChange() {
-        $selectedBird = 0;
-        console.log("selectedBird", $selectedBird);
+        selectedBird = bird;
+         if (bird == 1) {
+            $delSmax = 0.6;
+        } else if (bird == 2) {
+            $delSmax = 1;
+        } else if (bird == 3) {
+            $delSmax = 20;
+        }
+        fetchData()
+        returnData()
     }
 </script>
 
