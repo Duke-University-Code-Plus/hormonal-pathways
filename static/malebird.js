@@ -1,5 +1,8 @@
 class maleBird {
-    constructor(x, y, scale, nest, perch, femaleperch) {
+    constructor(name, x, y, scale, nest, perch, femaleperch) {
+        this.name = name
+        this.proportion = 0
+
         this.sprite = createSprite(x, y);
         this.sprite.scale = scale
         this.nest = nest;
@@ -125,7 +128,6 @@ class maleBird {
         }
 
         if (this.matingStage == 4) { //baby bird created
-            console.log('matingStage', this.matingStage)
 
             if (!this.babyBirdChange && this.fullNest) { //if baby bird hasnt already been created and there's two baby birds in the nest 
                 
@@ -151,7 +153,6 @@ class maleBird {
         }
 
         if (this.matingStage == 5) { //female bird flies away and male returns to nest 
-            console.log('matingStage', this.matingStage)
 
             this.sprite.changeAnimation('fly')
             this.sprite.attractionPoint(0.2, this.nest.sprite.position.x + 17, this.nest.sprite.position.y - 20)
@@ -216,7 +217,6 @@ class maleBird {
         }
 
         if (this.scavengeState == 1) { // if = 1, fly to worm
-            console.log('scavengeState', this.scavengeState)
             this.sprite.changeAnimation('fly')
             this.sprite.attractionPoint(0.2, this.scavengeX, this.scavengeY)
 
@@ -237,7 +237,6 @@ class maleBird {
 
         // at ground
         if (this.scavengeState == 2) { //if = 2, peck at ground 
-            console.log('scavengeState', this.scavengeState)
 
             this.sprite.changeAnimation('peck')
 
@@ -264,7 +263,6 @@ class maleBird {
         }
 
         if (this.scavengeState == 3) {  //fly to nest
-            console.log('scavengeState', this.scavengeState)
 
             this.sprite.changeAnimation('fly')
             this.sprite.attractionPoint(0.2, this.nest.sprite.position.x + 17, this.nest.sprite.position.y - 20) // fly to nest 
@@ -286,9 +284,7 @@ class maleBird {
         }
 
         if (this.scavengeState == 4) { //feed birds
-            console.log('scavengeState', this.scavengeState)
 
-            console.log('frameCount', this.scavengeFrameCount)
             this.scavengeFrameCount++
 
             if (this.scavengeFrameCount <= peckFrameCycle / 2) {
@@ -304,7 +300,6 @@ class maleBird {
         }
 
         if (this.scavengeState == 5) {
-            console.log('scavengeState', this.scavengeState)
 
             this.sprite.changeAnimation('stand')
             this.caughtPrey = false
@@ -317,7 +312,6 @@ class maleBird {
             this.peckColliderY = 0;
             this.scavengeCondition = false;
 
-            console.log('array lengt', wormsArray.length)
 
         }
     }
@@ -344,6 +338,15 @@ class maleBird {
         }
         this.scavengeY = ground.position.y - ground.originalHeight / 2
 
+    }
+
+    determineBehavior() {
+        const randomNum = random(0, 1)
+        if (randomNum < this.proportion) { //smaller proportion, smaller change of mating
+            this.matingCondition = true
+        } else {
+            this.scavengeCondition = true
+        }
     }
 }
 

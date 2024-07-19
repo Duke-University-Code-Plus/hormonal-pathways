@@ -29,7 +29,6 @@ class femaleBird {
 
     mateBehavior() {
         if (this.matingStage == 1) { //female bird flying to male bid
-            console.log('matingStage', this.matingStage)
             if ((abs(this.sprite.position.y - this.perchY) < 1) && (abs(this.sprite.position.x - this.perchX) < 1)) { //if close to perch stop
                 this.sprite.velocity.x = 0; //stop moving
                 this.sprite.velocity.y = 0
@@ -50,7 +49,6 @@ class femaleBird {
         }
 
         if (this.matingStage == 2) { //bird sings for 1 more frame cycles
-            console.log('matingStage', this.matingStage)
             this.sprite.changeAnimation('stand')
             this.singFrameCount++
             if (this.singFrameCount > singFrameCycle) {
@@ -59,16 +57,8 @@ class femaleBird {
             }
         }
 
-        if (this.matingStage == 3) {
-            console.log('matingStage', this.matingStage)
-        }
-
-        if (this.matingStage == 4) {
-            console.log('matingStage', this.matingStage)
-        }
-
         if (this.matingStage == 5) {
-            console.log('matingStage', this.matingStage)
+
             this.sprite.changeAnimation('fly')
             this.sprite.attractionPoint(0.3, this.initialX, this.initialY)
             if (this.sprite.position.x < 0 || this.sprite.position.x > width) {

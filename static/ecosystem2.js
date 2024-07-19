@@ -14,8 +14,7 @@ let nest1_locations = [[125, 272], [290, 320]];
 let male1_perch_locations = [[300, 320], [205, 275]];
 let female1_perch_locations = [[250, 312], [155, 275]];
 
-
-let nest2_locations = [[330, 410], [440, 376]]
+let nest2_locations = [[330, 410], [440, 376]];
 let male2_perch_locations = [[470, 372], [390, 405]];
 let female2_perch_locations = [[420, 375], [340, 405]];
 
@@ -29,9 +28,9 @@ var index2;
 var index3;
 
 //location of each nest 
-var nest1_xy
-var nest2_xy
-var nest3_xy
+var nest1_xy;
+var nest2_xy;
+var nest3_xy;
 
 // environment sprites
 var ground;
@@ -117,11 +116,16 @@ function preload() {
 function setup() {
     createCanvas(800, 590);
     createEnvironment();
-    createInputs();
-    createAnimals();
+    //createInputs();
+    createAnimals()
 }
 
 function draw() {
+
+    bird1.proportion = window.proportion1
+    bird2.proportion = window.proportion2
+    bird3.proportion = window.proportion3
+
     background(135, 206, 250);
     drawSprites();
     maleBirdMovement()
@@ -130,21 +134,28 @@ function draw() {
     updateNumPrey()
 
     for (let bird of maleBirdsArray) { //go through male birds
-        if (bird.matingCondition) { //if should be mating
-            if (!bird.mateCreated) { //and not in the process of mating
-                bird.mate = createFemaleBird(bird); //create a female bird
-                bird.mateCreated = true //set variable to indicate in process of mating
+        if (bird.proportion != undefined) {
+            if (bird.matingCondition != true && bird.scavengeCondition != true) {
+                bird.determineBehavior()
             }
-            bird.mateBehavior();
-        }
-        if (bird.scavengeCondition) { //if should be scavenging
-            bird.scavengeBehavior();
+    
+            if (bird.matingCondition) { //if should be mating
+                if (!bird.mateCreated) { //and not in the process of mating
+                    bird.mate = createFemaleBird(bird); //create a female bird
+                    bird.mateCreated = true //set variable to indicate in process of mating
+                }
+                bird.mateBehavior();
+            }
+            if (bird.scavengeCondition) { //if should be scavenging
+                bird.scavengeBehavior();
+            }
+
         }
     }
 }
 
 function updateNumPrey() {
-    numPrey = foodSlider.value()
+    //numPrey = foodSlider.value()
 
     if (wormsArray.length < numPrey) {
         createPrey();
@@ -242,6 +253,7 @@ function createEnvironment() {
 }
 
 function createInputs() {
+    /*
     //bird 1
     scavengeButton1 = createButton(" Scavenge Food");
     scavengeButton1.position(70, 10);
@@ -319,10 +331,13 @@ function createInputs() {
     matingButton3.style('padding', '5px 5px');
     matingButton3.style('border', 'none');
     matingButton3.style('border-radius', '12px');
+    
 
+    
     foodSlider = createSlider(3, 10, 3, 1);
     foodSlider.position(10, 10);
     foodSlider.size(80);
+    */
 }
 
 function createAnimals() {
@@ -336,9 +351,9 @@ function createAnimals() {
     let femaleperch2 = female2_perch_locations[index2]
     let femaleperch3 = female3_perch_locations[index3]
 
-    bird1 = new maleBird(nest1.sprite.position.x + 20, nest1.sprite.position.y - 20, 0.1, nest1, perch1, femaleperch1)
-    bird2 = new maleBird(nest2.sprite.position.x + 20, nest2.sprite.position.y - 20, 0.1, nest2, perch2, femaleperch2)
-    bird3 = new maleBird(nest3.sprite.position.x + 20, nest3.sprite.position.y - 20, 0.1, nest3, perch3, femaleperch3)
+    bird1 = new maleBird('bird1', nest1.sprite.position.x + 20, nest1.sprite.position.y - 20, 0.1, nest1, perch1, femaleperch1)
+    bird2 = new maleBird('bird2', nest2.sprite.position.x + 20, nest2.sprite.position.y - 20, 0.1, nest2, perch2, femaleperch2)
+    bird3 = new maleBird('bird3', nest3.sprite.position.x + 20, nest3.sprite.position.y - 20, 0.1, nest3, perch3, femaleperch3)
     
     nest1.bird = bird1; 
     nest2.bird = bird2; 
@@ -346,7 +361,8 @@ function createAnimals() {
 
     for (let nest of nestArray) {
         var babyBirdX = nest.sprite.position.x - nest.sprite.originalWidth / 8 + ((nest.sprite.originalWidth / 3) * nest.babyBirdsInNest.length)
-        nest.addBabyBird(babyBirdX)
+        nest.babyBirdCount++;
+        new babyBird(babyBirdX, nest.sprite.position.y - nest.sprite.originalWidth / 8, 0.05, nest);
     }
 }
 
@@ -363,7 +379,6 @@ function preyMovement() {
         }
     }
 }
-
 
 //load the animations into variables
 function loadAnimations() {
@@ -419,7 +434,6 @@ class babyBird {
     }
 
     leaveNest() {
-        console.log('in babybird leave nest')
             if (this.sprite.velocity.x > 0) {
                 this.sprite.mirrorX(-1);
             } else if (this.sprite.velocity.x < 0) {
