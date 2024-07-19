@@ -326,11 +326,6 @@
 
 <NavBar multiPage="Single" />
 
-<!-- <nav>
-    <a href="/">home</a>
-    <a href="/multimodel">multimodel</a>
-</nav>-->
-
 <h1
     class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
 >

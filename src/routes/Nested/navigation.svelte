@@ -85,17 +85,17 @@
                     <li class="{$page.url.pathname == '/research' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
                         <a href="/research">Research</a>
                     </li>
-                    <li class="{$page.url.pathname == '/singlemodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
-                        <a href="/singlemodel">Single Run</a>
+                    <li class="{$page.url.pathname == '/single-run' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
+                        <a href="/single-run">Single Run</a>
                     </li>
-                    <li class="{$page.url.pathname == '/multimodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
-                        <a href="/multimodel">Multi Run</a>
+                    <li class="{$page.url.pathname == '/multi-run' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
+                        <a href="/multi-run">Multi Run</a>
                     </li>
-                    <li class="{$page.url.pathname == '/simulationmodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
-                        <a href="/simulationmodel">Tissue</a>
+                    <li class="{$page.url.pathname == '/tissue' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
+                        <a href="/tissue">Tissue</a>
                     </li>
-                    <li class="{$page.url.pathname == '/ecosystemsim' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
-                        <a href="/ecosystemsim">Ecosystem</a>
+                    <li class="{$page.url.pathname == '/ecosystem' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
+                        <a href="/ecosystem">Ecosystem</a>
                     </li>
                 </ul>
             </div>
@@ -124,17 +124,17 @@
                     <li class="{$page.url.pathname == '/research' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
                         <a href="/research">Research</a>
                     </li>
-                    <li class="{$page.url.pathname == '/singlemodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
-                        <a href="/singlemodel">Single Run</a>
+                    <li class="{$page.url.pathname == '/single-run' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/single-run">Single Run</a>
                     </li>
-                    <li class="{$page.url.pathname == '/multimodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
-                        <a href="/multimodel">Multi Run</a>
+                    <li class="{$page.url.pathname == '/multi-run' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/multi-run">Multi Run</a>
                     </li>
-                    <li class="{$page.url.pathname == '/simulationmodel' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
-                        <a href="/simulationmodel">Tissue</a>
+                    <li class="{$page.url.pathname == '/tissue' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/tissue">Tissue</a>
                     </li>
-                    <li class="{$page.url.pathname == '/ecosystemsim' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
-                        <a href="/ecosystemsim">Ecosystem</a>
+                    <li class="{$page.url.pathname == '/ecosystem' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/ecosystem">Ecosystem</a>
                     </li>
             <!-- !! Old Dropdown Menu Code  !! -->
             <!-- <div class="relative">
@@ -148,8 +148,8 @@
                     </svg>
                 </button>
                 <div class="dropdown-menu absolute hidden bg-gray-700 text-white rounded-b-lg pb-2 w-48">
-                    <a href="/singlemodel" class="block px-6 py-2 hover:bg-gray-800">Single Run</a>
-                    <a href="/multimodel" class="block px-6 py-2 hover:bg-gray-800">Multi Run</a>
+                    <a href="/single-run" class="block px-6 py-2 hover:bg-gray-800">Single Run</a>
+                    <a href="/multi-run" class="block px-6 py-2 hover:bg-gray-800">Multi Run</a>
                 </div>
             </div>
              Dropdown Menu for visual
@@ -164,8 +164,8 @@
                     </svg>
                 </button>
                 <div class="dropdown-menu absolute hidden bg-gray-700 text-white rounded-b-lg pb-2 w-48">
-                    <a href="/simulationmodel" class="block px-6 py-2 hover:bg-gray-800">Tissue</a>
-                    <a href="/ecosystemsim" class="block px-6 py-2 hover:bg-gray-800">Ecosystem</a>
+                    <a href="/tissue" class="block px-6 py-2 hover:bg-gray-800">Tissue</a>
+                    <a href="/ecosystem" class="block px-6 py-2 hover:bg-gray-800">Ecosystem</a>
                 </div>
             </div> -->
         </div>
