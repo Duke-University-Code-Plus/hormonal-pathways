@@ -16,10 +16,6 @@
     } from "../tissue_store.js";
     export let canvas;
 
-    // function updateCurrRate(value) {
-    //     currRate.set(value);
-    // }
-
     let sketchContainer;
 
     class Particle {
