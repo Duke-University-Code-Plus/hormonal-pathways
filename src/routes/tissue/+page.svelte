@@ -267,23 +267,7 @@
             "Hormone concentration"
         );
 
-        // Create Fitness Chart
-        // fitnessChartInstance = makeChart(
-        //     "fitnessChart",
-        //     "Fitness",
-        //     Whist,
-        //     "rgba(255, 159, 64, 1)",
-        //     1.2
-        // );
-
-        // Create Cumulative Fitness Chart
-        // cumulativeFitnessChartInstance = makeChart(
-        //     "cumulativeFitnessChart",
-        //     "Cumulative Fitness",
-        //     Wcuml,
-        //     "rgba(255, 206, 86, 1)",
-        //     20
-        // );
+       
 
         traitChartInstance = makeChart(
             "traitChart",
@@ -298,10 +282,6 @@
 
 <NavBar multiPage="Single" />
 
-<!-- <nav>
-    <a href="/">home</a>
-    <a href="/multimodel">multimodel</a>
-</nav>-->
 
 <h1
     class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
@@ -316,64 +296,12 @@
     >
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
-            <!--
-            <SliderInput
-                id="Selection against effort in trait i (γᵢ, ₜ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma1}
-                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
-            />
-
-            <SliderInput
-                id="Selection against effort in trait j (γⱼ, ₜ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma2}
-                modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the second trait."
-            />
-        
-            <SliderInput
-                id="Selection against effort in each trait k (γₖ, ₜ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma3}
-            />
-            -->
+           
         </div>
 
         <!-- Container for Z sliders-->
         <div class="flex flex-wrap justify-center w-full">
-            <!--
-            <SliderInput
-                id="Weight of first trait (zᵢ)" 
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z1}
-                modalMessage="The weight of the first trait in the role of the fitness function."
-            />
-
-            <SliderInput
-                id="Weight of second trait (zⱼ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z2}
-                modalMessage="The weight of the second trait in the role of the fitness function."
-            />
-            
-            <SliderInput
-                id="Weight of third trait (zₖ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z3}
-            />
-            -->
+          
         </div>
 
         <!-- Container for food shortage sliders-->
@@ -400,14 +328,6 @@
 
         <!-- Container for G and mu sliders-->
         <div class="flex flex-wrap justify-center w-full">
-            <!--
-            <SliderInput 
-                id="Min hormone level for gamete maturation (G)" 
-                min="0" 
-                max="1" 
-                step="0.1" 
-                bind:inputVar={$G} />
-            -->
 
             <SliderInput
                 id="Death probability (µ)"
@@ -422,40 +342,7 @@
 
     <!-- Form Inputs-->
     <div class="flex flex-wrap justify-center">
-        <!--input for gamma-->
-        <!--
-        <FormInput
-            id="Gamma"
-            inputType="text"
-            bind:inputVar={$gamma}
-        />
-        -->
-
-        <!--input for G-->
-        <!--
-        <FormInput
-            id="G"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$G}
-        />
-        -->
-
-        <!--input for Xmin-->
-        <!--
-        <FormInput
-            id="Min energy level for reproduction (xᵣₑₚ)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by energy function"
-            bind:inputVar={$Xmin}
-        />
-        -->
-
+       
         <FormInput
             id="Max change of sensitivity to hormone (|ΔSᵢ, ₘₐₓ|)"
             inputType="number"
@@ -485,54 +372,7 @@
             modalMessage="Determines the food availible in the environment for the organism. "
             bind:inputVar={$tau}
         />
-        <!--
-        <FormInput
-            id="Michaelis-Menten constant (K)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="A constant used by the Michaelis-Menten Equation. Equal across all tissues."
-            bind:inputVar={$K}
-        />
-        
-
-        <FormInput
-            id="First parameter of beta distribution (A)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
-            bind:inputVar={$alpha}
-        />
-
-        <FormInput
-            id="Second parameter of beta distribution (B)"
-            inputType="number"
-            min="0"
-            max="10000"
-            step="1"
-            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
-            bind:inputVar={$beta}
-        />
-        -->
-        <!--input for mu
-        <FormInput
-            id="Mu"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.001"
-            bind:inputVar={$mu}
-         />
-
-         <FormInput
-            id="Z"
-            inputType="text"
-            bind:inputVar={$z}
-        />
-        -->
+       
 
         <FormInput
             id="Number of reproductive cycles (N)"
@@ -544,35 +384,7 @@
             bind:inputVar={$N}
         />
 
-        <!--
-
-         <FormInput
-            id="Food Short"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$foodShort}
-         />
-
-         <FormInput
-            id="Food Short Begin"
-            inputType="number"
-            min="0"
-            max={$foodShortend}
-            step="1"
-            bind:inputVar={$foodShortbegin}
-         />
-
-         <FormInput
-            id="Food Short End"
-            inputType="number"
-            min="0"
-            max={$N}
-            step="1"
-            bind:inputVar={$foodShortend}
-         />
-         -->
+    
     </div>
 </div>
 
@@ -586,16 +398,7 @@
 
 <!-- Creating Charts-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
-    <!--
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Energy of Organism
-        </h2>
-        <canvas id="bodyConditionChart"></canvas>
-    </div>
-    -->
+   
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -608,22 +411,7 @@
         <h2 class="text-center text-xl font-semibold mb-4">Circulating Level Of Hormone </h2>
         <canvas id="productionChart"></canvas>
     </div>
-    <!--
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">Fitness</h2>
-        <canvas id="fitnessChart"></canvas>
-    </div>
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Cumulative Fitness
-        </h2>
-        <canvas id="cumulativeFitnessChart"></canvas>
-    </div>
-    -->
+    
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >

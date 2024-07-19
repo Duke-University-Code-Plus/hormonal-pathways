@@ -2,10 +2,8 @@
     import { onMount } from "svelte";
     import axios from "axios";
     import Chart from "chart.js/auto";
-    import FormInput from "../Nested/FormInput.svelte";
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
-    import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
     import {
         gamma1,
         gamma2,
@@ -44,12 +42,6 @@
     let gamma = [$gamma1, $gamma2, $gamma3];
     let z = [$z1, $z2, $z3];
 
-    let bodyConditionChartInstance = null;
-    let sensitivityChartInstance = null;
-    let productionChartInstance = null;
-    let fitnessChartInstance = null;
-    let cumulativeFitnessChartInstance = null;
-    let traitChartInstance = null;
     let traitRatioOneChartInstance = null;
     let traitRatioTwoChartInstance = null;
     let traitRatioThreeChartInstance = null;
@@ -92,6 +84,8 @@
             Whist = data1.Whist;
             Wcuml = data1.Wcuml;
             Vhist1 = data1.Vhist;
+
+            
 
 
             gamma = [$gamma1, $gamma3, $gamma2];
