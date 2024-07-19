@@ -7,7 +7,7 @@
     import SliderInput from "../Nested/SliderInput.svelte";
     import TissueSim from "./TissueSim.svelte";
     import TissueLegend from "./TissueLegend.svelte";
-    import BirdButton from './BirdButton.svelte';
+    import BirdButton from "./BirdButton.svelte";
     import { writable } from "svelte/store";
     import {
         gamma1,
@@ -122,13 +122,13 @@
     function returnData() {
         //will call billys function here which updates tissue-stores based on delSmax and gamma vals?
         reset();
-        $gamma1_tissue = Shist[0][Shist[0].length-1]/2;
-        console.log($gamma1_tissue)
-        $gamma2_tissue = Shist[1][Shist[1].length-1]/2;
-        console.log($gamma2_tissue)
-        $gamma3_tissue = Shist[2][Shist[2].length-1]/2;
-        console.log($gamma2_tissue)
-        $hormoneCount = Math.ceil(Chist[Chist.length-1]/2);
+        $gamma1_tissue = Shist[0][Shist[0].length - 1] / 2;
+        console.log($gamma1_tissue);
+        $gamma2_tissue = Shist[1][Shist[1].length - 1] / 2;
+        console.log($gamma2_tissue);
+        $gamma3_tissue = Shist[2][Shist[2].length - 1] / 2;
+        console.log($gamma2_tissue);
+        $hormoneCount = Math.ceil(Chist[Chist.length - 1] / 2);
     }
 
     function reset() {
@@ -150,26 +150,27 @@
         console.log("bird button clicked", bird);
         //reset();
         $selectedBird = bird;
-        fetchData()
-        returnData()
+        fetchData();
+        returnData();
         if (bird == 1) {
-            $gamma1_tissue = Math.ceil(Math.min(10,$gamma1_tissue));
-            $gamma3_tissue = Math.ceil(Math.min(10,$gamma3_tissue));
-            $gamma2_tissue = Math.ceil(Math.min(10,$gamma2_tissue));
+            $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue));
+            $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue));
+            $gamma2_tissue = Math.ceil(Math.min(10, $gamma2_tissue));
         } else if (bird == 2) {
-            $gamma1_tissue = Math.ceil(Math.min(10,$gamma1_tissue*1.4));
-            $gamma3_tissue = Math.ceil(Math.min(10,$gamma3_tissue*1.4));
-            $gamma2_tissue = Math.ceil(Math.min(10,$gamma2_tissue*1.4));
+            $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue * 1.4));
+            $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue * 1.4));
+            $gamma2_tissue = Math.ceil(Math.min(10, $gamma2_tissue * 1.4));
         } else if (bird == 3) {
-            $gamma1_tissue = Math.ceil(Math.min(10,$gamma1_tissue*2));
-            $gamma3_tissue = Math.ceil(Math.min(10,$gamma3_tissue*2));
-            $gamma2_tissue = Math.ceil(Math.min(10,$gamma2_tissue*2));
+            $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue * 2));
+            $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue * 2));
+            $gamma2_tissue = Math.ceil(Math.min(10, $gamma2_tissue * 2));
         }
-        console.log($gamma1)
+        console.log($gamma1);
     }
 
-    function handleSliderChange(){
-        console.log("Slider change")
+    function handleSliderChange() {
+        $selectedBird = 0;
+        console.log("Slider change");
     }
 </script>
 
@@ -204,7 +205,8 @@
     <p class="text-xl font-semibold mt-4">
         Each bird exhibits a unique level of tissue sensitivity, which
         influences the maximum number of receptors present in each tissue. These
-        tissues, in turn, affect the expression of various traits. By manipulating these parameters, you can gain insights into the$
+        tissues, in turn, affect the expression of various traits. By
+        manipulating these parameters, you can gain insights into the
         relationship between hormone levels, receptor counts, and trait
         expression in birds.
     </p>
@@ -212,36 +214,44 @@
 
 <!-- Bird buttons -->
 <div class=" flex space-x-2 justify-center">
-    <button   
-        class:bg-gray-400={$selectedBird === 1}
-        class:text-white={$selectedBird === 1}
-        class:bg-white={$selectedBird !== 1}
-        class:text-black={$selectedBird !== 1}
-        on:click={() => updateSmax(1)}
-    >
-    <BirdButton Birdiff={bird1} />
-    </button>
-    
-    <button
-        
-        class:bg-gray-400={$selectedBird === 2}
-        class:text-white={$selectedBird === 2}
-        class:bg-white={$selectedBird !== 2}
-        class:text-black={$selectedBird !== 2}
-        on:click={() => updateSmax(2)}
-    >
-    <BirdButton Birdiff={bird2}/>
-    </button>
-    <button
-        
-        class:bg-gray-400={$selectedBird === 3}
-        class:text-white={$selectedBird === 3}
-        class:bg-white={$selectedBird !== 3}
-        class:text-black={$selectedBird !== 3}
-        on:click={() => updateSmax(3)}
-    >
-    <BirdButton Birdiff={bird3}/>
-    </button>
+    <div class="flex, flex-col justify-center">
+        <h2 class="text-center text-l font-semibold">Low Tissue Sensitivity</h2>
+        <button
+            class:bg-gray-400={$selectedBird === 1}
+            class:text-white={$selectedBird === 1}
+            class:bg-white={$selectedBird !== 1}
+            class:text-black={$selectedBird !== 1}
+            on:click={() => updateSmax(1)}
+        >
+            <BirdButton Birdiff={bird1} />
+        </button>
+    </div>
+
+    <div class="flex, flex-col justify-center">
+        <h2 class="text-center text-l font-semibold">Average Tissue Sensitivity</h2>
+        <button
+            class:bg-gray-400={$selectedBird === 2}
+            class:text-white={$selectedBird === 2}
+            class:bg-white={$selectedBird !== 2}
+            class:text-black={$selectedBird !== 2}
+            on:click={() => updateSmax(2)}
+        >
+            <BirdButton Birdiff={bird2} />
+        </button>
+    </div>
+
+    <div class="flex, flex-col justify-center">
+        <h2 class="text-center text-l font-semibold">High Tissue Sensitivity</h2>
+        <button
+            class:bg-gray-400={$selectedBird === 3}
+            class:text-white={$selectedBird === 3}
+            class:bg-white={$selectedBird !== 3}
+            class:text-black={$selectedBird !== 3}
+            on:click={() => updateSmax(3)}
+        >
+            <BirdButton Birdiff={bird3} />
+        </button>
+    </div>
 </div>
 
 <!-- Run Simulation Button-->
@@ -256,6 +266,7 @@
     <div>
         <SliderInput
             id="hormoneCount"
+            sliderLabel="Hormone Count"
             min="0"
             max="30"
             step="1"
@@ -263,13 +274,11 @@
             modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
         />
     </div>
-
 </div>
 
-<hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700 z-[100]">
+<hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700 z-[100]" />
 
 <div class="flex flex-col justify-center items-center">
-
     <div class="mt-[-80px] mb-5 z-[-1]">
         <TissueLegend />
     </div>
@@ -304,6 +313,7 @@
         </div>
         <SliderInput
             id="gamma1_tissue"
+            sliderLabel="Receptor Count"
             min="0"
             max="10"
             step="1"
@@ -324,11 +334,13 @@
         </div>
         <SliderInput
             id="gamma2_tissue"
+            sliderLabel="Receptor Count"
             min="0"
             max="10"
             step="1"
             bind:inputVar={$gamma2_tissue}
             modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+            callback={handleSliderChange}
         />
     </div>
 
@@ -343,11 +355,13 @@
         </div>
         <SliderInput
             id="gamma3_tissue"
+            sliderLabel="Receptor Count"
             min="0"
             max="10"
             step="1"
             bind:inputVar={$gamma3_tissue}
             modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+            callback={handleSliderChange}
         />
     </div>
 </div>

@@ -6,6 +6,7 @@
     export let inputVar;
     export let modalMessage;
     export let callback = null;
+    export let sliderLabel = null;
 
     import Modal from './Modal.svelte';
 
@@ -65,9 +66,9 @@
 
         <!-- Variable Label -->
         <label
-            for={id}
+            for={id} 
             class="flex absolute left-0 font-normal truncate leading-tight -top-1.5 text-[11px] -mt-2"
-            >{id}
+            >{sliderLabel || id}
         </label>
 
         <!-- Slider Value -->
