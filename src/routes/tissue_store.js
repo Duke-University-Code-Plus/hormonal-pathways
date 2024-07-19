@@ -15,3 +15,5 @@ export const receptorsBound2 = writable(0);
 export const receptorsBound3 = writable(0);
 
 export const labelToggle = writable(false);
+
+export const selectedBird = writable(0);
