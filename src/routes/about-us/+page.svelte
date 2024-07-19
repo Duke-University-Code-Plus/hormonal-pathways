@@ -14,6 +14,10 @@
     </p>
     <p>
         The project was spun out of a research paper called A Dynamic State Variable Model of Hormonal Pleiotropy that was written by Nicole M. Baran, H.K. Reeve, F. Havlak, and E. Adkins-Regan.
+
+    </p>
+    <p>
+        For links to our stakeholders and our github go the the resources section below.
     </p>
 </div>
 <div>
@@ -31,6 +35,12 @@
         <a href="https://www.davidson.edu/people/nicole-m-baran" class="ml-4">
             <img src="/davidson.png" alt="davidson logo" height=auto width=200 >
         </a>  
+        <a href="https://www.nccu.edu/" class="ml-4">
+            <img src="/NCCU.png" alt="NCCU logo" height=auto width=200>
+        </a>
+        <a href="nsf.gov" class="ml-4">
+            <img src="/NSF_logo.png" alt="NSF logo" height=auto width=100>
+        </a>
     </p>
 </div>
 <div>

@@ -1,9 +1,78 @@
 <script>
     import { page } from '$app/stores';
+    import { onMount } from 'svelte';
+
+    let isOpen = false;
+
+    const toggleMenu = () => {
+        isOpen = !isOpen;
+    };
+
+    onMount(() => {
+        if (typeof document !== 'undefined') {
+            // Select all dropdown toggle buttons
+            const dropdownToggles = document.querySelectorAll(".dropdown-toggle");
+
+            dropdownToggles.forEach((toggle) => {
+                toggle.addEventListener("click", () => {
+                    // Find the next sibling element which is the dropdown menu
+                    const dropdownMenu = toggle.nextElementSibling;
+
+                    // Toggle the 'hidden' class to show or hide the dropdown menu
+                    if (dropdownMenu.classList.contains("hidden")) {
+                        // Hide any open dropdown menus before showing the new one
+                        document.querySelectorAll(".dropdown-menu").forEach((menu) => {
+                            menu.classList.add("hidden");
+                        });
+
+                        dropdownMenu.classList.remove("hidden");
+                    } else {
+                        dropdownMenu.classList.add("hidden");
+                    }
+                });
+            });
+
+            // Optional: Clicking outside of an open dropdown menu closes it
+            window.addEventListener("click", (event) => {
+                if (!event.target.matches(".dropdown-toggle")) {
+                    document.querySelectorAll(".dropdown-menu").forEach((menu) => {
+                        if (!menu.contains(event.target)) {
+                            menu.classList.add("hidden");
+                        }
+                    });
+                }
+            });
+
+            // Mobile menu toggle
+            const mobileMenuButton = document.querySelector(".mobile-menu-button");
+            const mobileMenu = document.querySelector(".navigation-menu");
+
+            mobileMenuButton.addEventListener("click", () => {
+                mobileMenu.classList.toggle("hidden");
+                document.body.classList.toggle("menu-open", !mobileMenu.classList.contains("hidden"));
+            });
+        }
+    });
+
+    $: if (isOpen) {
+        if (typeof document !== 'undefined') {
+            document.body.classList.add('menu-open');
+        }
+    } else {
+        if (typeof document !== 'undefined') {
+            document.body.classList.remove('menu-open');
+        }
+    }
 </script>
 
-<nav class="bg-gray-100 dark:bg-gray-100 shadow shadow-gray-300 w-full px-8 md:px-auto sm:block hidden">
-    <div class="md:h-16 h-20 mx-auto md:px-4 container flex items-center justify-between flex-wrap md:flex-nowrap">
+<style>
+    body.menu-open {
+        background-color: rgba(0, 0, 0, 0.5); /* Adjust the background color as needed */
+    }
+</style>
+
+<nav class="bg-gray-100 dark:bg-gray-100 shadow shadow-gray-300 w-full px-8 md:px-auto">
+    <div class="md:h-16 h-20 mx-auto md:px-4 py-6 container flex items-center justify-between flex-wrap md:flex-nowrap sm:block hidden">
         <a href="/" class="absolute left-5 top-5">
             <span class="font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-indigo-700">HM</span>
         </a>
@@ -32,4 +101,58 @@
             </div>
         </div>
     </div>
+    <div class="sm:h-16 h-20 mx-auto sm:px-4 container flex items-center justify-between flex-wrap sm:flex-nowrap sm:hidden block">
+        <div class="flex justify-center w-full">
+            <a href="/" class="text-center">
+                <span class="font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-indigo-700">HM</span>
+            </a>
+        </div>
+        <div class="sm:hidden flex items-center absolute right-5">
+            <button class="mobile-menu-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <title>bars-3-bottom-left</title>
+                    <g fill="none">
+                        <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </g>
+                </svg>
+            </button>
+        </div>
+        <div class="hidden sm:flex sm:flex-row flex-col items-center justify-start sm:space-x-1 navigation-menu pb-3 sm:pb-0 absolute right-0 top-16 bg-gray-100 w-full sm:w-auto">
+            <a href="/about-us" class="py-2 px-3 block">About Us</a>
+            <a href="/research" class="py-2 px-3 block">Research</a>
+            <!-- Dropdown Menu -->
+            <div class="relative">
+                <button class="dropdown-toggle py-2 px-3 hover:bg-gray-700 flex items-center gap-2 rounded">
+                    <span class="pointer-events-none">Graph Models</span>
+                    <svg class="w-3 h-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <title>chevron-down</title>
+                        <g fill="none">
+                            <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                </button>
+                <div class="dropdown-menu absolute hidden bg-gray-700 text-white rounded-b-lg pb-2 w-48">
+                    <a href="/singlemodel" class="block px-6 py-2 hover:bg-gray-800">Single Run</a>
+                    <a href="/multimodel" class="block px-6 py-2 hover:bg-gray-800">Multi Run</a>
+                </div>
+            </div>
+            <!-- Dropdown Menu for visual -->
+            <div class="relative">
+                <button class="dropdown-toggle py-2 px-3 hover:bg-gray-700 flex items-center gap-2 rounded">
+                    <span class="pointer-events-none">Visual Models</span>
+                    <svg class="w-3 h-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <title>bruh</title>
+                        <g fill="none">
+                            <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                </button>
+                <div class="dropdown-menu absolute hidden bg-gray-700 text-white rounded-b-lg pb-2 w-48">
+                    <a href="/simulationmodel" class="block px-6 py-2 hover:bg-gray-800">Tissue</a>
+                    <a href="/ecosystemsim" class="block px-6 py-2 hover:bg-gray-800">Ecosystem</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </nav>
+
