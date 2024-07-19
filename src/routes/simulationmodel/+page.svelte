@@ -6,6 +6,8 @@
     import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
     import TissueSim from "./TissueSim.svelte";
+    import BirdButton from './BirdButton.svelte';
+    
     import { writable } from "svelte/store";
     import {
         gamma1,
@@ -62,6 +64,10 @@
     let canvas1 = "gamma1_tissue";
     let canvas2 = "gamma2_tissue";
     let canvas3 = "gamma3_tissue";
+    let bird1 = "1";
+    let bird3 = "2";
+    let bird2 = "3";
+
 
     onMount(() => {
         fetchData();
@@ -415,34 +421,35 @@
 <!-- Bird buttons -->
 <div class=" flex space-x-2 justify-center">
     <button
-        class="px-4 py-2 border rounded transition-colors duration-200"
+        
         class:bg-gray-400={selectedBird === 1}
         class:text-white={selectedBird === 1}
         class:bg-white={selectedBird !== 1}
         class:text-black={selectedBird !== 1}
         on:click={() => updateSmax(1)}
     >
-        Bird 1
+    <BirdButton Birdiff={bird1} />
     </button>
+    
     <button
-        class="px-4 py-2 border rounded transition-colors duration-200"
+        
         class:bg-gray-400={selectedBird === 2}
         class:text-white={selectedBird === 2}
         class:bg-white={selectedBird !== 2}
         class:text-black={selectedBird !== 2}
         on:click={() => updateSmax(2)}
     >
-        Bird 2
+    <BirdButton Birdiff={bird2}/>
     </button>
     <button
-        class="px-4 py-2 border rounded transition-colors duration-200"
+        
         class:bg-gray-400={selectedBird === 3}
         class:text-white={selectedBird === 3}
         class:bg-white={selectedBird !== 3}
         class:text-black={selectedBird !== 3}
         on:click={() => updateSmax(3)}
     >
-        Bird 3
+    <BirdButton Birdiff={bird3}/>
     </button>
 </div>
 
