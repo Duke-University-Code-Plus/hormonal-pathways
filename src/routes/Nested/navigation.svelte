@@ -117,7 +117,7 @@
                 </svg>
             </button>
         </div>
-        <div class="hidden sm:flex sm:flex-row flex-col items-center justify-start sm:space-x-1 navigation-menu pb-3 sm:pb-0 absolute right-0 top-16 bg-gray-100 w-full sm:w-auto z-10 p-5">
+        <div class="hidden sm:flex sm:flex-row flex-col items-center justify-start sm:space-x-1 navigation-menu pb-3 sm:pb-0 absolute right-0 top-16 bg-gray-100 w-full sm:w-auto z-40 p-5">
            <li class="{$page.url.pathname == '/about-us' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
                         <a href="/about-us">About Us</a>
                     </li>
