@@ -71,22 +71,36 @@
             };
 
             // Making 3 Requests to the server in one Fetch
+
+            // Blue Bird
+
+            // Setting gamma a z values to create more weight for parental effort
+            params['gamma'] = [$gamma1, $gamma2, $gamma3].join(",");
+            params['z'] = [$z1, $z2, $z3].join(",");
+            params['delSmax'] = $delSmax3;
+
             const queryStringBlue = new URLSearchParams(params).toString();
             const responseBlue = await axios.get(
                 `${$apiEndpoint}/hormonemodel?${queryStringBlue}`,
             );
             const dataBlue = responseBlue.data;
 
+            // Red Bird
+
+            // Setting gamma a z values to create more weight for mating effort
             params['gamma'] = [$gamma1, $gamma3, $gamma2].join(",");
             params['z'] = [$z1, $z3, $z2].join(",");
             params['delSmax'] = $delSmax1;
-
+            
             const queryStringRed = new URLSearchParams(params).toString();
             const responseRed = await axios.get(
                 `${$apiEndpoint}/hormonemodel?${queryStringRed}`,
             );
             const dataRed = responseRed.data;
             
+            // Purple Bird
+
+            // Setting gamma a z values to put equal weight on each trait
             params['gamma'] = [$gamma1, $gamma1, $gamma1].join(",");
             params['z'] = [$z1, $z1, $z1].join(",");
             params['delSmax'] = $delSmax2;
