@@ -24,7 +24,6 @@
         window.onmessage = function (e) {
             // inside the iframe
             window.message = JSON.parse(e.data); //either proportion or start button
-            console.log('window.proportion', window.message)
 
             if (window.message[0] == "proportion") {
                 window.proportion1 = Number(window.message[1]);

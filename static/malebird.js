@@ -8,7 +8,6 @@ class maleBird {
         this.sprite.scale = scale
         this.nest = nest;
         this.sprite.velocity.x = neutralSpeed;
-        console.log(this.sprite.velocity.x)
 
         //perch spot
         this.perchX = perch[0]
