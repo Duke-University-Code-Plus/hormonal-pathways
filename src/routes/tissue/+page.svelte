@@ -271,7 +271,7 @@
             max="30"
             step="1"
             bind:inputVar={$hormoneCount}
-            modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+            modalMessage="Number of hormones produced by all tissues."
         />
     </div>
 </div>
@@ -318,7 +318,7 @@
             max="10"
             step="1"
             bind:inputVar={$gamma1_tissue}
-            modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+            modalMessage="Number of receptors produced by the tissue regulating Gamete Maturation"
             callback={handleSliderChange}
         />
     </div>
@@ -339,7 +339,7 @@
             max="10"
             step="1"
             bind:inputVar={$gamma2_tissue}
-            modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+            modalMessage="Number of receptors produced by the tissue regulating Parental Effort."
             callback={handleSliderChange}
         />
     </div>
@@ -360,7 +360,7 @@
             max="10"
             step="1"
             bind:inputVar={$gamma3_tissue}
-            modalMessage="A variable that determines the negative weight of a trait. The higher the value, the lower the value of the first trait."
+            modalMessage="Number of receptors produced by the tissue regulating Mating Effort."
             callback={handleSliderChange}
         />
     </div>
