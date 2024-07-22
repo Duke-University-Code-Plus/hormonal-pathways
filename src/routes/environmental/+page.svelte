@@ -133,14 +133,23 @@
 
 <!-- Animation stuff-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
-    <div>
-        <iframe
-            width="800"
-            height="590"
-            src="http://localhost:5173/ecosystem-sketch"
-            id="iframeID"
-            title="YouTube video player"
-            frameborder="0"
-        ></iframe>
+    <div class="rounded-container">
+        <iframe width="800" height="590" src="http://localhost:5173/ecosystem-sketch" id="iframeID" title="YouTube video player" frameborder="0" class="rounded-iframe"></iframe>
     </div>
 </div>
+<style>
+  .rounded-container {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust shadow as needed */
+    width: 800px; /* Explicitly set width */
+    height: 520px; /* Explicitly set height */
+}
+
+.rounded-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 12px;
+}
+</style>

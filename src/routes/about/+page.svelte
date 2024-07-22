@@ -5,30 +5,42 @@
 <Navbar multiPage="aboutus" />
 <div>
     <h1 class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
-        What is the Hormone Model simulation project?
+        Project Background
     </h1>
 </div>
 <div class="flex m-5 max-w-[1000px] m-auto flex-col gap-4">
     <p>
-        The Hormone Model simulation project otherwise known as the Hormonal Pathways and Trait Expression in Songbirds Simulator was developed the summer of 2024 by a team of students from Davidson, Duke, and North Carolina Central University. The team worked with Duke’s Office of Information Technology, a faculty researcher from Davidson University, and other stakeholders to build an interactive app to allow exploration of a model of hormone influence on traits, with particular examples in songbirds.
+        The Hormonal Pathways and Trait Expression in Songbirds Simulator was developed the summer of 2024 by a team of students from Davidson, Duke, and North Carolina Central University. The team worked with Duke’s Office of Information Technology, a faculty researcher from Davidson University, and other stakeholders to build an interactive app to allow exploration of a model of hormone influence on traits, with particular examples in songbirds.
     </p>
     <p>
         The project was spun out of a research paper called A Dynamic State Variable Model of Hormonal Pleiotropy that was written by Nicole M. Baran, H.K. Reeve, F. Havlak, and E. Adkins-Regan.
 
     </p>
-    <p>
-        For links to our stakeholders and our github go the the resources section below.
-    </p>
+<div>
+    <div class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
+        Project Goals
+    </div>
 </div>
+1. Develop an interactive website, enabling
+researchers and students to test various
+parameters of Dr. Baran’s male songbird model
+<p>
+2. Use graphical visualizations and simulations to
+show effects on hormone concentration, receptor
+sensitivity, and reproductive fitness
+</p>
+</div>
+
+
 <div>
     <!-- TODO added more resources code+ program, Dr.Baron, Duke, NCShare -->
     <h2 class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
-        Resources
+        Partners and Stakeholders
     </h2>
    <p class="text-center items-center justify-center flex">
-         <a href="https:/github.com/aaronkutnick/hormonal-pathways" class="ml-4">
+         <!-- <a href="https:/github.com/aaronkutnick/hormonal-pathways" class="ml-4">
             <GitHubIcon width="64" height="64" fill="#24292f" />
-        </a>
+        </a> -->
          <a href="https://codeplus.duke.edu/" class="ml-4">
             <img src="/Code+logo.png" alt="Duke Code+ logo" height=auto width=200>
        </a>
