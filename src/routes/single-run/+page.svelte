@@ -340,7 +340,7 @@
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Investment cost for Gamete Maturation Trait(γ₉, ₜ)"
+                id="Investment cost for Gametes (γ₉, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -349,7 +349,7 @@
             />
 
             <SliderInput
-                id="Investment cost for Mating Effort Trait (γₘ, ₜ)"
+                id="Investment cost for Mating Effort (γₘ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -358,7 +358,7 @@
             />
 
             <SliderInput
-                id="Investment cost for Parental Effort Trait (γₚ, ₜ)"
+                id="Investment cost for Parental Effort (γₚ, ₜ)"
                 min="0"
                 max="1"
                 step="0.1"
@@ -400,7 +400,7 @@
         <!-- Container for G and mu sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput 
-                id="Hormone level for gamete maturation (G)" 
+                id="Hormone level for Mature Gametes (G)" 
                 min="0" 
                 max="1" 
                 step="0.1" 
