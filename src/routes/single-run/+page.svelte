@@ -332,6 +332,28 @@
     Hormone Model - Single Run
 </h1>
 
+
+
+<div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
+    <p class="text-xl font-medium mt-4">
+        The male songbird tries to optimize its chances of reproductive success by choosing whether to invest in mating effort, parental effort, or gamete maturation. These three traits are mediated by hormones, which also affect the songbird's energy and fitness. The songbird tries to optimize its fitness based on its sensitivity to hormones and the concentration of hormones.
+    </p>
+
+    <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+        <h2 class="text-lg font-bold mb-2">Simulation Steps</h2>
+        <ul class="list-disc list-inside">
+            <li class="mb-2">
+                <strong>Step 1:</strong> Run the model to see an immediate output of all variables coming together. Observe each of the graphs to determine what exactly we are tracking.
+            <li class="mb-2">
+                <strong>Step 2:</strong> Use the sliders and form inputs to change the model's values. Consult the tooltip icons on the upper right of each input to gain further insight into the model's inner workings.  
+            </li>
+            <li class="mb-2">
+                <strong>Step 3:</strong> Play around with the variables to understand how each affects the model and to learn about the relationships between each variable.
+            </li>
+        </ul>
+    </div>
+</div>
+
 <!--Input Parameters -->
 <div class="flex flex-wrap justify-center">
     <div
