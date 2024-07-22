@@ -71,7 +71,7 @@
     }
 </style>
 
-<nav class="bg-gray-100 dark:bg-gray-100 shadow shadow-gray-300 w-full px-8 md:px-auto">
+<nav data-sveltekit-reload class="bg-gray-100 dark:bg-gray-100 shadow shadow-gray-300 w-full px-8 md:px-auto">
     <div class="md:h-16 h-20 mx-auto md:px-4 py-6 container flex items-center justify-between flex-wrap md:flex-nowrap sm:block hidden">
         <a href="/" class="absolute left-5 top-5">
             <span class="font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-indigo-700">HM</span>
