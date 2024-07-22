@@ -153,13 +153,13 @@
         fetchData();
         returnData();
         if (bird == 1) {
-            $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue));
-            $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue));
-            $gamma2_tissue = Math.ceil(Math.min(10, $gamma2_tissue));
+            $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue * 0.4));
+            $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue*0.4));
+            $gamma2_tissue = Math.ceil(Math.min(10, $gamma2_tissue*0.4));
         } else if (bird == 2) {
-            $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue * 1.4));
-            $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue * 1.4));
-            $gamma2_tissue = Math.ceil(Math.min(10, $gamma2_tissue * 1.4));
+            $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue * 1.2));
+            $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue * 1.2));
+            $gamma2_tissue = Math.ceil(Math.min(10, $gamma2_tissue * 1.2));
         } else if (bird == 3) {
             $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue * 2));
             $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue * 2));
@@ -174,7 +174,14 @@
     }
 </script>
 
-<NavBar multiPage="Single" />
+<NavBar multiPage="tissue" />
+
+<h1
+    class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
+>
+    Tissue Simulation
+</h1>
+
 
 <!-- Instructions -->
 <div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
