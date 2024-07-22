@@ -68,10 +68,6 @@
     let canvas2 = "gamma2_tissue";
     let canvas3 = "gamma3_tissue";
 
-    let bird1 = "1";
-    let bird3 = "2";
-    let bird2 = "3";
-
     onMount(() => {
         fetchData();
     });
@@ -184,8 +180,25 @@
 
 <NavBar multiPage="Single" />
 
+<h1
+    class="mt-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
+>
+    Tissue Simulation
+</h1>
+
 <!-- Instructions -->
 <div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
+
+    <p class="text-xl font-medium my-4">
+        Each bird exhibits a unique level of tissue sensitivity, which
+        influences the maximum number of receptors present in each tissue. These
+        tissues, in turn, affect the expression of various traits. By
+        manipulating these parameters, you can gain insights into the
+        relationship between hormone levels, receptor counts, and trait
+        expression in birds.
+    </p>
+
+
     <div class="bg-gray-100 p-4 rounded-lg shadow-md">
         <h2 class="text-lg font-bold mb-2">Simulation Steps</h2>
         <ul class="list-disc list-inside">
@@ -210,54 +223,38 @@
             </li>
         </ul>
     </div>
-    <p class="text-xl font-semibold mt-4">
-        Each bird exhibits a unique level of tissue sensitivity, which
-        influences the maximum number of receptors present in each tissue. These
-        tissues, in turn, affect the expression of various traits. By
-        manipulating these parameters, you can gain insights into the
-        relationship between hormone levels, receptor counts, and trait
-        expression in birds.
-    </p>
+    
 </div>
+
+
+<div class="flex items-center justify-center font-bold text-xl mt-4 mb-8">Click a bird to run the tissue model</div>
 
 <!-- Bird buttons -->
 <div class=" flex space-x-2 justify-center">
     <div class="flex, flex-col justify-center">
         <h2 class="text-center text-l font-semibold">Low Tissue Sensitivity</h2>
         <button
-            class:bg-gray-400={$selectedBird === 1}
-            class:text-white={$selectedBird === 1}
-            class:bg-white={$selectedBird !== 1}
-            class:text-black={$selectedBird !== 1}
             on:click={() => updateSmax(1)}
         >
-            <BirdButton Birdiff={bird1} />
+            <BirdButton BirdColor="red" BirdID=1 />
         </button>
     </div>
 
     <div class="flex, flex-col justify-center">
         <h2 class="text-center text-l font-semibold">Average Tissue Sensitivity</h2>
         <button
-            class:bg-gray-400={$selectedBird === 2}
-            class:text-white={$selectedBird === 2}
-            class:bg-white={$selectedBird !== 2}
-            class:text-black={$selectedBird !== 2}
             on:click={() => updateSmax(2)}
         >
-            <BirdButton Birdiff={bird2} />
+            <BirdButton BirdColor="purple" BirdID=2 />
         </button>
     </div>
 
     <div class="flex, flex-col justify-center">
         <h2 class="text-center text-l font-semibold">High Tissue Sensitivity</h2>
         <button
-            class:bg-gray-400={$selectedBird === 3}
-            class:text-white={$selectedBird === 3}
-            class:bg-white={$selectedBird !== 3}
-            class:text-black={$selectedBird !== 3}
             on:click={() => updateSmax(3)}
         >
-            <BirdButton Birdiff={bird3} />
+            <BirdButton BirdColor="blue" BirdID=3 />
         </button>
     </div>
 </div>

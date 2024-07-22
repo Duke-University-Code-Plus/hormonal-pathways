@@ -1,55 +1,41 @@
 <script>
 import { onMount } from "svelte";
-export let Birdiff;
-let sketchcontainer;    
+import { selectedBird } from "../tissue_store";
+
+export let BirdColor;
+export let BirdID;
+let sketchcontainer;
+
 onMount(() => {
-        createSketch();
-    });
+    createSketch();
+});
+
 const createSketch = () => {
         new p5((p) => {
             let malebird;
             let malebird_fly_spritesheet;
             let malebird_fly;
-            if (Birdiff == "1") {
-                p.preload = () => {p.loadJSON('bird-images/malebird_fly.json', function(malebird_fly_frames) {
-                        malebird_fly_spritesheet = p.loadSpriteSheet('bird-images/malebird_fly_spritesheet.png', malebird_fly_frames);
-                    });
-                }
-            }
-            if (Birdiff == "2") {
-                p.preload = () => {p.loadJSON('bird-images/malebird2_fly.json', function(malebird_fly_frames) {
-                        malebird_fly_spritesheet = p.loadSpriteSheet('bird-images/malebird2_fly_spritesheet.png', malebird_fly_frames);
-                    });
-                }
-            }
 
-            if (Birdiff == "3") {
-                p.preload = () => {p.loadJSON('bird-images/malebird1_fly.json', function(malebird_fly_frames) {
-                        malebird_fly_spritesheet = p.loadSpriteSheet('bird-images/malebird1_fly_spritesheet.png', malebird_fly_frames);
-                    });
-                }
+
+            let peck;
+
+
+            p.preload = () => {p.loadJSON(`sprites_haruta/${BirdColor}/malebird_fly.json`, function(malebird_fly_frames) {
+                    malebird_fly_spritesheet = p.loadSpriteSheet(`sprites_haruta/${BirdColor}/malebird_fly_spritesheet.png`, malebird_fly_frames);
+                });
             }
 
             p.setup = () => {
                 let canvas = p.createCanvas(200, 100).parent(sketchcontainer);
                 malebird = p.createSprite(100,50);
-                console.log(Birdiff);
 
-                if(Birdiff == "1") {
                 malebird_fly = p.loadAnimation(malebird_fly_spritesheet);
-                malebird.addAnimation('stand', 'bird-images/malebird_stand.png');
-                }
-                if(Birdiff == "2") {
-                malebird_fly = p.loadAnimation(malebird_fly_spritesheet);
-                malebird.addAnimation('stand', 'bird-images/malebird2_stand.png');
-                }
-                if(Birdiff == "3") {
-                malebird_fly = p.loadAnimation(malebird_fly_spritesheet);
-                malebird.addAnimation('stand', 'bird-images/malebird1_stand.png');
-                }
+                
+                malebird.addAnimation('stand', `sprites_haruta/${BirdColor}/malebird_stand.png`);
 
+                // peck = malebird.addAnimation('peck', `sprites_haruta/${BirdColor}/malebird_peck0001.png', 'sprites_haruta/${BirdColor}/malebird_peck0002.png`);
 
-
+                // peck.frameDelay = 10
 
                 malebird.addAnimation('fly', malebird_fly);
                 malebird.setCollider('circle', 0, 0, 250);
@@ -62,24 +48,51 @@ const createSketch = () => {
                 // canvas.onMouseOut = function() {
                 //     malebird.changeAnimation('stand');
                 // };
-                canvas.mouseOver(flying);
-                canvas.mouseOut(standing);
+                // canvas.mouseOver(pecking);
+                // canvas.mouseOut(standing);
                 //canvas.mousePressed(flying);
                 //canvas.mouseReleased(flying);
             };
             p.draw = () => {
                 p.background(255);
                 //p.scale(0.5);
+
+
+                updateAnimation()
                 
                 p.drawSprites();
+
+
                 
             }
 
+            function updateAnimation(){
+                if ($selectedBird == BirdID) flying()
+                if ($selectedBird != BirdID) standing()
+            }
+
             function flying() {
+                if (malebird.flying) return;
                 malebird.changeAnimation('fly');
-                }
+                malebird.flying = true
+                malebird.standing = false
+                malebird.pecking = false
+            }
+
             function standing() {
+                if (malebird.standing) return;
                 malebird.changeAnimation('stand');
+                malebird.standing = true
+                malebird.flying = false
+                malebird.pecking = false
+            }
+
+            function pecking(){
+                //if ($selectedBird == parseInt(Birdiff)) return
+                malebird.changeAnimation('peck');
+                malebird.pecking = true
+                malebird.standing = false
+                malebird.flying = false
             }
             
 }, sketchcontainer);
