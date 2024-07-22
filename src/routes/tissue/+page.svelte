@@ -153,13 +153,13 @@
         fetchData();
         returnData();
         if (bird == 1) {
-            $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue));
-            $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue));
-            $gamma2_tissue = Math.ceil(Math.min(10, $gamma2_tissue));
+            $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue * 0.4));
+            $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue*0.4));
+            $gamma2_tissue = Math.ceil(Math.min(10, $gamma2_tissue*0.4));
         } else if (bird == 2) {
-            $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue * 1.4));
-            $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue * 1.4));
-            $gamma2_tissue = Math.ceil(Math.min(10, $gamma2_tissue * 1.4));
+            $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue * 1.2));
+            $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue * 1.2));
+            $gamma2_tissue = Math.ceil(Math.min(10, $gamma2_tissue * 1.2));
         } else if (bird == 3) {
             $gamma1_tissue = Math.ceil(Math.min(10, $gamma1_tissue * 2));
             $gamma3_tissue = Math.ceil(Math.min(10, $gamma3_tissue * 2));
