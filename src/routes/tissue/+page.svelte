@@ -186,13 +186,6 @@
     Tissue Simulation
 </h1>
 
-
-<h1
-    class="mt-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
->
-    Tissue Simulation
-</h1>
-
 <!-- Instructions -->
 <div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
 
