@@ -198,7 +198,7 @@
   <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
     <div class="text-center pointer-events-auto mb-4">
       <div class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-darkIndigo">
-        The Hormonal Pathways <br> and Trait Expression Simulator Project
+        The Hormonal Pathways <br> and Trait Expression Simulator
       </div>
     </div>
     <div class="pointer-events-auto z-30">
