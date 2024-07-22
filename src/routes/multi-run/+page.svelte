@@ -471,6 +471,30 @@ function bruh() {
     Hormone Model - Multi Run
 </h1>
 
+<div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
+    <p class="text-xl font-medium mt-4">
+        The male songbird tries to optimize its chances of reproductive success by choosing whether to invest in mating effort, parental effort, or gamete maturation. These three traits are mediated by hormones, which also affect the energy and fitness of the songbird. The songbird tries to optimize its fitness based on its sensitivity to the hormones and the concentration of the hormones. It is easier to see how each variable affects the model when using multiple runs of a single variable change.
+    </p>
+
+    <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+        <h2 class="text-lg font-bold mb-2">Simulation Steps</h2>
+        <ul class="list-disc list-inside">
+            <li class="mb-2">
+                <strong>Step 1:</strong> Ignore choosing a trait at the bottom of the page. Choose a variable and pick a variable to change. Next to the dropdown, select the starting value and the ending value of a value of the chosen variable, as well as the number of runs. Run the model to see an immediate output of all variables coming together. Make sure you click the option for "Multiple Lines Graph." Observe each of the graphs to determine what exactly we are tracking. We recommend running the model three times, each with a different number of runs to display different outputs.
+            <li class="mb-2">
+                <strong>Step 2:</strong> Use the sliders and form inputs to change the model's values. Consult the tooltip icons on the upper right of each input to gain further insight into the model's inner workings. 
+            </li>
+            <li class="mb-2">
+                <strong>Step 3:</strong> Now choose a trait and select the option for "Median and Confidence Interval Graph." This will run the model 100 times, so select which variables you want to change and which will change in each run. It is unnecessary to have the variable "number of runs" be more than 2. Run the model. The confidence interval is characterized by the curves above and below the middle curve (the median). 
+            <li class="mb-2">
+                <strong>Step 4:</strong> Play around with the variables to understand how each affects the model and to learn about the relationships between each variable.
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+
 <div class="flex flex-wrap justify-center">
     <!-- Sliders -->
     <div
@@ -748,7 +772,7 @@ function bruh() {
         switchSensitivityGraphs(event.target.value);
     }}
     showValidationMessage = {$showValidationMessage}
-    messageForValidation = "Please select a Trait For the SensitivityGraph"
+    messageForValidation = "Please select a Trait For the Sensitivity Graph"
     />
     <!-- Choose variable drop down -->
     <div class="flex flex-wrap justify-center">
