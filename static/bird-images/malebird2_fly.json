@@ -1,6 +1,0 @@
-[
-	{"name":"maleBird2_fly0001", "frame":{"x":1, "y": 1, "width": 1920, "height": 1080}},
-  {"name":"maleBird2_fly0002", "frame":{"x":1, "y": 1083, "width": 1920, "height": 1080}},
-  {"name":"maleBird2_fly0003", "frame":{"x":1923, "y": 1, "width": 1920, "height": 1080}},
-  {"name":"maleBird2_fly0004", "frame":{"x":1923, "y": 1083, "width": 1920, "height": 1080}}
-]

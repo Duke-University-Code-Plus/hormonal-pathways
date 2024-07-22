@@ -71,7 +71,7 @@
     }
 </style>
 
-<nav class="bg-gray-100 dark:bg-gray-100 shadow shadow-gray-300 w-full px-8 md:px-auto">
+<nav data-sveltekit-reload class="bg-gray-100 dark:bg-gray-100 shadow shadow-gray-300 w-full px-8 md:px-auto">
     <div class="md:h-16 h-20 mx-auto md:px-4 py-6 container flex items-center justify-between flex-wrap md:flex-nowrap sm:block hidden">
         <a href="/" class="absolute left-0" style="top: 0;">
             <img src="/HM.png" alt="Blue Bird" class="w-32 h-32 object-cover" style="margin-top: -20px;"> 
