@@ -79,8 +79,8 @@
         <div class="flex w-full justify-between items-center">
             <div class="text-gray-500 w-full md:w-auto md:flex-1">
                 <ul class="flex flex-row gap-8 font-semibold justify-center md:justify-end w-full">
-                    <li class="{$page.url.pathname == '/about-us' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
-                        <a href="/about-us">About Us</a>
+                    <li class="{$page.url.pathname == '/about' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
+                        <a href="/about">About</a>
                     </li>
                     <li class="{$page.url.pathname == '/research' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
                         <a href="/research">Research</a>
@@ -94,8 +94,8 @@
                     <li class="{$page.url.pathname == '/tissue' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
                         <a href="/tissue">Tissue</a>
                     </li>
-                    <li class="{$page.url.pathname == '/ecosystem' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
-                        <a href="/ecosystem">Ecosystem</a>
+                    <li class="{$page.url.pathname == '/environmental' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl">
+                        <a href="/environmental">Environmental</a>
                     </li>
                 </ul>
             </div>
@@ -118,8 +118,8 @@
             </button>
         </div>
         <div class="hidden sm:flex sm:flex-row flex-col items-center justify-start sm:space-x-1 navigation-menu pb-3 sm:pb-0 absolute right-0 top-16 bg-gray-100 w-full sm:w-auto z-40 p-5">
-           <li class="{$page.url.pathname == '/about-us' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
-                        <a href="/about-us">About Us</a>
+           <li class="{$page.url.pathname == '/about' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/about">About</a>
                     </li>
                     <li class="{$page.url.pathname == '/research' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
                         <a href="/research">Research</a>
@@ -133,8 +133,8 @@
                     <li class="{$page.url.pathname == '/tissue' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
                         <a href="/tissue">Tissue</a>
                     </li>
-                    <li class="{$page.url.pathname == '/ecosystem' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
-                        <a href="/ecosystem">Ecosystem</a>
+                    <li class="{$page.url.pathname == '/environmental' ? 'text-indigo-500' : ''} md:px-4 md:py-2 hover:text-indigo-600 text-xl block">
+                        <a href="/environmental">Environmental</a>
                     </li>
             <!-- !! Old Dropdown Menu Code  !! -->
             <!-- <div class="relative">
@@ -165,7 +165,7 @@
                 </button>
                 <div class="dropdown-menu absolute hidden bg-gray-700 text-white rounded-b-lg pb-2 w-48">
                     <a href="/tissue" class="block px-6 py-2 hover:bg-gray-800">Tissue</a>
-                    <a href="/ecosystem" class="block px-6 py-2 hover:bg-gray-800">Ecosystem</a>
+                    <a href="/environmental" class="block px-6 py-2 hover:bg-gray-800">Environmental</a>
                 </div>
             </div> -->
         </div>

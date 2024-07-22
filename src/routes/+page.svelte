@@ -182,7 +182,7 @@
 
     function handleKeyPress(event) {
     if (event.key === "Enter") {
-      window.location.href = "/about-us";
+      window.location.href = "/about";
     }
   }
   
@@ -204,7 +204,7 @@
     <div class="pointer-events-auto z-30">
       <ul class="flex flex-row gap-4 font-semibold justify-center w-full px-3 py-1 text-2xl font-bold text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full shadow-sm hover:from-purple-600 hover:to-indigo-500 focus:outline-none focus:ring-1 focus:ring-purple-600 focus:ring-opacity-50 transition duration-300">
         <li class="m-1">
-          <a href="/about-us">
+          <a href="/about">
             Enter
           </a>
         </li>

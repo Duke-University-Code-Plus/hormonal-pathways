@@ -75,7 +75,7 @@
 <h1
     class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
 >
-    Ecosystem Simulation
+    Environmental Simulation
 </h1>
 
 <!-- Instructions -->
