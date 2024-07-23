@@ -282,7 +282,25 @@ function createCharts() {
                 labels: Array.from({ length: Xhist.length }, (_, i) => i),
                 datasets: createDatasets(Xhist, XhistCon, "Body Condition"),
             },
-            options: chartOptions,
+            options:{
+            plugins: {
+                legend: {
+                    display: true, // no legend
+                },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Reproductive Cycle" },
+                    max: $N,
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { display: true,text: "Body Condition"},
+                    //max: maxValue
+                },
+            },
+            },
         }
     );
 
@@ -298,7 +316,25 @@ function createCharts() {
                     labels: Array.from({ length: Shist[0].length }, (_, i) => i),
                     datasets: createSensitivityDatasets(Shist, "Sensitivity"),
                 },
-                options: chartOptions,
+                options:{
+            plugins: {
+                legend: {
+                    display: true, // no legend
+                },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Reproductive Cycle" },
+                    max: $N,
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text:"Sensitivity"},
+                    //max: maxValue
+                },
+            },
+            },
             }
         );
     }
@@ -312,7 +348,25 @@ function createCharts() {
                 labels: Array.from({ length: Chist.length }, (_, i) => i),
                 datasets: createDatasets(Chist, ChistCon, "Production"),
             },
-            options: chartOptions,
+            options:{
+            plugins: {
+                legend: {
+                    display: true, // no legend
+                },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Reproductive Cycle" },
+                    max: $N,
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Production"},
+                    //max: maxValue
+                },
+            },
+            },
         }
     );
 
@@ -325,8 +379,26 @@ function createCharts() {
                 labels: Array.from({ length: Whist.length }, (_, i) => i),
                 datasets: createDatasets(Whist, WhistCon, "Fitness"),
             },
-            options: chartOptions,
-        }
+            options:{
+            plugins: {
+                legend: {
+                    display: true, // no legend
+                },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Reproductive Cycle" },
+                    max: $N,
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { display: true,text:"Fitness"},
+                    //max: maxValue
+                },
+            },
+            },
+            }
     );
 
     // Create Cumulative Fitness Chart
@@ -338,7 +410,25 @@ function createCharts() {
                 labels: Array.from({ length: Wcuml.length }, (_, i) => i),
                 datasets: createDatasets(Wcuml, WcumlCon, "Cumulative Fitness"),
             },
-            options: chartOptions,
+            options:{
+            plugins: {
+                legend: {
+                    display: true, // no legend
+                },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Reproductive Cycle" },
+                    max: $N,
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { display: true,text:"Cumulative Fitness"},
+                    //max: maxValue
+                },
+            },
+        }
         }
     );
 }
@@ -826,7 +916,7 @@ function bruh() {
             bind:inputVar={$variableRangeEnd}
         />
         <FormInput
-            id="Number of Runs"
+            id="Number of increments"
             inputType="number"
             min="0"
             max="1000000"
@@ -845,7 +935,7 @@ function bruh() {
   class:bg-indigo-600={$statRun}
   class:text-gray-100={$statRun}
 >
-  {!$statRun ? 'Multple Lines Graph' : 'Median and Confidence Interval Graph'}
+  {!$statRun ? 'Multiple Lines Graph' : 'Median and Confidence Interval Graph'}
 </button>
 </div>
 
