@@ -451,7 +451,7 @@ class babyBird {
 
         this.sprite.changeAnimation('fly');  //baby bird fly to remove location
         this.sprite.friction = 0.1
-        this.sprite.attractionPoint(0.2, this.removeX, this.removeY)
+        this.sprite.attractionPoint(0.4, this.removeX, this.removeY)
 
         if ((abs(this.sprite.position.y - this.removeY) < 1) && (abs(this.sprite.position.x - this.removeX) < 1)) { //if baby bird at remove location
             this.sprite.velocity.x = 0;
