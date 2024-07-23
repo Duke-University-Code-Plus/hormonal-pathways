@@ -1,4 +1,6 @@
 <script>
+    let showFitnessCharts = false
+
     import { onMount } from "svelte";
     import axios from "axios";
     import Chart from "chart.js/auto";
@@ -141,16 +143,17 @@
             // Making the Bird Ratios
             for (let i = 0; i < VhistBlue[0].length; i++) {
 
-                    VhistBlueRatio.push(VhistBlue[1][i] / (VhistBlue[1][i] + VhistBlue[2][i]));
                     VhistRedRatio.push(VhistRed[1][i] / (VhistRed[1][i] + VhistRed[2][i]));
                     VhistPurpleRatio.push(VhistPurple[1][i] / (VhistPurple[1][i] + VhistPurple[2][i]));
+                    VhistBlueRatio.push(VhistBlue[1][i] / (VhistBlue[1][i] + VhistBlue[2][i]));
                 }
             
             createCharts();
             
             iframe = document.querySelector("#iframeID"); //caching dom element called iframe
-            const proportiondata = ["proportion", VhistBlueRatio, VhistRedRatio, VhistPurpleRatio];
+            const proportiondata = ["proportion", VhistRedRatio, VhistPurpleRatio, VhistBlueRatio];
             iframe.contentWindow.postMessage(JSON.stringify(proportiondata), "*"); // pushes message to the
+
             
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -329,6 +332,8 @@
             "Trait Values - Purple Bird"
         )
 
+        if (showFitnessCharts) {
+
         fitnessBirdOneChartInstance = makeChart(
             "fitnessChartBirdOne",
             "Fitness",
@@ -355,6 +360,7 @@
             5,
             "Fitness - Purple Bird"
         )
+    }
 
     }
 </script>
@@ -476,7 +482,7 @@
                 <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Number of Offspring</th>
                 <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Mate count</th>
                 <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Parental count</th>
-                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Ratio between Mating and Parental Effort</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Ratio between Mating <br> and Parental Effort</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -509,15 +515,15 @@
 </div>
 
 <!-- Creating Charts-->
-<div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">     
+<div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">  
     <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Trait Values - Blue Bird
-        </h2>
-        <canvas id="traitChartBirdOne"></canvas>
-    </div> 
+    class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+>
+    <h2 class="text-center text-xl font-semibold mb-4">
+        Trait Values - Red Bird
+    </h2>
+    <canvas id="traitChartBirdTwo"></canvas>
+</div>    
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -526,31 +532,19 @@
         </h2>
         <canvas id="traitChartBirdThree"></canvas>
     </div> 
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Trait Values - Blue Bird
+        </h2>
+        <canvas id="traitChartBirdOne"></canvas>
+    </div> 
 
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Trait Values - Red Bird
-        </h2>
-        <canvas id="traitChartBirdTwo"></canvas>
-    </div> 
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Fitness - Blue Bird
-        </h2>
-        <canvas id="fitnessChartBirdOne"></canvas>
-    </div> 
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Fitness - Purple Bird
-        </h2>
-        <canvas id="fitnessChartBirdThree"></canvas>
-    </div> 
+
+
+
+{#if showFitnessCharts} 
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -559,6 +553,28 @@
         </h2>
         <canvas id="fitnessChartBirdTwo"></canvas>
     </div> 
+
+    <div
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Fitness - Purple Bird
+        </h2>
+        <canvas id="fitnessChartBirdThree"></canvas>
+    </div> 
+
+    <div
+    class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+>
+    <h2 class="text-center text-xl font-semibold mb-4">
+        Fitness - Blue Bird
+    </h2>
+    <canvas id="fitnessChartBirdOne"></canvas>
+
+</div> 
+{/if}
+
+
     
 </div>
 

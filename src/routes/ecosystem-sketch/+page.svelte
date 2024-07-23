@@ -25,6 +25,7 @@
                 window.proportion1 = window.message[1];
                 window.proportion2 = window.message[2];
                 window.proportion3 = window.message[3];
+
                 window.birdNeutralState = false; //then birds shouldnt be in neutral state
             }
 

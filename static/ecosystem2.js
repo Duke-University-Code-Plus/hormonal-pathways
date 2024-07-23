@@ -202,8 +202,7 @@ function draw() {
             bird.sprite.friction = 0.1;
         }
 
-        
-
+    
         if (!bird.neutralState) { //if bird isnt in neutral state 
             // if (bird.proportion != undefined) {
             if (timeStep >= endTimeStep) {

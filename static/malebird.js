@@ -3,6 +3,7 @@ class maleBird {
         this.neutralState = true
         this.name = name
         this.proportion = null
+        this.currentProportion = null
 
         this.sprite = createSprite(x, y);
         this.sprite.scale = scale
@@ -348,8 +349,10 @@ class maleBird {
     }
 
     determineBehavior() {
+        this.currentProportion = this.proportion[timeStep-1]; 
+        console.log(this.currentProportion)
         const randomNum = random(0, 1)
-        if (randomNum > this.proportion && this.nest.babyBirdCount > 0) { //smaller proportion, smaller change of mating
+        if (randomNum > this.currentProportion && this.nest.babyBirdCount > 0) { //smaller proportion, smaller chance of scavenging
             this.scavengeCondition = true
         } else {
             this.matingCondition = true
