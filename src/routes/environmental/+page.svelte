@@ -137,6 +137,46 @@
         <iframe width="800" height="590" src="http://localhost:5173/ecosystem-sketch" id="iframeID" title="YouTube video player" frameborder="0" class="rounded-iframe"></iframe>
     </div>
 </div>
+
+<div>
+    <div class="container mx-auto mb-8">
+        <h1 class=" flex flex-row flex-wrap text-2xl font-bold justify-center mb-4">Data Grid</h1>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white border border-gray-200">
+            <thead class="bg-gray-200">
+              <tr>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Color of Bird</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Number of Offspring</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Mate count</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Parental count</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <tr class="hover:bg-gray-100">
+                <td class="py-2 px-4 text-sm text-gray-700">Red</td>
+                <td class="py-2 px-4 text-sm text-gray-700">3</td>
+                <td class="py-2 px-4 text-sm text-gray-700">25</td>
+                <td class="py-2 px-4 text-sm text-gray-700">2</td>
+              </tr>
+              <tr class="hover:bg-gray-100">
+                <td class="py-2 px-4 text-sm text-gray-700">Purple</td>
+                <td class="py-2 px-4 text-sm text-gray-700">3</td>
+                <td class="py-2 px-4 text-sm text-gray-700">25</td>
+                <td class="py-2 px-4 text-sm text-gray-700">21</td>
+              </tr>
+              <tr class="hover:bg-gray-100">
+                <td class="py-2 px-4 text-sm text-gray-700">Blue</td>
+                <td class="py-2 px-4 text-sm text-gray-700">6</td>
+                <td class="py-2 px-4 text-sm text-gray-700">12</td>
+                <td class="py-2 px-4 text-sm text-gray-700">33</td>
+              </tr>
+              <!-- Add more rows as needed -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+</div>
+
 <style>
   .rounded-container {
     border-radius: 12px;
