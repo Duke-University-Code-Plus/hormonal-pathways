@@ -228,12 +228,8 @@ function draw() {
 
 
 function updateVariables() {
-    // var counter = 0; 
-    // while (counter < nestArray.length) {
-    //     text("Reproductive Success " + counter + ": " + nestArray[counter].babyBirdCount, 10, 20 + 20 * (counter));
-    //     counter++; 
-    // }
-    text("time step: " + int(timeStep), 10, 20);
+    textSize(20)
+    text("Reproductive Cycle " + int(timeStep), 10, 25);
 }
 
 function updateNumPrey() {
