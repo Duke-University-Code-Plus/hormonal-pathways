@@ -119,7 +119,7 @@ var defaultFoodAvailability = 10;
 
 //inputs
 var time = 0; 
-var timeStepCycle = 25; 
+var timeStepCycle = 30; 
 var timeStep = 0; 
 var behavior; 
 var mu = 10; 

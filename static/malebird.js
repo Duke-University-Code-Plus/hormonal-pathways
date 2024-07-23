@@ -105,7 +105,7 @@ class maleBird {
 
             } else {
                 this.sprite.changeAnimation('fly')
-                this.sprite.attractionPoint(0.2, this.perchX, this.perchY)
+                this.sprite.attractionPoint(0.3, this.perchX, this.perchY)
             }
         }
 
@@ -128,7 +128,7 @@ class maleBird {
             this.createLove();
             if (!this.love.loveCondition) {
                 if (this.nest.babyBirdsInNest.length == 2) {
-                    this.fullNest = true
+                    this.fullNest = true 
                 }
                 this.matingStage = 4
                 this.mate.matingStage = 4
@@ -140,12 +140,9 @@ class maleBird {
         }
 
         if (this.matingStage == 4) { //baby bird created
-
             if (!this.babyBirdChange && this.fullNest) { //if baby bird hasnt already been created and there's two baby birds in the nest 
-                
                 this.nest.removeBabyBird() //remove baby bird
                 this.babyBirdFlying = true
-
                 if (this.nest.babyBirdsInNest.length == 1) { //once baby bird sprite is out of frame 
                     this.nest.addBabyBird(this.nest.emptySpaceX) //add baby bird at the x position of bird that left 
                     this.babyBirdChange = true;
@@ -155,8 +152,7 @@ class maleBird {
             }
 
             if (!this.babyBirdChange && !this.fullNest) {
-
-                var babybirdX = this.nest.sprite.position.x - this.nest.sprite.originalWidth / 4 + ((this.nest.sprite.originalWidth / 5) * this.nest.babyBirdCount);
+                var babybirdX = this.nest.sprite.position.x - this.nest.sprite.originalWidth / 5 + ((this.sprite.originalWidth / 8) * this.nest.babyBirdCount);
                 this.nest.addBabyBird(babybirdX); //create baby bird
                 this.babyBirdChange = true;
                 this.matingStage = 5;
@@ -165,7 +161,6 @@ class maleBird {
         }
 
         if (this.matingStage == 5) { //female bird flies away and male returns to nest 
-
             this.sprite.changeAnimation('fly')
             this.sprite.attractionPoint(0.2, this.nest.sprite.position.x + 17, this.nest.sprite.position.y - 20)
 
@@ -181,6 +176,7 @@ class maleBird {
                     this.notes = null
                     this.notes_flipped = null
                     this.love = null
+                    this.neutralState = true;
                 }
             }
         }
@@ -208,9 +204,9 @@ class maleBird {
         if (this.love == null) {
             var midpointX = abs(this.mate.sprite.position.x - this.sprite.position.x) / 2;
             if (this.mate.sprite.position.x <= this.sprite.position.x)
-                this.love = new Heart(this.mate.sprite.position.x + midpointX, this.mate.sprite.position.y - 20);
+                this.love = new Heart(this.mate.sprite.position.x + midpointX, this.mate.sprite.position.y - 30);
             if (this.mate.sprite.position.x > this.sprite.position.x)
-                this.love = new Heart(this.sprite.position.x + midpointX, this.mate.sprite.position.y - 20);
+                this.love = new Heart(this.sprite.position.x + midpointX, this.mate.sprite.position.y - 30);
         }
         this.love.fade();
         this.love.show();
@@ -230,7 +226,7 @@ class maleBird {
 
         if (this.scavengeState == 1) { // if = 1, fly to worm
             this.sprite.changeAnimation('fly')
-            this.sprite.attractionPoint(0.2, this.scavengeX, this.scavengeY)
+            this.sprite.attractionPoint(0.3, this.scavengeX, this.scavengeY)
 
             if ((abs(this.sprite.position.y - this.scavengeY) < 1) && (abs(this.sprite.position.x - this.scavengeX) < 1)) { //if close to scavenge stop
 
@@ -277,7 +273,7 @@ class maleBird {
         if (this.scavengeState == 3) {  //fly to nest
 
             this.sprite.changeAnimation('fly')
-            this.sprite.attractionPoint(0.2, this.nest.sprite.position.x + 17, this.nest.sprite.position.y - 20) // fly to nest 
+            this.sprite.attractionPoint(0.3, this.nest.sprite.position.x + 17, this.nest.sprite.position.y - 20) // fly to nest 
 
             if ((abs(this.sprite.position.y - (this.nest.sprite.position.y - 20)) < 1) && (abs(this.sprite.position.x - (this.nest.sprite.position.x + 17)) < 1)) { //if at nest 
                 if (this.nest.sprite.position.x < this.sprite.position.x) {
@@ -312,8 +308,6 @@ class maleBird {
         }
 
         if (this.scavengeState == 5) {
-
-            this.sprite.changeAnimation('stand')
             this.caughtPrey = false
             this.scavengeChange = false
             this.scavengeState = 0
@@ -323,9 +317,17 @@ class maleBird {
             this.scavengeFrameCount = 0;
             this.peckColliderY = 0;
             this.scavengeCondition = false;
-
-
+            this.neutralState = true;
         }
+    }
+
+    deathBehavior() {
+        this.sprite.changeAnimation('transformed');
+        this.sprite.velocity.x = 0;
+        this.sprite.velocity.y = 2;
+
+        if (this.sprite.position.y >= ground.position.y - ground.originalHeight / 2 && this.sprite.getAnimationLabel() == 'transformed') 
+            this.sprite.remove();
     }
 
     findWorm() {
@@ -347,16 +349,26 @@ class maleBird {
 
     determineBehavior() {
         const randomNum = random(0, 1)
-        if (randomNum < this.proportion) { //smaller proportion, smaller change of mating
-            this.matingCondition = true
-        } else {
+        if (randomNum > this.proportion && this.nest.babyBirdCount > 0) { //smaller proportion, smaller change of mating
             this.scavengeCondition = true
+        } else {
+            this.matingCondition = true
         }
     }
 
     neutralStateBehavior() {
         this.sprite.changeAnimation('fly')
-        this.sprite.friction = 0.0
+        this.sprite.friction = 0.1;
+        if (this.sprite.position.y > height / 4) { //flies upward
+            this.sprite.attractionPoint(0.3, width / 2, height / 4);
+        }
+        else { 
+            if (this.sprite.velocity.x > 0) {
+                this.sprite.velocity.x = 2; 
+            } else {
+                this.sprite.velocity.x = -2; 
+            }
+        }
     }
 }
 
