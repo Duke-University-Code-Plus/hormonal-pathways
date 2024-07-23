@@ -134,7 +134,7 @@
 <!-- Animation stuff-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
     <div class="rounded-container">
-        <iframe width="800" height="590" src="http://localhost:5173/ecosystem-sketch" id="iframeID" title="YouTube video player" frameborder="0" class="rounded-iframe"></iframe>
+        <iframe width="800" height="590" src="http://localhost:5173/ecosystem-sketch" id="iframeID" title="Environmental Simulation" allow="accelerometer" frameborder="0" class="rounded-iframe"></iframe>
     </div>
 </div>
 <style>
