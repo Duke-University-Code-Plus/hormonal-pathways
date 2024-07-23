@@ -1,5 +1,7 @@
 <script>
     let showFitnessCharts = false
+    let showFoodScarcitySlider = false
+    let modelRan = false
 
     import { onMount } from "svelte";
     import axios from "axios";
@@ -154,6 +156,8 @@
             const proportiondata = ["proportion", VhistRedRatio, VhistPurpleRatio, VhistBlueRatio];
             iframe.contentWindow.postMessage(JSON.stringify(proportiondata), "*"); // pushes message to the
 
+            modelRan = true
+
             
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -170,7 +174,8 @@
         const is2dArray = (array) => array.every((item) => Array.isArray(item));
         if (is2dArray(y)) {
             let chartDatasets = [];
-            for (let i = 0; i < y.length; i++) {
+            //start at 1 to exclude gamete maturation data from graphs
+            for (let i = 1; i < y.length; i++) { 
                 color = color_pool[i]
                 let r = color[0];
                 let g = color[1];
@@ -404,10 +409,11 @@
         <img src="/bird_red.png" alt="Red Bird" class="w-16 h-16 object-cover">
 
         <SliderInput
-            id="Max change of sensitivity - Red Bird"
+            id="Max change of sensitivity"
             min="0.01"
             max=".5"
             step="0.01"
+            bind:disabled={modelRan}
             bind:inputVar={$delSmax1}
             modalMessage="Changes the way the bird optimizes fitness. For the red bird, it will reach its hormonal optimum realy slowly compared to all other birds. It will invest in its most valued trait in near the end of the simulation or not at all. The max change of sensitivity is the maximum change a bird can change its sensitivity which also helps it adapt to its environment."
             />
@@ -418,10 +424,11 @@
         <img src="/bird_purple.png" alt="Purple Bird" class="w-16 h-16 object-cover">
 
         <SliderInput
-            id="Max change of sensitivity - Purple Bird"
+            id="Max change of sensitivity"
             min="0.01"
             max=".5"
             step="0.01"
+            bind:disabled={modelRan}
             bind:inputVar={$delSmax2}
             modalMessage="Changes the way the bird optimizes fitness. For the purple bird, it will reach its hormonal optimum relatively quickly compared to the red bird, but not as fast as the blue bird. It will invest in its most valued trait in near the middle of the simulation. The max change of sensitivity is the maximum change a bird can change its sensitivity which also helps it adapt to its environment."
             />
@@ -432,21 +439,23 @@
         <img src="/bird_blue.png" alt="Blue Bird" class="w-16 h-16 object-cover">
 
         <SliderInput
-            id="Max change of sensitivity - Blue Bird"
+            id="Max change of sensitivity"
             min="0.01"
             max=".5"
             step="0.01"
+            bind:disabled={modelRan}
             bind:inputVar={$delSmax3}
             modalMessage="Changes the way the bird optimizes fitness. For the blue bird, it will reach its hormonal optimum faster, so it will invest in its most valued trait early on. The max change of sensitivity is the maximum change a bird can change its sensitivity which also helps it adapt to its environment."
             />
     </div>
 </div>
 
+{#if showFoodScarcitySlider}
 <div class="flex flex-wrap justify-center grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
     <!-- Container for food shortage sliders-->
     <div class="flex flex-wrap justify-center w-full -mt-5">
         <SliderInput
-            id="Worm Count"
+            id="Food Scarcity"
             min="0"
             max="1"
             step="0.1"
@@ -455,11 +464,12 @@
         />
     </div>
 </div>
+{/if}
 
 <!-- Run Simulation Button-->
-<div class="text-center my-4">
+<div class="text-center -mt-4 mb-6">
     <button
-        class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded"
+        class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded {modelRan ? 'disable' : ''}"
         on:click={fetchData}>Run</button
     >
 </div>
@@ -523,7 +533,8 @@
         Trait Values - Red Bird
     </h2>
     <canvas id="traitChartBirdTwo"></canvas>
-</div>    
+</div> 
+
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -532,6 +543,7 @@
         </h2>
         <canvas id="traitChartBirdThree"></canvas>
     </div> 
+
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
     >
@@ -540,8 +552,6 @@
         </h2>
         <canvas id="traitChartBirdOne"></canvas>
     </div> 
-
-
 
 
 {#if showFitnessCharts} 
