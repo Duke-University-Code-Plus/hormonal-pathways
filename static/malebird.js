@@ -2,7 +2,7 @@ class maleBird {
     constructor(name, x, y, scale, nest, perch, femaleperch, color, neutralSpeed) {
         this.neutralState = true
         this.name = name
-        this.proportion = 0
+        this.proportion = null
 
         this.sprite = createSprite(x, y);
         this.sprite.scale = scale

@@ -137,11 +137,17 @@ function setup() {
     updateNumPrey()
 }
 
-function draw() {
-
+function updateProportion() {
     bird1.proportion = window.proportion1
     bird2.proportion = window.proportion2
     bird3.proportion = window.proportion3
+}
+
+function draw() {
+
+    if (bird1.proportion == null) {
+        updateProportion();
+    }
 
     background(135, 206, 250);
     drawSprites();
@@ -151,7 +157,6 @@ function draw() {
     updateNumPrey()
 
     for (let bird of maleBirdsArray) { //go through male birds
-
         if (window.birdNeutralState == false) { //if birds shouldnt be in neutrak state in set constructor value to false
             bird.neutralState = false;
             bird.sprite.friction = 0.1

@@ -53,8 +53,6 @@
     let fitnessBirdThreeChartInstance = null;
 
     onMount(() => {
-        fetchData();
-        //send proportion data to iframe
 
         //listen for iframe
         window.onmessage = function (e) {
@@ -71,6 +69,7 @@
 
     async function fetchData() {
         try {
+
             gamma = [$gamma1, $gamma2, $gamma3];
             z = [$z1, $z2, $z3];
             var params = {
@@ -94,7 +93,6 @@
             // Making 3 Requests to the server in one Fetch
 
             // Blue Bird
-
             // Setting gamma a z values to create more weight for parental effort
             params['gamma'] = [$gamma1, $gamma2, $gamma3].join(",");
             params['z'] = [$z1, $z2, $z3].join(",");
@@ -147,19 +145,13 @@
                     VhistRedRatio.push(VhistRed[1][i] / (VhistRed[1][i] + VhistRed[2][i]));
                     VhistPurpleRatio.push(VhistPurple[1][i] / (VhistPurple[1][i] + VhistPurple[2][i]));
                 }
-
-            // RATIOS OUTPUT TO CONSOLE
-            console.log(VhistBlueRatio);
-            console.log(VhistRedRatio);
-            console.log(VhistPurpleRatio); 
             
             createCharts();
             
             iframe = document.querySelector("#iframeID"); //caching dom element called iframe
             const proportiondata = ["proportion", VhistBlueRatio, VhistRedRatio, VhistPurpleRatio];
             iframe.contentWindow.postMessage(JSON.stringify(proportiondata), "*"); // pushes message to the
-            const runStart = "run"
-            iframe.contentWindow.postMessage(JSON.stringify(runStart), "*");
+            
         } catch (error) {
             console.error("Error fetching data:", error);
         }
