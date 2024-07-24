@@ -158,7 +158,6 @@ function draw() {
     preyMovement();
     femaleBirdMovement();
     updateNumPrey()
-    updateVariables();
 
     time = int(millis() / 1000); 
 
@@ -186,18 +185,20 @@ function draw() {
         }
     }
 
-    console.log ("time", timeStep); 
+
 
     if ((time % timeStepCycle == 0 || time == 0) && (birdsNeutralState == true)) { //if the time cycle ends
         timeStep++; 
     }
 
     for (let bird of maleBirdsArray) { //go through male birds
+
         if (bird.neutralState) {
             bird.neutralStateBehavior();
         }
 
         if ((time % timeStepCycle == 0 || time == 0) && (birdsNeutralState == true)) { //if the time cycle ends
+            bird.updateHTML();
             bird.neutralState = false;
             bird.sprite.friction = 0.1;
         }
@@ -224,12 +225,6 @@ function draw() {
             // }
         }
     }
-}
-
-
-function updateVariables() {
-    textSize(20)
-    text("Reproductive Cycle " + int(timeStep), 10, 25);
 }
 
 function updateNumPrey() {

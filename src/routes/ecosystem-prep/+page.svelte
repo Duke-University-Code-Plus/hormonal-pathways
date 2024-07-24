@@ -62,13 +62,36 @@
             window.message = JSON.parse(e.data);
             window.message1 = window.message[0]; //name of bird
             window.message2 = window.message[1]; //num of offspring
+            window.message3 = window.message[2]; //cumulative mating effort
+            window.message4 = window.message[3]; //cumulative parental effort
+            window.message5 = window.message[4]; //ratio of mating effort
+            window.message6 = window.message[5]; //ratio of parental effort
+            window.message7 = window.message[6]; //reproductive cycle
 
-            const element = document.getElementById(
+            const element1 = document.getElementById(
                 window.message1 + "Offspring",
             );
-            element.innerHTML = "Offspring Count: " + window.message2;
+            const element2 = document.getElementById(
+                window.message1 + "Mating",
+            );
+            const element3 = document.getElementById(
+                window.message1 + "Parental",
+            );
+            const element4 = document.getElementById(
+                window.message1 + "Ratio",
+            );
+            const element5 = document.getElementById(
+                "reproductiveCycle",
+            );
+            element1.innerHTML = window.message2;
+            element2.innerHTML = window.message3;
+            element3.innerHTML = window.message4;
+            element4.innerHTML = window.message5 + " : " + window.message6;
+            element5.innerHTML = "Reproductive Cycle: " + window.message7;
         };
     });
+
+
 
     async function fetchData() {
         try {
@@ -508,8 +531,14 @@
     </div>
 {/if}
 
-<!-- Run Simulation Button-->
+<!-- Run Simulation Button -->
 <div class="text-center -mt-4 mb-6">
+    <!-- Reproductive Cycle Box -->
+    <div class="absolute border border-gray-200 p-2 rounded-md">
+        <span id="reproductiveCycle" class="text-center text-base font-semibold">Reproductive Cycle: 0</span>
+    </div>
+
+    <!-- Run Simulation Button -->
     <button
         class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded {modelRan
             ? 'disable'
@@ -518,6 +547,10 @@
     >
 </div>
 
+
+<div>
+
+</div>
 <!-- Animation stuff-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
     <div class="rounded-container">
@@ -531,72 +564,46 @@
             class="rounded-iframe"
         ></iframe>
     </div>
-</div>
 
-<div>
     <div class="container mx-auto mb-8">
 
         {#if modelRan}
         <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-200">
-                <thead class="bg-gray-200">
-                    <tr>
-                        <th
-                            class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700"
-                            >Color of Bird</th
-                        >
-                        <th
-                            class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700"
-                            >Number of Offspring</th
-                        >
-                        <th
-                            class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700"
-                            >Mate count</th
-                        >
-                        <th
-                            class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700"
-                            >Parental count</th
-                        >
-                        <th
-                            class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700"
-                            >Ratio between Mating <br /> and Parental Effort</th
-                        >
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    <tr class="hover:bg-gray-100">
-                        <td class="py-2 px-4 text-sm text-gray-700">Red</td>
-                        <td
-                            id="bird1Offspring"
-                            class="py-2 px-4 text-sm text-gray-700">3</td
-                        >
-                        <td class="py-2 px-4 text-sm text-gray-700">25</td>
-                        <td class="py-2 px-4 text-sm text-gray-700">2</td>
-                        <td class="py-2 px-4 text-sm text-gray-700">2</td>
-                    </tr>
-                    <tr class="hover:bg-gray-100">
-                        <td class="py-2 px-4 text-sm text-gray-700">Purple</td>
-                        <td
-                            id="bird2Offspring"
-                            class="py-2 px-4 text-sm text-gray-700">3</td
-                        >
-                        <td class="py-2 px-4 text-sm text-gray-700">25</td>
-                        <td class="py-2 px-4 text-sm text-gray-700">21</td>
-                        <td class="py-2 px-4 text-sm text-gray-700">21</td>
-                    </tr>
-                    <tr class="hover:bg-gray-100">
-                        <td class="py-2 px-4 text-sm text-gray-700">Blue</td>
-                        <td
-                            id="bird3Offspring"
-                            class="py-2 px-4 text-sm text-gray-700">6</td
-                        >
-                        <td class="py-2 px-4 text-sm text-gray-700">12</td>
-                        <td class="py-2 px-4 text-sm text-gray-700">33</td>
-                        <td class="py-2 px-4 text-sm text-gray-700">21</td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                </tbody>
-            </table>
+          <table class="min-w-full bg-white border border-gray-200">
+            <thead class="bg-gray-200">
+              <tr>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Color of Bird</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Number of Offspring</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Mate count</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Parental count</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Ratio between Mating <br> and Parental Effort</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <tr class="hover:bg-gray-100">
+                <td class="py-2 px-4 text-sm text-gray-700">Red</td>
+                <td id="bird1Offspring" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird1Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird1Parental" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird1Ratio" class="py-2 px-4 text-sm text-gray-700">0</td>
+              </tr>
+              <tr class="hover:bg-gray-100">
+                <td class="py-2 px-4 text-sm text-gray-700">Purple</td>
+                <td id="bird2Offspring" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird2Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird2Parental" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird2Ratio" class="py-2 px-4 text-sm text-gray-700">0</td>
+              </tr>
+              <tr class="hover:bg-gray-100">
+                <td class="py-2 px-4 text-sm text-gray-700">Blue</td>
+                <td id="bird3Offspring" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird3Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird3Parental" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird3Ratio" class="py-2 px-4 text-sm text-gray-700">0</td>
+              </tr>
+              <!-- Add more rows as needed -->
+            </tbody>
+          </table>
         </div>
         {/if}
     </div>
