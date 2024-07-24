@@ -593,7 +593,7 @@ function bruh() {
     </p>
 
     <div class="bg-gray-100 p-4 rounded-lg shadow-md">
-        <h2 class="text-lg font-bold mb-2">Recommended Exploration Stepss</h2>
+        <h2 class="text-lg font-bold mb-2">Recommended Exploration Steps</h2>
        <strong>There are two ways to explore the model using the multi-run version of the model:</strong> 
         <ol class="list-inside space-y-4 mb-2">
             <li>1. Explore the output of 100 simulations using the same set of parameters. Remember that there are several random variables that affect the output of the model, including the variable β (which affects reproductive efficacy at each time point) and µ (which is the probability that the organism dies at each time point). Running the model exploring the output of many simulations allows us to see how the organism optimizes its fitness given this element of randomness. You can access this model by selecting the ‘Median and Confidence Interval Graph’  option above the ‘Run’ button. </li>
