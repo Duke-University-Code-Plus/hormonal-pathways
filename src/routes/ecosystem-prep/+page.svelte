@@ -84,8 +84,8 @@
                 "reproductiveCycle",
             );
             element1.innerHTML = window.message2;
-            element2.innerHTML = window.message3;
-            element3.innerHTML = window.message4;
+            //element2.innerHTML = window.message3;
+            //element3.innerHTML = window.message4;
             element4.innerHTML = window.message5 + " : " + window.message6;
             element5.innerHTML = "Reproductive Cycle: " + window.message7;
         };
@@ -469,7 +469,7 @@
         <SliderInput
             id="Max change of sensitivity"
             min="0.01"
-            max=".5"
+            max=".9"
             step="0.01"
             bind:disabled={modelRan}
             bind:inputVar={$delSmax1}
@@ -490,7 +490,7 @@
         <SliderInput
             id="Max change of sensitivity"
             min="0.01"
-            max=".5"
+            max=".9"
             step="0.01"
             bind:disabled={modelRan}
             bind:inputVar={$delSmax2}
@@ -511,7 +511,7 @@
         <SliderInput
             id="Max change of sensitivity"
             min="0.01"
-            max=".5"
+            max=".9"
             step="0.01"
             bind:disabled={modelRan}
             bind:inputVar={$delSmax3}
@@ -583,8 +583,9 @@
               <tr>
                 <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Color of Bird</th>
                 <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Number of Offspring</th>
-                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Mate count</th>
-                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Parental count</th>
+                
+                <!-- <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Mate count</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Parental count</th> -->
                 <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Ratio between Parental <br> and Mating Effort</th>
               </tr>
             </thead>
@@ -592,22 +593,22 @@
               <tr class="hover:bg-gray-100">
                 <td class="py-2 px-4 text-sm text-gray-700">Red</td>
                 <td id="bird1Offspring" class="py-2 px-4 text-sm text-gray-700">0</td>
-                <td id="bird1Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
-                <td id="bird1Parental" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <!-- <td id="bird1Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird1Parental" class="py-2 px-4 text-sm text-gray-700">0</td> -->
                 <td id="bird1Ratio" class="py-2 px-4 text-sm text-gray-700">0</td>
               </tr>
               <tr class="hover:bg-gray-100">
                 <td class="py-2 px-4 text-sm text-gray-700">Purple</td>
                 <td id="bird2Offspring" class="py-2 px-4 text-sm text-gray-700">0</td>
-                <td id="bird2Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
-                <td id="bird2Parental" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <!-- <td id="bird2Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird2Parental" class="py-2 px-4 text-sm text-gray-700">0</td> -->
                 <td id="bird2Ratio" class="py-2 px-4 text-sm text-gray-700">0</td>
               </tr>
               <tr class="hover:bg-gray-100">
                 <td class="py-2 px-4 text-sm text-gray-700">Blue</td>
                 <td id="bird3Offspring" class="py-2 px-4 text-sm text-gray-700">0</td>
-                <td id="bird3Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
-                <td id="bird3Parental" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <!-- <td id="bird3Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird3Parental" class="py-2 px-4 text-sm text-gray-700">0</td> -->
                 <td id="bird3Ratio" class="py-2 px-4 text-sm text-gray-700">0</td>
               </tr>
               <!-- Add more rows as needed -->
