@@ -340,12 +340,12 @@
     </p>
 
     <div class="bg-gray-100 p-4 rounded-lg shadow-md">
-        <h2 class="text-lg font-bold mb-2">Simulation Steps</h2>
+        <h2 class="text-lg font-bold mb-2">Recommended Exploration Steps</h2>
         <ul class="list-disc list-inside">
             <li class="mb-2">
-                <strong>Step 1:</strong> Run the model to see an immediate output of all variables coming together. Observe each of the graphs to determine what exactly we are tracking.
+                <strong>Step 1:</strong> Run the model to see an immediate output of all variables. Observe each of the graphs to determine what exactly we are tracking.
             <li class="mb-2">
-                <strong>Step 2:</strong> Use the sliders and form inputs to change the model's values. Consult the tooltip icons on the upper right of each input to gain further insight into the model's inner workings.  
+                <strong>Step 2:</strong> Use the sliders and form inputs to change the model's values. Consult the tooltip icons on the upper right of each input to gain further insight into the model's inner workings.
             </li>
             <li class="mb-2">
                 <strong>Step 3:</strong> Play around with the variables to understand how each affects the model and to learn about the relationships between each variable.
@@ -367,7 +367,7 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma1}
-                modalMessage="A variable that determines the negative weight of gamete maturation. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for gamete maturation, the more costly it is to the organism to invest in gamete maturation. Therefore, there is lower value for gamete maturation, and will get picked less."
+                modalMessage="A variable that determines the negative weight of gamete maturation. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligible, the higher the gamma value for gamete maturation, the more costly it is to the organism to invest in gamete maturation. Therefore, as the cost of gamete production increases, the benefits for investing in gamete maturation decrease."
             />
 
             <SliderInput
@@ -376,7 +376,7 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma2}
-                modalMessage="A variable that determines the negative weight of mating effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for mating effort, the more costly it is to the organism to invest in mating effort. Therefore, there is lower value for mating effort, and will get picked less."
+                modalMessage="A variable that determines the negative weight of mating effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligible, the higher the gamma value for mating effort, the more costly it is to the organism to invest in mating effort. Therefore, as the cost of mating effort increases, the benefits for investing in mating effort decrease."
             />
 
             <SliderInput
@@ -385,7 +385,7 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$gamma3}
-                modalMessage="A variable that determines the negative weight of parental effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for parental effort, the more costly it is to the organism to invest in parental effort. Therefore, there is lower value for parental effort, and will get picked less."
+                modalMessage="A variable that determines the negative weight of parental effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligible, the higher the gamma value for parental effort, the more costly it is to the organism to invest in parental effort. Therefore, as the cost of parental effort increases, the benefits for investing in parental effort decrease."
             />
         </div>
 
@@ -406,7 +406,7 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$z2}
-                modalMessage="The weight of the mating effort trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
+                modalMessage="The weighting of the gamete maturation trait in the fitness function, also known as the selection index. As the z value for a trait increases, the more impactful that trait is in the fitness function. However, a higher z is not necessarily always better for the organism since there are also costs when investing into a trait."
             />
 
             <SliderInput
@@ -415,28 +415,28 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$z3}
-                modalMessage="The weight of the parental effort trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
+                modalMessage="The weighting of the parental effort trait in the fitness function, also known as the selection index. As the z value for a trait increases, the more impactful that trait is in the fitness function. However, a higher z is not necessarily always better for the organism since there are also costs when investing into a trait."
             />
         </div>
 
         <!-- Container for G and mu sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput 
-                id="Hormone level for Mature Gametes (G)" 
+                id="Minimum hormone level for Mature Gametes (G)" 
                 min="0" 
                 max="1" 
                 step="0.1" 
                 bind:inputVar={$G} 
-                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization. This is the minimum production of hormone that has to be present in the gamete maturation trait in order for gamete maturation to occur. A lower treshhold of hormone level (G) will result in lower costs in the energy level of the organism, and lower costs investing into parental effort."
+                modalMessage="Minimum level of circulating hormone required for cells to mature at the end of gametogenesis, leading to the production of sperm/eggs capable of fertilization. This is the minimum production of hormone that must be present in the gamete maturation trait in order for gamete maturation to occur. Gamete maturation is required for any reproductive success, so as G increases, the organism must invest more of its resources in gamete production in order to achieve any fitness, which limits its ability to invest in other activities, including gaining energy, mating effort, and parental effort.  "
                 />
 
             <SliderInput
-                id="Death probability (µ)"
+                id="Mortality probability (µ)"
                 min="0"
                 max="1"
                 step="0.001"
                 bind:inputVar={$mu}
-                modalMessage="A fixed chance that the male songbird will die randomly."
+                modalMessage="In any given reproductive cycle, mu is the probability that the organism will die."
             />
         </div>
 
@@ -454,7 +454,7 @@
                 max="1"
                 step="0.1"
                 bind:inputVar={$foodShort}
-                modalMessage="A multiplier of current food. The lower the value, the lower the food available to the organism."
+                modalMessage="A multiplier of current food. The lower the value, the less energy is accrued by organism during each reproductive cycle."
             />
 
             <SliderTwoInput
@@ -499,7 +499,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by the cost function. Decreasing the minimum energy required for reproduction will reduce the costs of investing more into mating effort. However, this is at the expense of investing into parental effort, and at the expense of accumulating energy."
+            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by the cost function. Decreasing the minimum energy required for reproduction will mean that more resources are available to invest in mating, parental effort, and accumulating more resources."
             bind:inputVar={$Xmin}
         />
 
@@ -509,7 +509,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues. The organism maximizes its lifetime success by finding the optimal level of the |ΔSᵢ, ₘₐₓ| at a given target."
+            modalMessage="The absolute value of the max change of the sensitivity in hormone in an organism. This is not the same across tissues. The organism seeks to maximizes its lifetime reproductive success by choosing the optimal level of the S at each target tissue, but it is constrained in reaching that optimum by |ΔSᵢ, ₘₐₓ| because it cannot change more that this value each cycle. Thus, as |ΔSᵢ, ₘₐₓ| increases, the faster that the organism can change its S values at each tissue to reach a phenotypic optimum."
             bind:inputVar={$delSmax}
         />
 
@@ -519,7 +519,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism. The organism will try to optimize this value to maximize its lifetime success."
+            modalMessage="The absolute value of the max change of the circulating hormone in an organism. The organism seeks to maximizes its lifetime reproductive success by choosing the optimal level of C at each reproductive cycle, but it is constrained in reaching that optimum by |Cₘₐₓ| because it cannot change more that this value each cycle. Thus, as |Cₘₐₓ| increases, the faster that the organism can change its  hormone production to reach a phenotypic optimum"
             bind:inputVar={$delCmax}
         />
 
@@ -529,7 +529,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="Determines the food availible in the environment for the organism. Increasing the food availiability will increase the payoff when investing in foraging."
+            modalMessage="•	Determines the food available in the environment for the organism. Increasing the food availability will increase the payoff when investing in foraging."
             bind:inputVar={$tau}
         />
 
@@ -539,7 +539,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="A constant used by the Michaelis-Menten Equation. Equal across all tissues."
+            modalMessage="The Michaelis constant used by the Michaelis-Menten Equation. It is assumed to be equal across all tissues. K is the concentration of a substrate (in this case the hormone) at which the reaction between hormones and receptors reaches half of its maximum velocity. As K increases, more hormone is needed to achieve the same velocity of the reaction. "
             bind:inputVar={$K}
         />
 
@@ -549,7 +549,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
+            modalMessage="•	The individual is in an environment that is variable from one period to the next, captured by the random variable β that affects reproductive efficacy at each time point. The distribution is defined by two positive parameters, alpha (A) and beta (B), that together control the shape of the distribution. For more information, see: https://en.wikipedia.org/wiki/Beta_distribution."
             bind:inputVar={$alpha}
         />
 
@@ -559,7 +559,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
+            modalMessage="•	The individual is in an environment that is variable from one period to the next, captured by the random variable β that affects reproductive efficacy at each time point. The distribution is defined by two positive parameters, alpha (A) and beta (B), that together control the shape of the distribution. For more information, see: https://en.wikipedia.org/wiki/Beta_distribution."
             bind:inputVar={$beta}
         />
 
@@ -589,7 +589,7 @@
             min="0"
             max="10000"
             step="1"
-            modalMessage="Number of reproductive cycles the simulation goes through. Once reached, the organism dies."
+            modalMessage="•	Maximum number of reproductive cycles included in the simulation. Once reached, the organism dies."
             bind:inputVar={$N}
         />
 
