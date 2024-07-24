@@ -429,27 +429,31 @@
 <!-- Instructions -->
 <div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
     <p class="text-xl font-semibold mt-4">
-        Each bird exhibits a unique level of receptor sensitivity, which
-        determines their flexiblilty in adapting to external changes. This
-        adaptive capability directly reflects how successful a bird is in
-        producing an offspring.
+        Each bird differs in their capability to change their receptor sensitivity to hormones. 
+        This ability allows birds to flexibly change the magntitude of their reaction with hormones, 
+        leading to their optimal adaptation to external changes. A bird's maximum capacity to change 
+        their sensitivity to hormones directly reflects how successful a bird is in producing an offspring
+         in every reproductive cycle.
     </p>
     <div class="bg-gray-100 p-4 rounded-lg shadow-md">
-        <h2 class="text-lg font-bold mb-2">Simulation Steps</h2>
+        <h2 class="text-lg font-bold mb-2">Recommended Exploration Steps</h2>
         <ul class="list-disc list-inside">
             <li class="mb-2">
-                <strong>Step 1:</strong> Observe the behaviors expressed by the male
-                bird. The birds optimize their chances of reproductive success by
-                choosing whether to invest on mating effort or parental effort.
+                <strong>Step 1:</strong> Use the sliders below each bird to adjust their 
+                ability to change hormone sensitivity. 
             </li>
             <li class="mb-2">
-                <strong>Step 2:</strong> Use the slider to change the food availability
-                of the simulation. The change in the external environement causes
-                the birds to reconsider their trait expression.
+                <strong>Step 2:</strong> 
+                Observe the behaviors expressed by the male
+                birds. The birds optimize their chances of reproductive success by
+                choosing whether to exhibit mating or parental behavior depending on 
+                their external conditions.
             </li>
             <li class="mb-2">
-                <strong>Step 3:</strong> Reference the Offspring Count to compare
-                which bird is experiencing the most reproductive success.
+                <strong>Step 3:</strong> Reference the table and graphs below. Compare a bird's Number 
+                of Offspring to distinguish a bird's reproductive success. The Ratio between 
+                Parental and Mating Effort represents which behavior a bird is attempting to prioritize 
+                at each reproductive cycle. 
             </li>
         </ul>
     </div>
@@ -458,7 +462,7 @@
 <div class="flex justify-center">
     <div class="flex flex-col items-center m-5">
         <h4 class="text-center text-base font-semibold">
-            Low Max Change of Hormone Sensitivity
+            Low Ability to Change Hormone Sensitivity
         </h4>
         <img
             src="/bird_red.png"
@@ -479,7 +483,7 @@
 
     <div class="flex flex-col items-center m-5">
         <h4 class="text-center text-base font-semibold">
-            Average Max Change of Hormone Sensitivity
+            Average Ability to Change Hormone Sensitivity
         </h4>
         <img
             src="/bird_purple.png"
@@ -500,7 +504,7 @@
 
     <div class="flex flex-col items-center m-5">
         <h4 class="text-center text-base font-semibold">
-            High Max Change of Hormone Sensitivity
+            High Ability to Change Hormone Sensitivity
         </h4>
         <img
             src="/bird_blue.png"
