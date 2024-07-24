@@ -3,7 +3,6 @@
     import axios from "axios";
     import Chart from "chart.js/auto";
     import FormInput from "../Nested/FormInput.svelte";
-    import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
     import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
     import Dropdown from "../Nested/Dropdown.svelte";
@@ -580,8 +579,6 @@ function bruh() {
 }
 </script>
 
-<NavBar multiPage="Multi" />
-
 <h1
     class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
     Hormone Model - Multi Run
@@ -614,7 +611,7 @@ function bruh() {
                 <li>
                     <strong>Step 1:</strong> Ignore choosing a trait at the bottom of the page. Instead, choose a variable and pick a variable to change. 
                 <li>
-                    <strong>Step 2:</strong> Next to the dropdown, select the starting value and the ending value of a value of the chosen variable, as well as the number of runs. Run the model to see an immediate output of all variables coming together. Make sure you click the option for "Multiple Lines Graph." Observe each of the graphs to determine what exactly we are tracking. We recommend running the model three times, each with a different number of increments  to display different outputs.
+                    <strong>Step 2:</strong> Next to the dropdown, select the starting value and the ending value of a value of the chosen variable, as well as the number of increments. Run the model to see an immediate output of all variables coming together. Make sure you click the option for "Multiple Lines Graph." Observe each of the graphs to determine what exactly we are tracking. We recommend running the model three times, each with a different number of increments  to display different outputs.
                 </li>
                 <li>
                     <strong>Step 3:</strong> Play around with the variables to understand how each affects the model and to learn about the relationships between each variable.
@@ -692,7 +689,7 @@ function bruh() {
 
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput 
-            id="Minimum hormone level for Mature Gametes (G)" 
+            id="Min. hormone for mature gametes (G)" 
             min="0" 
             max="1" 
             step="0.1" 

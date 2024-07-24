@@ -1,8 +1,7 @@
 <script>
-    import Navbar from "../Nested/navigation.svelte";
     import GitHubIcon from "../Nested/GitHubIcon.svelte";
 </script>
-<Navbar multiPage="aboutus" />
+
 <div>
     <h1 class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
         Project Background
@@ -13,7 +12,7 @@
 developed the summer of 2024 by a team of students from Davidson 
 College, Duke University, and North Carolina Central University. The team 
 worked with Duke’s Office of Information Technology, Nicole M. Baran (a 
-faculty researcher from in Biology at Davidson College), and other 
+faculty researcher in Biology at Davidson College), and other 
 stakeholders to build an interactive app that allows exploration of a
 mathematical model of hormone influence on traits, with particular examples
 in songbirds.
@@ -21,7 +20,7 @@ in songbirds.
         The project grew out of an unpublished mathematical model developed by Nicole M. Baran, H.K. Reeve, F. 
 Havlak, and E. Adkins-Regan. The model is a dynamic state variable model of
 how organisms optimize their reproductive fitness using hormonal signals 
-which influence multiple traits (i.e. hormonal pleiotropy)
+which influence multiple traits (i.e. hormonal pleiotropy).
     </p>
 <div>
     <div class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">

@@ -1,13 +1,4 @@
-<script>
-    import NavBar from "../Nested/navigation.svelte"
-</script>
-
-<NavBar/>
-
-<div class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
-    Graphical Abstract
-</div>
-<div class="flex items-center justify-center mb-1">
+<div class="flex items-center justify-center mb-1 mt-10">
     <img src="/graphicalAbstractFINAL.png" class="object-center w-1/2" alt="The Research Poster that is attributed to the model">
 </div>
 <div class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
@@ -36,11 +27,11 @@
     4. <b> Evolutionary constraint:</b> Hormonal systems may act as an evolutionary constraint, slowing down the rate of evolution and reducing the probability that an organism will be able to adapt quickly enough to changing environments. This is because the same hormonal signal might not be optimal for all traits it influences and the organism is limited in the extent to which it can change the coupling between a hormone and a trait. 
     </li> 
 </ol>
-<br>
-<b>
-How can we examine these key features?
-</b>
-<br>
+
+<div class="mt-6 mb-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
+    How can we examine these key features?
+</div>
+
 <b>Dynamic State Variable Model:</b> The mathematical model that is used in this project aims to understand how hormonal signal levels and target tissue sensitivity are optimized over time under various environmental conditions and selection pressures. This model seeks to explore whether hormone sensitivity has more effect on trait expression than hormone concentration.
 <br>
 <b>Application example:</b> The model is applied to the trade-off between mating effort and parental care in seasonally-breeding male birds, such as dark-eyed juncos, where these questions have been examined in real populations. The steroid hormone testosterone is hypothesized to mediate this trade-off, influencing behaviors such as courtship displays and territory size, but also reducing parental care and immune function.
@@ -51,6 +42,6 @@ Hormonal systems are integral to the regulation of complex traits and behaviors.
 <div class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo">
     Model Information
 </div>
-<div class="flex items-center justify-center">
+<div class="flex items-center justify-center pb-[50px]">
     <img src="/UpdatedHandout.png" class="object-center w-3/4" alt="The Research Poster that is attributed to the model">
 </div>

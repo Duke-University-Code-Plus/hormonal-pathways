@@ -4,7 +4,6 @@
     import Chart, { registerables } from "chart.js/auto";
     import ExportChart from "../Nested/ExportChart.svelte";
     import FormInput from "../Nested/FormInput.svelte";
-    import NavBar from "../Nested/navigation.svelte";
     import SliderInput from "../Nested/SliderInput.svelte";
     import SliderTwoInput from "../Nested/SliderTwoInput.svelte";
     import {
@@ -326,8 +325,6 @@
     }
     
 </script>
-
-<NavBar multiPage="Single" />
 
 <h1
     class="my-8 text-center text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-indigo-500 from-darkIndigo"
