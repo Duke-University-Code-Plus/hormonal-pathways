@@ -1,7 +1,7 @@
 <script>
-    let showFitnessCharts = false
-    let showFoodScarcitySlider = false
-    let modelRan = false
+    let showFitnessCharts = false;
+    let showFoodScarcitySlider = false;
+    let modelRan = false;
 
     import { onMount } from "svelte";
     import axios from "axios";
@@ -29,18 +29,18 @@
         N,
         foodShort,
         foodShortbegin,
-        foodShortend
+        foodShortend,
     } from "../data5_store.js";
-    import {apiEndpoint} from "../state_store.js"
+    import { apiEndpoint } from "../state_store.js";
 
     let iframe;
 
     let VhistBlue = [];
     let VhistRed = [];
     let VhistPurple = [];
-    let WhistBlue = []; 
-    let WhistRed = []; 
-    let WhistPurple = []; 
+    let WhistBlue = [];
+    let WhistRed = [];
+    let WhistPurple = [];
 
     let VhistBlueRatio = [];
     let VhistRedRatio = [];
@@ -57,7 +57,6 @@
     let fitnessBirdThreeChartInstance = null;
 
     onMount(() => {
-
         //listen for iframe
         window.onmessage = function (e) {
             window.message = JSON.parse(e.data);
@@ -69,11 +68,10 @@
             );
             element.innerHTML = "Offspring Count: " + window.message2;
         };
-        });
+    });
 
     async function fetchData() {
         try {
-
             gamma = [$gamma1, $gamma2, $gamma3];
             z = [$z1, $z2, $z3];
             var params = {
@@ -91,16 +89,16 @@
                 N: $N,
                 foodShort: $foodShort,
                 foodShortbegin: $foodShortbegin,
-                foodShortend: $foodShortend
+                foodShortend: $foodShortend,
             };
 
             // Making 3 Requests to the server in one Fetch
 
             // Blue Bird
             // Setting gamma a z values to create more weight for parental effort
-            params['gamma'] = [$gamma1, $gamma2, $gamma3].join(",");
-            params['z'] = [$z1, $z2, $z3].join(",");
-            params['delSmax'] = $delSmax3;
+            params["gamma"] = [$gamma1, $gamma2, $gamma3].join(",");
+            params["z"] = [$z1, $z2, $z3].join(",");
+            params["delSmax"] = $delSmax3;
 
             const queryStringBlue = new URLSearchParams(params).toString();
             const responseBlue = await axios.get(
@@ -113,20 +111,20 @@
             // Setting gamma a z values to create more weight for mating effort
             // params['gamma'] = [$gamma1, $gamma3, $gamma2].join(",");
             // params['z'] = [$z1, $z3, $z2].join(",");
-            params['delSmax'] = $delSmax1;
-            
+            params["delSmax"] = $delSmax1;
+
             const queryStringRed = new URLSearchParams(params).toString();
             const responseRed = await axios.get(
                 `${$apiEndpoint}/hormonemodel?${queryStringRed}`,
             );
             const dataRed = responseRed.data;
-            
+
             // Purple Bird
 
             // Setting gamma a z values to put equal weight on each trait
             // params['gamma'] = [$gamma1, $gamma1, $gamma1].join(",");
             // params['z'] = [$z1, $z1, $z1].join(",");
-            params['delSmax'] = $delSmax2;
+            params["delSmax"] = $delSmax2;
 
             const queryStringPurple = new URLSearchParams(params).toString();
             const responsePurple = await axios.get(
@@ -144,39 +142,51 @@
 
             // Making the Bird Ratios
             for (let i = 0; i < VhistBlue[0].length; i++) {
+                VhistRedRatio.push(
+                    VhistRed[1][i] / (VhistRed[1][i] + VhistRed[2][i]),
+                );
+                VhistPurpleRatio.push(
+                    VhistPurple[1][i] / (VhistPurple[1][i] + VhistPurple[2][i]),
+                );
+                VhistBlueRatio.push(
+                    VhistBlue[1][i] / (VhistBlue[1][i] + VhistBlue[2][i]),
+                );
+            }
 
-                    VhistRedRatio.push(VhistRed[1][i] / (VhistRed[1][i] + VhistRed[2][i]));
-                    VhistPurpleRatio.push(VhistPurple[1][i] / (VhistPurple[1][i] + VhistPurple[2][i]));
-                    VhistBlueRatio.push(VhistBlue[1][i] / (VhistBlue[1][i] + VhistBlue[2][i]));
-                }
-            
             createCharts();
-            
+
             iframe = document.querySelector("#iframeID"); //caching dom element called iframe
-            const proportiondata = ["proportion", VhistRedRatio, VhistPurpleRatio, VhistBlueRatio];
-            iframe.contentWindow.postMessage(JSON.stringify(proportiondata), "*"); // pushes message to the
+            const proportiondata = [
+                "proportion",
+                VhistRedRatio,
+                VhistPurpleRatio,
+                VhistBlueRatio,
+            ];
+            iframe.contentWindow.postMessage(
+                JSON.stringify(proportiondata),
+                "*",
+            ); // pushes message to the
 
-            modelRan = true
-
-            
+            modelRan = true;
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     }
 
-    
     function makeChart(canvas, title, y, color, maxValue, ylabel) {
         // <block:data:3>
-        let color_pool = [[216, 27, 96], 
-                          [9, 224, 188], 
-                          [124, 181, 24]]
+        let color_pool = [
+            [216, 27, 96],
+            [9, 224, 188],
+            [124, 181, 24],
+        ];
         let chartData = {};
         const is2dArray = (array) => array.every((item) => Array.isArray(item));
         if (is2dArray(y)) {
             let chartDatasets = [];
             //start at 1 to exclude gamete maturation data from graphs
-            for (let i = 1; i < y.length; i++) { 
-                color = color_pool[i]
+            for (let i = 1; i < y.length; i++) {
+                color = color_pool[i];
                 let r = color[0];
                 let g = color[1];
                 let b = color[2];
@@ -187,7 +197,7 @@
                     radius: 0,
                     borderWidth: 1,
                     fill: false,
-                    lineTension: .5,
+                    lineTension: 0.5,
                 };
                 chartDatasets.push(data);
             }
@@ -203,7 +213,7 @@
                 radius: 0,
                 borderWidth: 1,
                 fill: false,
-                lineTension: .5,
+                lineTension: 0.5,
             };
             chartData = {
                 labels: Array.from({ length: y.length }, (_, i) => i),
@@ -211,55 +221,62 @@
             };
         }
 
-        let ctx = document.getElementById(canvas) //.getContext("2d");
+        let ctx = document.getElementById(canvas); //.getContext("2d");
         if (!ctx) {
-            console.error(`Canvas element with ID ${canvas} not found`)
+            console.error(`Canvas element with ID ${canvas} not found`);
         }
         // </block:data>
-
 
         // <block:animation:2>
         const render = [];
 
         for (let i = 0; i < y.length; i++) {
-            render.push({x: i, y: y[i]});
+            render.push({ x: i, y: y[i] });
         }
         //ratio for sensitvity graphs is ? 1 : 32.78
         //const totalDuration = 2000;
-        const totalDuration = canvas == 'traitChartBirdThree' || canvas == 'traitChartBirdOne' || canvas == 'traitChartBirdTwo' ? 245 : 4000;
+        const totalDuration =
+            canvas == "traitChartBirdThree" ||
+            canvas == "traitChartBirdOne" ||
+            canvas == "traitChartBirdTwo"
+                ? 245
+                : 4000;
         const delayBetweenPoints = totalDuration / render.length;
 
-        const previousY = (ctx) => ctx.index === 0 
-                ? ctx.chart.scales.y.getPixelForValue(100) 
-                : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+        const previousY = (ctx) =>
+            ctx.index === 0
+                ? ctx.chart.scales.y.getPixelForValue(100)
+                : ctx.chart
+                      .getDatasetMeta(ctx.datasetIndex)
+                      .data[ctx.index - 1].getProps(["y"], true).y;
 
         const animation = {
             x: {
-                type: 'number',
-                easing: 'linear',
+                type: "number",
+                easing: "linear",
                 duration: delayBetweenPoints,
                 from: NaN, // the point is initially skipped
                 delay(ctx) {
-                if (ctx.type !== 'data' || ctx.xStarted) {
-                    return 0;
-                }
-                ctx.xStarted = true;
-                return ctx.index * delayBetweenPoints;
-                }
+                    if (ctx.type !== "data" || ctx.xStarted) {
+                        return 0;
+                    }
+                    ctx.xStarted = true;
+                    return ctx.index * delayBetweenPoints;
+                },
             },
             y: {
-                type: 'number',
-                easing: 'linear',
+                type: "number",
+                easing: "linear",
                 duration: delayBetweenPoints,
                 from: previousY,
                 delay(ctx) {
-                if (ctx.type !== 'data' || ctx.yStarted) {
-                    return 0;
-                }
-                ctx.yStarted = true;
-                return ctx.index * delayBetweenPoints;
-                }
-            }
+                    if (ctx.type !== "data" || ctx.yStarted) {
+                        return 0;
+                    }
+                    ctx.yStarted = true;
+                    return ctx.index * delayBetweenPoints;
+                },
+            },
         };
         // </block:animation>
 
@@ -267,24 +284,24 @@
         const chartOptions = {
             animation,
             interaction: {
-                intersect: false
+                intersect: false,
             },
             plugins: {
-                display:{
-                    legend: true
+                display: {
+                    legend: true,
                 },
             },
             scales: {
                 x: {
-                    type: 'linear',
+                    type: "linear",
                     beginAtZero: true,
                     title: { display: true, text: "Reproductive Cycle" },
-                    max: $N
+                    max: $N,
                 },
                 y: {
                     beginAtZero: true,
                     title: { display: true, text: ylabel },
-                    max: maxValue
+                    max: maxValue,
                 },
             },
         };
@@ -292,9 +309,9 @@
 
         // <block:config:0>
         const config = {
-            type: 'line',
+            type: "line",
             data: chartData,
-            options: chartOptions
+            options: chartOptions,
         };
         // </block:config>
 
@@ -308,7 +325,8 @@
         if (traitBirdThreeChartInstance) traitBirdThreeChartInstance.destroy();
         if (fitnessBirdOneChartInstance) fitnessBirdOneChartInstance.destroy();
         if (fitnessBirdTwoChartInstance) fitnessBirdTwoChartInstance.destroy();
-        if (fitnessBirdThreeChartInstance) fitnessBirdThreeChartInstance.destroy();
+        if (fitnessBirdThreeChartInstance)
+            fitnessBirdThreeChartInstance.destroy();
 
         traitBirdOneChartInstance = makeChart(
             "traitChartBirdOne",
@@ -316,8 +334,8 @@
             VhistBlue,
             "rgba(210, 155, 90, 1)",
             5,
-            "Trait Values - Blue Bird"
-        )
+            "Trait Values - Blue Bird",
+        );
 
         traitBirdTwoChartInstance = makeChart(
             "traitChartBirdTwo",
@@ -325,8 +343,8 @@
             VhistRed,
             "rgba(210, 155, 90, 1)",
             5,
-            "Trait Values - Red Bird"
-        )
+            "Trait Values - Red Bird",
+        );
 
         traitBirdThreeChartInstance = makeChart(
             "traitChartBirdThree",
@@ -334,39 +352,37 @@
             VhistPurple,
             "rgba(210, 155, 90, 1)",
             5,
-            "Trait Values - Purple Bird"
-        )
+            "Trait Values - Purple Bird",
+        );
 
         if (showFitnessCharts) {
+            fitnessBirdOneChartInstance = makeChart(
+                "fitnessChartBirdOne",
+                "Fitness",
+                WhistBlue,
+                "rgba(210, 155, 90, 1)",
+                5,
+                "Fitness - Purple Bird",
+            );
 
-        fitnessBirdOneChartInstance = makeChart(
-            "fitnessChartBirdOne",
-            "Fitness",
-            WhistBlue,
-            "rgba(210, 155, 90, 1)",
-            5,
-            "Fitness - Purple Bird"
-        )
+            fitnessBirdTwoChartInstance = makeChart(
+                "fitnessChartBirdTwo",
+                "Fitness",
+                WhistRed,
+                "rgba(210, 155, 90, 1)",
+                5,
+                "Fitness - Red Bird",
+            );
 
-        fitnessBirdTwoChartInstance = makeChart(
-            "fitnessChartBirdTwo",
-            "Fitness",
-            WhistRed,
-            "rgba(210, 155, 90, 1)",
-            5,
-            "Fitness - Red Bird"
-        )
-
-        fitnessBirdThreeChartInstance = makeChart(
-            "fitnessChartBirdThree",
-            "Fitness",
-            WhistPurple,
-            "rgba(210, 155, 90, 1)",
-            5,
-            "Fitness - Purple Bird"
-        )
-    }
-
+            fitnessBirdThreeChartInstance = makeChart(
+                "fitnessChartBirdThree",
+                "Fitness",
+                WhistPurple,
+                "rgba(210, 155, 90, 1)",
+                5,
+                "Fitness - Purple Bird",
+            );
+        }
     }
 </script>
 
@@ -382,31 +398,41 @@
 <div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
     <p class="text-xl font-semibold mt-4">
         Each bird exhibits a unique level of receptor sensitivity, which
-        determines their flexiblilty in adapting to external changes. This adaptive capability 
-        directly reflects how successful a bird is in producing an offspring.
+        determines their flexiblilty in adapting to external changes. This
+        adaptive capability directly reflects how successful a bird is in
+        producing an offspring.
     </p>
     <div class="bg-gray-100 p-4 rounded-lg shadow-md">
         <h2 class="text-lg font-bold mb-2">Simulation Steps</h2>
         <ul class="list-disc list-inside">
             <li class="mb-2">
-                <strong>Step 1:</strong> Observe the behaviors expressed by the male bird. The birds optimize their chances of reproductive success
-                by choosing whether to invest on mating effort or parental effort. 
-            <li class="mb-2">
-                <strong>Step 2:</strong> Use the slider to change the food availability of the simulation. The change in the external environement
-                causes the birds to reconsider their trait expression. 
+                <strong>Step 1:</strong> Observe the behaviors expressed by the male
+                bird. The birds optimize their chances of reproductive success by
+                choosing whether to invest on mating effort or parental effort.
             </li>
             <li class="mb-2">
-                <strong>Step 3:</strong> Reference the Offspring Count to compare which bird is experiencing the most reproductive success. 
+                <strong>Step 2:</strong> Use the slider to change the food availability
+                of the simulation. The change in the external environement causes
+                the birds to reconsider their trait expression.
+            </li>
+            <li class="mb-2">
+                <strong>Step 3:</strong> Reference the Offspring Count to compare
+                which bird is experiencing the most reproductive success.
             </li>
         </ul>
     </div>
-
 </div>
 
 <div class="flex justify-center">
     <div class="flex flex-col items-center m-5">
-        <h4 class="text-center text-base font-semibold">Low Max Change of Hormone Sensitivity</h4>
-        <img src="/bird_red.png" alt="Red Bird" class="w-16 h-16 object-cover">
+        <h4 class="text-center text-base font-semibold">
+            Low Max Change of Hormone Sensitivity
+        </h4>
+        <img
+            src="/bird_red.png"
+            alt="Red Bird"
+            class="w-16 h-16 object-cover"
+        />
 
         <SliderInput
             id="Max change of sensitivity"
@@ -416,12 +442,18 @@
             bind:disabled={modelRan}
             bind:inputVar={$delSmax1}
             modalMessage="Changes the way the bird optimizes fitness. For the red bird, it will reach its hormonal optimum realy slowly compared to all other birds. It will invest in its most valued trait in near the end of the simulation or not at all. The max change of sensitivity is the maximum change a bird can change its sensitivity which also helps it adapt to its environment."
-            />
+        />
     </div>
 
     <div class="flex flex-col items-center m-5">
-        <h4 class="text-center text-base font-semibold">Average Max Change of Hormone Sensitivity</h4>
-        <img src="/bird_purple.png" alt="Purple Bird" class="w-16 h-16 object-cover">
+        <h4 class="text-center text-base font-semibold">
+            Average Max Change of Hormone Sensitivity
+        </h4>
+        <img
+            src="/bird_purple.png"
+            alt="Purple Bird"
+            class="w-16 h-16 object-cover"
+        />
 
         <SliderInput
             id="Max change of sensitivity"
@@ -431,12 +463,18 @@
             bind:disabled={modelRan}
             bind:inputVar={$delSmax2}
             modalMessage="Changes the way the bird optimizes fitness. For the purple bird, it will reach its hormonal optimum relatively quickly compared to the red bird, but not as fast as the blue bird. It will invest in its most valued trait in near the middle of the simulation. The max change of sensitivity is the maximum change a bird can change its sensitivity which also helps it adapt to its environment."
-            />
+        />
     </div>
 
     <div class="flex flex-col items-center m-5">
-        <h4 class="text-center text-base font-semibold">High Max Change of Hormone Sensitivity</h4>
-        <img src="/bird_blue.png" alt="Blue Bird" class="w-16 h-16 object-cover">
+        <h4 class="text-center text-base font-semibold">
+            High Max Change of Hormone Sensitivity
+        </h4>
+        <img
+            src="/bird_blue.png"
+            alt="Blue Bird"
+            class="w-16 h-16 object-cover"
+        />
 
         <SliderInput
             id="Max change of sensitivity"
@@ -446,30 +484,34 @@
             bind:disabled={modelRan}
             bind:inputVar={$delSmax3}
             modalMessage="Changes the way the bird optimizes fitness. For the blue bird, it will reach its hormonal optimum faster, so it will invest in its most valued trait early on. The max change of sensitivity is the maximum change a bird can change its sensitivity which also helps it adapt to its environment."
-            />
+        />
     </div>
 </div>
 
 {#if showFoodScarcitySlider}
-<div class="flex flex-wrap justify-center grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
-    <!-- Container for food shortage sliders-->
-    <div class="flex flex-wrap justify-center w-full -mt-5">
-        <SliderInput
-            id="Food Scarcity"
-            min="0"
-            max="1"
-            step="0.1"
-            bind:inputVar={$foodShort}
-            modalMessage="Controls the worms available to the birds. The lower the value, the lower the food available to the organism."
-        />
+    <div
+        class="flex flex-wrap justify-center grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1"
+    >
+        <!-- Container for food shortage sliders-->
+        <div class="flex flex-wrap justify-center w-full -mt-5">
+            <SliderInput
+                id="Food Scarcity"
+                min="0"
+                max="1"
+                step="0.1"
+                bind:inputVar={$foodShort}
+                modalMessage="Controls the worms available to the birds. The lower the value, the lower the food available to the organism."
+            />
+        </div>
     </div>
-</div>
 {/if}
 
 <!-- Run Simulation Button-->
 <div class="text-center -mt-4 mb-6">
     <button
-        class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded {modelRan ? 'disable' : ''}"
+        class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded {modelRan
+            ? 'disable'
+            : ''}"
         on:click={fetchData}>Run</button
     >
 </div>
@@ -477,63 +519,100 @@
 <!-- Animation stuff-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
     <div class="rounded-container">
-        <iframe width="800" height="590" src="http://localhost:5173/ecosystem-sketch" id="iframeID" title="YouTube video player" frameborder="0" class="rounded-iframe"></iframe>
+        <iframe
+            width="800"
+            height="590"
+            src="http://localhost:5173/ecosystem-sketch"
+            id="iframeID"
+            title="YouTube video player"
+            frameborder="0"
+            class="rounded-iframe"
+        ></iframe>
     </div>
 </div>
 
 <div>
     <div class="container mx-auto mb-8">
-        <h1 class=" flex flex-row flex-wrap text-2xl font-bold justify-center mb-4">Data Grid</h1>
+        <h1
+            class=" flex flex-row flex-wrap text-2xl font-bold justify-center mb-4"
+        >
+            Data Grid
+        </h1>
         <div class="overflow-x-auto">
-          <table class="min-w-full bg-white border border-gray-200">
-            <thead class="bg-gray-200">
-              <tr>
-                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Color of Bird</th>
-                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Number of Offspring</th>
-                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Mate count</th>
-                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Parental count</th>
-                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Ratio between Mating <br> and Parental Effort</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-              <tr class="hover:bg-gray-100">
-                <td class="py-2 px-4 text-sm text-gray-700">Red</td>
-                <td id="bird1Offspring" class="py-2 px-4 text-sm text-gray-700">3</td>
-                <td class="py-2 px-4 text-sm text-gray-700">25</td>
-                <td class="py-2 px-4 text-sm text-gray-700">2</td>
-                <td class="py-2 px-4 text-sm text-gray-700">2</td>
-              </tr>
-              <tr class="hover:bg-gray-100">
-                <td class="py-2 px-4 text-sm text-gray-700">Purple</td>
-                <td id="bird2Offspring" class="py-2 px-4 text-sm text-gray-700">3</td>
-                <td class="py-2 px-4 text-sm text-gray-700">25</td>
-                <td class="py-2 px-4 text-sm text-gray-700">21</td>
-                <td class="py-2 px-4 text-sm text-gray-700">21</td>
-              </tr>
-              <tr class="hover:bg-gray-100">
-                <td class="py-2 px-4 text-sm text-gray-700">Blue</td>
-                <td id="bird3Offspring" class="py-2 px-4 text-sm text-gray-700">6</td>
-                <td class="py-2 px-4 text-sm text-gray-700">12</td>
-                <td class="py-2 px-4 text-sm text-gray-700">33</td>
-                <td class="py-2 px-4 text-sm text-gray-700">21</td>
-              </tr>
-              <!-- Add more rows as needed -->
-            </tbody>
-          </table>
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th
+                            class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700"
+                            >Color of Bird</th
+                        >
+                        <th
+                            class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700"
+                            >Number of Offspring</th
+                        >
+                        <th
+                            class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700"
+                            >Mate count</th
+                        >
+                        <th
+                            class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700"
+                            >Parental count</th
+                        >
+                        <th
+                            class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700"
+                            >Ratio between Mating <br /> and Parental Effort</th
+                        >
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <tr class="hover:bg-gray-100">
+                        <td class="py-2 px-4 text-sm text-gray-700">Red</td>
+                        <td
+                            id="bird1Offspring"
+                            class="py-2 px-4 text-sm text-gray-700">3</td
+                        >
+                        <td class="py-2 px-4 text-sm text-gray-700">25</td>
+                        <td class="py-2 px-4 text-sm text-gray-700">2</td>
+                        <td class="py-2 px-4 text-sm text-gray-700">2</td>
+                    </tr>
+                    <tr class="hover:bg-gray-100">
+                        <td class="py-2 px-4 text-sm text-gray-700">Purple</td>
+                        <td
+                            id="bird2Offspring"
+                            class="py-2 px-4 text-sm text-gray-700">3</td
+                        >
+                        <td class="py-2 px-4 text-sm text-gray-700">25</td>
+                        <td class="py-2 px-4 text-sm text-gray-700">21</td>
+                        <td class="py-2 px-4 text-sm text-gray-700">21</td>
+                    </tr>
+                    <tr class="hover:bg-gray-100">
+                        <td class="py-2 px-4 text-sm text-gray-700">Blue</td>
+                        <td
+                            id="bird3Offspring"
+                            class="py-2 px-4 text-sm text-gray-700">6</td
+                        >
+                        <td class="py-2 px-4 text-sm text-gray-700">12</td>
+                        <td class="py-2 px-4 text-sm text-gray-700">33</td>
+                        <td class="py-2 px-4 text-sm text-gray-700">21</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
         </div>
-      </div>
+    </div>
 </div>
 
 <!-- Creating Charts-->
-<div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">  
+<div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
+
     <div
-    class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
->
-    <h2 class="text-center text-xl font-semibold mb-4">
-        Trait Values - Red Bird
-    </h2>
-    <canvas id="traitChartBirdTwo"></canvas>
-</div> 
+        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+    >
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Trait Values - Red Bird
+        </h2>
+        <canvas id="traitChartBirdTwo"></canvas>
+    </div>
 
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
@@ -542,7 +621,7 @@
             Trait Values - Purple Bird
         </h2>
         <canvas id="traitChartBirdThree"></canvas>
-    </div> 
+    </div>
 
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
@@ -551,56 +630,52 @@
             Trait Values - Blue Bird
         </h2>
         <canvas id="traitChartBirdOne"></canvas>
-    </div> 
+    </div>
 
+    {#if showFitnessCharts}
+        <div
+            class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+        >
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Fitness - Red Bird
+            </h2>
+            <canvas id="fitnessChartBirdTwo"></canvas>
+        </div>
 
-{#if showFitnessCharts} 
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Fitness - Red Bird
-        </h2>
-        <canvas id="fitnessChartBirdTwo"></canvas>
-    </div> 
+        <div
+            class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+        >
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Fitness - Purple Bird
+            </h2>
+            <canvas id="fitnessChartBirdThree"></canvas>
+        </div>
 
-    <div
-        class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
-    >
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Fitness - Purple Bird
-        </h2>
-        <canvas id="fitnessChartBirdThree"></canvas>
-    </div> 
+        <div
+            class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
+        >
+            <h2 class="text-center text-xl font-semibold mb-4">
+                Fitness - Blue Bird
+            </h2>
+            <canvas id="fitnessChartBirdOne"></canvas>
+        </div>
+    {/if}
 
-    <div
-    class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
->
-    <h2 class="text-center text-xl font-semibold mb-4">
-        Fitness - Blue Bird
-    </h2>
-    <canvas id="fitnessChartBirdOne"></canvas>
-
-</div> 
-{/if}
-
-
-    
 </div>
 
 <style>
     .rounded-container {
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust shadow as needed */
-      width: 800px; /* Explicitly set width */
-      height: 520px; /* Explicitly set height */
-  }
-  
-  .rounded-iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 12px;
-  }
-  </style>
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust shadow as needed */
+        width: 800px; /* Explicitly set width */
+        height: 520px; /* Explicitly set height */
+    }
+
+    .rounded-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 12px;
+    }
+</style>
