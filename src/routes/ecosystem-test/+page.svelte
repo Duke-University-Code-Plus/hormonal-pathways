@@ -1,6 +1,7 @@
 <script>
 
     import { onMount } from "svelte";
+    import { rootURL } from "../state_store.js";
 
     let iframe; 
 
@@ -14,4 +15,4 @@
 </script>
 
 
-<iframe width="800" height="590" src="http://localhost:5173/ecosystem-sketch" id="iframeID" title="YouTube video player" frameborder="0" ></iframe>
+<iframe width="800" height="590" src= "{rootURL}/ecosystem-sketch" id="iframeID" title="YouTube video player" frameborder="0" ></iframe>
