@@ -356,7 +356,7 @@ class maleBird {
         this.currentProportion = this.proportion[timeStep-1]; 
         console.log(this.currentProportion)
         const randomNum = random(0, 1)
-        if (randomNum > this.currentProportion && this.nest.babyBirdCount > 0) { //smaller proportion, smaller chance of scavenging
+        if (randomNum < this.currentProportion && this.nest.babyBirdCount > 0) { //smaller proportion, smaller chance of scavenging
             this.scavengeCondition = true
         } else {
             this.matingCondition = true

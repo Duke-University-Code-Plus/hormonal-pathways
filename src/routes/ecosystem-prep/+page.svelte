@@ -198,7 +198,7 @@
         }
     }
 
-    function makeChart(canvas, title, y, color, maxValue, ylabel) {
+    function makeChart(canvas, title, y, legendTitles, color, maxValue, ylabel) {
         // <block:data:3>
         let color_pool = [
             [216, 27, 96],
@@ -210,13 +210,14 @@
         if (is2dArray(y)) {
             let chartDatasets = [];
             //start at 1 to exclude gamete maturation data from graphs
+            //order of data is gamete maturation, parental effort, an dmating effort
             for (let i = 1; i < y.length; i++) {
                 color = color_pool[i];
                 let r = color[0];
                 let g = color[1];
                 let b = color[2];
                 let data = {
-                    label: title + " " + i,
+                    label: legendTitles[i],
                     data: y[i],
                     borderColor: "rgba(" + r + ", " + g + ", " + b + ", 1)",
                     radius: 0,
@@ -357,6 +358,7 @@
             "traitChartBirdOne",
             "Trait Value",
             VhistBlue,
+            ["Gamete Maturation", "Parental Effort", "Mating Effort"],
             "rgba(210, 155, 90, 1)",
             5,
             "Trait Values - Blue Bird",
@@ -366,6 +368,7 @@
             "traitChartBirdTwo",
             "Trait Value",
             VhistRed,
+            ["Gamete Maturation", "Parental Effort", "Mating Effort"],
             "rgba(210, 155, 90, 1)",
             5,
             "Trait Values - Red Bird",
@@ -375,6 +378,7 @@
             "traitChartBirdThree",
             "Trait Value",
             VhistPurple,
+            ["Gamete Maturation", "Parental Effort", "Mating Effort"],
             "rgba(210, 155, 90, 1)",
             5,
             "Trait Values - Purple Bird",
@@ -385,6 +389,7 @@
                 "fitnessChartBirdOne",
                 "Fitness",
                 WhistBlue,
+                ["Gamete Maturation", "Parental Effort", "Mating Effort"],
                 "rgba(210, 155, 90, 1)",
                 5,
                 "Fitness - Purple Bird",
@@ -394,6 +399,7 @@
                 "fitnessChartBirdTwo",
                 "Fitness",
                 WhistRed,
+                ["Gamete Maturation", "Parental Effort", "Mating Effort"],
                 "rgba(210, 155, 90, 1)",
                 5,
                 "Fitness - Red Bird",
@@ -403,6 +409,7 @@
                 "fitnessChartBirdThree",
                 "Fitness",
                 WhistPurple,
+                ["Gamete Maturation", "Parental Effort", "Mating Effort"],
                 "rgba(210, 155, 90, 1)",
                 5,
                 "Fitness - Purple Bird",
@@ -533,10 +540,6 @@
 
 <!-- Run Simulation Button -->
 <div class="text-center -mt-4 mb-6">
-    <!-- Reproductive Cycle Box -->
-    <div class="absolute border border-gray-200 p-2 rounded-md">
-        <span id="reproductiveCycle" class="text-center text-base font-semibold">Reproductive Cycle: 0</span>
-    </div>
 
     <!-- Run Simulation Button -->
     <button
@@ -552,7 +555,12 @@
 
 </div>
 <!-- Animation stuff-->
-<div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
+<div class="flex flex-col gap-6 items-center justify-center mb-8">
+    <!-- Reproductive Cycle Box -->
+    <div class="">
+        <span id="reproductiveCycle" class="text-center text-base font-semibold">Reproductive Cycle: 0</span>
+    </div>
+
     <div class="rounded-container">
         <iframe
             width="800"
@@ -564,6 +572,7 @@
             class="rounded-iframe"
         ></iframe>
     </div>
+</div>
 
     <div class="container mx-auto mb-8">
 
@@ -576,7 +585,7 @@
                 <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Number of Offspring</th>
                 <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Mate count</th>
                 <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Parental count</th>
-                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Ratio between Mating <br> and Parental Effort</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">Ratio between Parental <br> and Mating Effort</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -607,7 +616,7 @@
         </div>
         {/if}
     </div>
-</div>
+
 
 <!-- Creating Charts-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">

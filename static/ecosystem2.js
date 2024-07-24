@@ -61,7 +61,7 @@ var time = 0;
 var startTime = 0; 
 var timeStep = 0; 
 var birdsNeutralState; 
-var timeStepCycle = 30; 
+var timeStepCycle = 10; 
 
 
 //spritesheets
