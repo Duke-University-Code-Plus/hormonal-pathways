@@ -587,8 +587,8 @@ function bruh() {
     Hormone Model - Multi Run
 </h1>
 
-<div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
-    <p class="text-xl font-medium mt-4">
+<div class="flex max-w-[1200px] flex-col gap-4 px-5 pb-5 m-auto">
+    <p class="text-xl font-medium">
         A male songbird tries to optimize its chances of reproductive success by choosing whether to invest in mating effort, parental effort, or gamete maturation. These three traits are mediated by hormones, which also affect the songbird's energy and fitness. The songbird tries to optimize its fitness based on its sensitivity to hormones and the concentration of hormones. Here we examine the output of many simulations to more easily visualize the impact of changes in the various parameters of the model.  
     </p>
 

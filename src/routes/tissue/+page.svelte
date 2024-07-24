@@ -187,9 +187,9 @@
 </h1>
 
 <!-- Instructions -->
-<div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
+<div class="flex max-w-[1200px] flex-col gap-4 px-5 pb-5 m-auto">
 
-    <p class="text-xl font-medium my-4">
+    <p class="text-xl font-medium">
         Each bird exhibits a unique level of tissue sensitivity, which
         influences the maximum number of receptors present in each tissue. These
         tissues, in turn, affect the expression of various traits. By

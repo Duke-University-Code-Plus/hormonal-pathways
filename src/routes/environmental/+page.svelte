@@ -427,8 +427,8 @@
 </h1>
 
 <!-- Instructions -->
-<div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
-    <p class="text-xl font-semibold mt-4">
+<div class="flex max-w-[1200px] flex-col gap-4 px-5 pb-5 m-auto">
+    <p class="text-xl font-medium">
         Each bird differs in their capability to change their receptor sensitivity to hormones. 
         This ability allows birds to flexibly change the magntitude of their reaction with hormones, 
         leading to their optimal adaptation to external changes. A bird's maximum capacity to change 
