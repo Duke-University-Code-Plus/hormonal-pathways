@@ -67,6 +67,7 @@
             window.message4 = window.message[3]; //cumulative parental effort
             window.message5 = window.message[4]; //ratio of mating effort
             window.message6 = window.message[5]; //ratio of parental effort
+            window.message7 = window.message[6]; //reproductive cycle
 
             const element1 = document.getElementById(
                 window.message1 + "Offspring",
@@ -80,10 +81,14 @@
             const element4 = document.getElementById(
                 window.message1 + "Ratio",
             );
+            const element5 = document.getElementById(
+                "reproductiveCycle",
+            );
             element1.innerHTML = window.message2;
             element2.innerHTML = window.message3;
             element3.innerHTML = window.message4;
             element4.innerHTML = window.message5 + " : " + window.message6;
+            element5.innerHTML = "Reproductive Cycle: " + window.message7;
         };
         });
 
@@ -484,22 +489,30 @@
 </div>
 {/if}
 
-<!-- Run Simulation Button-->
+<!-- Run Simulation Button -->
 <div class="text-center -mt-4 mb-6">
+    <!-- Reproductive Cycle Box -->
+    <div class="absolute border border-gray-200 p-2 rounded-md">
+        <span id="reproductiveCycle" class="text-center text-base font-semibold">Reproductive Cycle: 0</span>
+    </div>
+
+    <!-- Run Simulation Button -->
     <button
         class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded {modelRan ? 'disable' : ''}"
         on:click={fetchData}>Run</button
     >
 </div>
 
+
+<div>
+
+</div>
 <!-- Animation stuff-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
     <div class="rounded-container">
         <iframe width="800" height="590" src="http://localhost:5173/ecosystem-sketch" id="iframeID" title="YouTube video player" frameborder="0" class="rounded-iframe"></iframe>
     </div>
-</div>
 
-<div>
     <div class="container mx-auto mb-8">
         <h1 class=" flex flex-row flex-wrap text-2xl font-bold justify-center mb-4">Data Grid</h1>
         <div class="overflow-x-auto">

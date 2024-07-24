@@ -379,7 +379,7 @@ class maleBird {
     }
 
     updateHTML() {
-        const displayData = [this.name, this.nest.babyBirdCount, this.matingCount, this.scavengeCount, int((this.currentProportion / 1) * 100), 100 - int((this.currentProportion / 1) * 100)]
+        const displayData = [this.name, this.nest.babyBirdCount, this.matingCount, this.scavengeCount, int((this.currentProportion / 1) * 100), 100 - int((this.currentProportion / 1) * 100), timeStep - 1]
         window.top.postMessage(JSON.stringify(displayData), '*') //inside the iframe
     }
 }

@@ -158,7 +158,6 @@ function draw() {
     preyMovement();
     femaleBirdMovement();
     updateNumPrey()
-    updateVariables();
 
     time = int(millis() / 1000); 
 
@@ -226,12 +225,6 @@ function draw() {
             // }
         }
     }
-}
-
-
-function updateVariables() {
-    textSize(15)
-    text("Reproductive Cycle: " + int(timeStep), 10, 25);
 }
 
 function updateNumPrey() {
