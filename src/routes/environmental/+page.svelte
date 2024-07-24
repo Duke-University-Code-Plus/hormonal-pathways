@@ -31,7 +31,7 @@
         foodShortbegin,
         foodShortend,
     } from "../data5_store.js";
-    import { apiEndpoint } from "../state_store.js";
+    import { apiEndpoint, rootURL } from "../state_store.js";
 
     let iframe;
 
@@ -569,7 +569,7 @@
         <iframe
             width="800"
             height="590"
-            src="http://localhost:5173/ecosystem-sketch"
+            src="{rootURL}/ecosystem-sketch"
             id="iframeID"
             title="YouTube video player"
             frameborder="0"
