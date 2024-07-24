@@ -63,13 +63,31 @@
             window.message = JSON.parse(e.data);
             window.message1 = window.message[0]; //name of bird
             window.message2 = window.message[1]; //num of offspring
+            window.message3 = window.message[2]; //cumulative mating effort
+            window.message4 = window.message[3]; //cumulative parental effort
+            window.message5 = window.message[4]; //ratio of mating effort
+            window.message6 = window.message[5]; //ratio of parental effort
 
-            const element = document.getElementById(
+            const element1 = document.getElementById(
                 window.message1 + "Offspring",
             );
-            element.innerHTML = "Offspring Count: " + window.message2;
+            const element2 = document.getElementById(
+                window.message1 + "Mating",
+            );
+            const element3 = document.getElementById(
+                window.message1 + "Parental",
+            );
+            const element4 = document.getElementById(
+                window.message1 + "Ratio",
+            );
+            element1.innerHTML = window.message2;
+            element2.innerHTML = window.message3;
+            element3.innerHTML = window.message4;
+            element4.innerHTML = window.message5 + " : " + window.message6;
         };
         });
+
+
 
     async function fetchData() {
         try {
@@ -498,24 +516,24 @@
             <tbody class="divide-y divide-gray-200">
               <tr class="hover:bg-gray-100">
                 <td class="py-2 px-4 text-sm text-gray-700">Red</td>
-                <td id="bird1Offspring" class="py-2 px-4 text-sm text-gray-700">3</td>
-                <td class="py-2 px-4 text-sm text-gray-700">25</td>
-                <td class="py-2 px-4 text-sm text-gray-700">2</td>
-                <td class="py-2 px-4 text-sm text-gray-700">2</td>
+                <td id="bird1Offspring" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird1Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird1Parental" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird1Ratio" class="py-2 px-4 text-sm text-gray-700">0</td>
               </tr>
               <tr class="hover:bg-gray-100">
                 <td class="py-2 px-4 text-sm text-gray-700">Purple</td>
-                <td id="bird2Offspring" class="py-2 px-4 text-sm text-gray-700">3</td>
-                <td class="py-2 px-4 text-sm text-gray-700">25</td>
-                <td class="py-2 px-4 text-sm text-gray-700">21</td>
-                <td class="py-2 px-4 text-sm text-gray-700">21</td>
+                <td id="bird2Offspring" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird2Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird2Parental" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird2Ratio" class="py-2 px-4 text-sm text-gray-700">0</td>
               </tr>
               <tr class="hover:bg-gray-100">
                 <td class="py-2 px-4 text-sm text-gray-700">Blue</td>
-                <td id="bird3Offspring" class="py-2 px-4 text-sm text-gray-700">6</td>
-                <td class="py-2 px-4 text-sm text-gray-700">12</td>
-                <td class="py-2 px-4 text-sm text-gray-700">33</td>
-                <td class="py-2 px-4 text-sm text-gray-700">21</td>
+                <td id="bird3Offspring" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird3Mating" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird3Parental" class="py-2 px-4 text-sm text-gray-700">0</td>
+                <td id="bird3Ratio" class="py-2 px-4 text-sm text-gray-700">0</td>
               </tr>
               <!-- Add more rows as needed -->
             </tbody>

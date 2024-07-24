@@ -4,6 +4,8 @@ class maleBird {
         this.name = name
         this.proportion = null
         this.currentProportion = null
+        this.matingCount = 0; 
+        this.scavengeCount = 0; 
 
         this.sprite = createSprite(x, y);
         this.sprite.scale = scale
@@ -170,6 +172,7 @@ class maleBird {
                 this.sprite.velocity.y = 0;
                 this.sprite.changeAnimation('stand')
                 if (this.mate == null && !this.babyBirdFlying ) {
+                    this.matingCount++; 
                     this.matingCondition = false
                     this.mateCreated = false
                     this.matingStage = 0;
@@ -309,6 +312,7 @@ class maleBird {
         }
 
         if (this.scavengeState == 5) {
+            this.scavengeCount++; 
             this.caughtPrey = false
             this.scavengeChange = false
             this.scavengeState = 0
@@ -372,6 +376,11 @@ class maleBird {
                 this.sprite.velocity.x = -2; 
             }
         }
+    }
+
+    updateHTML() {
+        const displayData = [this.name, this.nest.babyBirdCount, this.matingCount, this.scavengeCount, int((this.currentProportion / 1) * 100), 100 - int((this.currentProportion / 1) * 100)]
+        window.top.postMessage(JSON.stringify(displayData), '*') //inside the iframe
     }
 }
 
