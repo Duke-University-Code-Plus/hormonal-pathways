@@ -12,13 +12,13 @@ class Heart {
     fade() {
         if (!this.loveCondition) return
         if (this.fadeEffectCondition) {
-            this.fadeEffect += 2;
+            this.fadeEffect += 5;
             if (this.fadeEffect >= 255) {
                 this.fadeEffect = 255;
                 this.fadeEffectCondition = false;
             }
         } else {
-            this.fadeEffect -= 2;
+            this.fadeEffect -= 5;
             if (this.fadeEffect <= 0) {
                 this.fadeEffect = 0;
                 this.fadeEffectCondition = true;
