@@ -13,7 +13,7 @@
 developed the summer of 2024 by a team of students from Davidson 
 College, Duke University, and North Carolina Central University. The team 
 worked with Duke’s Office of Information Technology, Nicole M. Baran (a 
-faculty researcher from in Biology at Davidson UniversityCollege), and other 
+faculty researcher from in Biology at Davidson College), and other 
 stakeholders to build an interactive app that allows exploration of a
 mathematical model of hormone influence on traits, with particular examples
 in songbirds.
