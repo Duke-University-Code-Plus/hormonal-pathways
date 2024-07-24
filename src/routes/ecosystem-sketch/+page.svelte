@@ -22,10 +22,10 @@
             window.message = JSON.parse(e.data); //either proportion or start button
 
             if (window.message[0] == "proportion") {
-                window.proportion1 = Number(window.message[1]);
-                window.proportion2 = Number(window.message[2]);
-                window.proportion3 = Number(window.message[3]);
-            } else { //if message is to run
+                window.proportion1 = window.message[1];
+                window.proportion2 = window.message[2];
+                window.proportion3 = window.message[3];
+
                 window.birdNeutralState = false; //then birds shouldnt be in neutral state
             }
 

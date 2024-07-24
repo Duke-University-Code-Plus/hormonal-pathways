@@ -44,7 +44,7 @@ class femaleBird {
                 this.mate.matingStage = 2;
             } else {
                 this.sprite.changeAnimation('fly')
-                this.sprite.attractionPoint(0.2, this.perchX, this.perchY)
+                this.sprite.attractionPoint(0.3, this.perchX, this.perchY)
             }
         }
 
@@ -60,7 +60,7 @@ class femaleBird {
         if (this.matingStage == 5) {
 
             this.sprite.changeAnimation('fly')
-            this.sprite.attractionPoint(0.3, this.initialX, this.initialY)
+            this.sprite.attractionPoint(0.4, this.initialX, this.initialY)
             if (this.sprite.position.x < 0 || this.sprite.position.x > width) {
                 this.mate.mate = null; //set male's mate variable to null
                 const index = femaleBirdsArray.indexOf(this)

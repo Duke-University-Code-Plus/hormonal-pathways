@@ -20,7 +20,6 @@ class Nest {
     addBabyBird(x) {
         this.babyBirdCount++;
         new babyBird(x, this.sprite.position.y - this.sprite.originalWidth / 8, 0.05, this);
-        this.updateHTML();  // Update HTML after adding a baby bird
     }
 
     removeBabyBird() {
@@ -30,12 +29,5 @@ class Nest {
             const index = this.babyBirdsInNest.indexOf(this.babyBirdToRemove); // Grab index of baby bird
             this.babyBirdsInNest.splice(index, 1); // Remove from array 
         }
-    }
-
-    updateHTML() {
-
-        const displayData = [this.bird.name, this.babyBirdCount]
-
-        window.top.postMessage(JSON.stringify(displayData), '*') //inside the iframe
     }
 }
