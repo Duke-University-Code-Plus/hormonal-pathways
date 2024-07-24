@@ -221,7 +221,7 @@
     let color = startColor;
     const datasets = Array.from({ length: numRunsValue }, (_, runIndex) => {
         const factor = runIndex / (numRunsValue - 1);
-        let stepInValueChange = ($variableRangeEnd-$variableRangeBegin)/numRunsValue;
+        let stepInValueChange = ($variableRangeEnd-$variableRangeBegin)/(numRunsValue-1);
         let valueForLabel = $variableRangeBegin+stepInValueChange*(runIndex);
         if(!$statRun){
         labelPrefix = currprefix + "=" + valueForLabel
@@ -454,7 +454,7 @@ function createSensitivityDatasets(data, labelPrefix) {
     for (let i = 0; i < 3; i++) {
         datasets.push(
             ...Array.from({ length: numRunsValue }, (_, runIndex) => ({
-                label: `${labelPrefix} ${$variableName}=${$variableRangeBegin+(($variableRangeEnd-$variableRangeBegin)/numRunsValue)*runIndex}`,
+                label: `${labelPrefix} ${$variableName}=${$variableRangeBegin+(($variableRangeEnd-$variableRangeBegin)/(numRunsValue-1))*runIndex}`,
                 data: data[i].map((point) => point[runIndex]),
                 borderColor: `rgba(${colors[i][0]}, ${colors[i][1]}, ${colors[i][2]}, 1)`,
                 borderWidth: 1,
@@ -589,24 +589,38 @@ function bruh() {
 
 <div class="flex max-w-[1200px] flex-col gap-4 p-5 m-auto">
     <p class="text-xl font-medium mt-4">
-        The male songbird tries to optimize its chances of reproductive success by choosing whether to invest in mating effort, parental effort, or gamete maturation. These three traits are mediated by hormones, which also affect the energy and fitness of the songbird. The songbird tries to optimize its fitness based on its sensitivity to the hormones and the concentration of the hormones. It is easier to see how each variable affects the model when using multiple runs of a single variable change.
+        A male songbird tries to optimize its chances of reproductive success by choosing whether to invest in mating effort, parental effort, or gamete maturation. These three traits are mediated by hormones, which also affect the songbird's energy and fitness. The songbird tries to optimize its fitness based on its sensitivity to hormones and the concentration of hormones. Here we examine the output of many simulations to more easily visualize the impact of changes in the various parameters of the model.  
     </p>
 
     <div class="bg-gray-100 p-4 rounded-lg shadow-md">
-        <h2 class="text-lg font-bold mb-2">Simulation Steps</h2>
-        <ul class="list-disc list-inside">
-            <li class="mb-2">
-                <strong>Step 1:</strong> Ignore choosing a trait at the bottom of the page. Choose a variable and pick a variable to change. Next to the dropdown, select the starting value and the ending value of a value of the chosen variable, as well as the number of runs. Run the model to see an immediate output of all variables coming together. Make sure you click the option for "Multiple Lines Graph." Observe each of the graphs to determine what exactly we are tracking. We recommend running the model three times, each with a different number of runs to display different outputs.
-            <li class="mb-2">
-                <strong>Step 2:</strong> Use the sliders and form inputs to change the model's values. Consult the tooltip icons on the upper right of each input to gain further insight into the model's inner workings. 
+        <h2 class="text-lg font-bold mb-2">Recommended Exploration Stepss</h2>
+       <strong>There are two ways to explore the model using the multi-run version of the model:</strong> 
+        <ol class="list-inside space-y-4 mb-2">
+            <li>1. Explore the output of 100 simulations using the same set of parameters. Remember that there are several random variables that affect the output of the model, including the variable β (which affects reproductive efficacy at each time point) and µ (which is the probability that the organism dies at each time point). Running the model exploring the output of many simulations allows us to see how the organism optimizes its fitness given this element of randomness. You can access this model by selecting the ‘Median and Confidence Interval Graph’  option above the ‘Run’ button. </li>
+            <ul class="list-disc list-inside space-y-4 mb-2">
+                <li>
+                    <strong>Step 1:</strong> Use the sliders and form inputs to change the model's values. Consult the tooltip icons on the upper right of each input to gain further insight into the model's inner workings.
+                <li>
+                    <strong>Step 2:</strong> Now choose a trait and select the option for "Median and Confidence Interval Graph." This will run the model 100 times. Run the model. The confidence interval is characterized by the curves above and below the middle curve (the median).
+                </li>
+                <li>
+                    <strong>Step 3:</strong> Play around with the variables to understand how each affects the model and to learn about the relationships between each variable.
+                </li>
+            </ul>
+            <li>
+               2. Explore the output of the model across a range of possible values for a given parameter. For example, suppose you wanted to explore how |ΔCₘₐₓ| affects the output of the model, you can run the model looking at, for example, 20 increments of |ΔCₘₐₓ| ranging from 1 to 5. You can access this model by selecting the ‘Multiple Lines Graph’  option above the ‘Run’ button. 
             </li>
-            <li class="mb-2">
-                <strong>Step 3:</strong> Now choose a trait and select the option for "Median and Confidence Interval Graph." This will run the model 100 times, so select which variables you want to change and which will change in each run. It is unnecessary to have the variable "number of runs" be more than 2. Run the model. The confidence interval is characterized by the curves above and below the middle curve (the median). 
-            <li class="mb-2">
-                <strong>Step 4:</strong> Play around with the variables to understand how each affects the model and to learn about the relationships between each variable.
-
-            </li>
-        </ul>
+            <ul class="list-disc list-inside space-y-4 mb-2">
+                <li>
+                    <strong>Step 1:</strong> Ignore choosing a trait at the bottom of the page. Instead, choose a variable and pick a variable to change. 
+                <li>
+                    <strong>Step 2:</strong> Next to the dropdown, select the starting value and the ending value of a value of the chosen variable, as well as the number of runs. Run the model to see an immediate output of all variables coming together. Make sure you click the option for "Multiple Lines Graph." Observe each of the graphs to determine what exactly we are tracking. We recommend running the model three times, each with a different number of increments  to display different outputs.
+                </li>
+                <li>
+                    <strong>Step 3:</strong> Play around with the variables to understand how each affects the model and to learn about the relationships between each variable.
+                </li>
+            </ul>
+    </ol>
     </div>
 </div>
 
@@ -619,81 +633,81 @@ function bruh() {
         <!-- Container for Gamma Sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Investment cost for Gametes (γ₉, ₜ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma1}
-                modalMessage="A variable that determines the negative weight of gamete maturation. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for gamete maturation, the more costly it is to the organism to invest in gamete maturation. Therefore, there is lower value for gamete maturation, and will get picked less."
-            />
+            id="Investment cost for Gametes (γ₉, ₜ)"
+            min="0"
+            max="1"
+            step="0.1"
+            bind:inputVar={$gamma1}
+            modalMessage="A variable that determines the negative weight of gamete maturation. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligible, the higher the gamma value for gamete maturation, the more costly it is to the organism to invest in gamete maturation. Therefore, as the cost of gamete production increases, the benefits for investing in gamete maturation decrease."
+        />
 
-            <SliderInput
-                id="Investment cost for Mating Effort (γₘ, ₜ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma2}
-                modalMessage="A variable that determines the negative weight of mating effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for mating effort, the more costly it is to the organism to invest in mating effort. Therefore, there is lower value for mating effort, and will get picked less."
-            />
+        <SliderInput
+            id="Investment cost for Mating Effort (γₘ, ₜ)"
+            min="0"
+            max="1"
+            step="0.1"
+            bind:inputVar={$gamma2}
+            modalMessage="A variable that determines the negative weight of mating effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligible, the higher the gamma value for mating effort, the more costly it is to the organism to invest in mating effort. Therefore, as the cost of mating effort increases, the benefits for investing in mating effort decrease."
+        />
 
-            <SliderInput
-                id="Investment cost for Parental Effort (γₚ, ₜ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$gamma3}
-                modalMessage="A variable that determines the negative weight of parental effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligable, the higher the gamma value for parental effort, the more costly it is to the organism to invest in parental effort. Therefore, there is lower value for parental effort, and will get picked less."
-            />
+        <SliderInput
+            id="Investment cost for Parental Effort (γₚ, ₜ)"
+            min="0"
+            max="1"
+            step="0.1"
+            bind:inputVar={$gamma3}
+            modalMessage="A variable that determines the negative weight of parental effort. Gamma is used in the cost function, which dictates that the trait expression and hormone production are costly to the organism. While the cost of hormone production is so small that it is negligible, the higher the gamma value for parental effort, the more costly it is to the organism to invest in parental effort. Therefore, as the cost of parental effort increases, the benefits for investing in parental effort decrease."
+        />
         </div>
 
         <!-- Container for Z sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Weight of Gamete Maturation Trait (z₉)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z1}
-                modalMessage="The weight of the gamete maturation trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
-            />
-            
+            id="Weight of Gamete Maturation Trait (z₉)" 
+            min="0"
+            max="1"
+            step="0.1"
+            bind:inputVar={$z1}
+            modalMessage="The weight of the gamete maturation trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
+        />
 
-            <SliderInput
-                id="Weight of Mating Effort Trait (zₘ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z2}
-                modalMessage="The weight of the mating effort trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
-            />
+        <SliderInput
+            id="Weight of Mating Effort Trait (zₘ)"
+            min="0"
+            max="1"
+            step="0.1"
+            bind:inputVar={$z2}
+            modalMessage="The weighting of the gamete maturation trait in the fitness function, also known as the selection index. As the z value for a trait increases, the more impactful that trait is in the fitness function. However, a higher z is not necessarily always better for the organism since there are also costs when investing into a trait."
+        />
 
-            <SliderInput
-                id="Weight of Parental Effort Trait (zₚ)"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$z3}
-                modalMessage="The weight of the parental effort trait in the role of the fitness function. There higher the z value, the more impactful a trait is in the fitness function. Does not necesarily mean that a higher z is better for the organism since there are also costs when investing into a trait."
-            />
+        <SliderInput
+            id="Weight of Parental Effort Trait (zₚ)"
+            min="0"
+            max="1"
+            step="0.1"
+            bind:inputVar={$z3}
+            modalMessage="The weighting of the parental effort trait in the fitness function, also known as the selection index. As the z value for a trait increases, the more impactful that trait is in the fitness function. However, a higher z is not necessarily always better for the organism since there are also costs when investing into a trait."
+        />
         </div>
 
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput 
-                id="Hormone level for Mature Gametes (G)" 
-                min="0" 
-                max="1"
-                step="0.1" 
-                bind:inputVar={$G} 
-                modalMessage="Minimum level of circulating hormone for cells to mature at the end of gametogenesis. Produces cells capable of fertilization. This is the minimum production of hormone that has to be present in the gamete maturation trait in order for gamete maturation to occur. A lower treshhold of hormone level (G) will result in lower costs in the energy level of the organism, and lower costs investing into parental effort."/>
-
-            <SliderInput
-                id="Death probability (µ)"
-                min="0"
-                max="1"
-                step="0.001"
-                bind:inputVar={$mu}
-                modalMessage="A fixed chance that the bird will die randomly."
+            id="Minimum hormone level for Mature Gametes (G)" 
+            min="0" 
+            max="1" 
+            step="0.1" 
+            bind:inputVar={$G} 
+            modalMessage="Minimum level of circulating hormone required for cells to mature at the end of gametogenesis, leading to the production of sperm/eggs capable of fertilization. This is the minimum production of hormone that must be present in the gamete maturation trait in order for gamete maturation to occur. Gamete maturation is required for any reproductive success, so as G increases, the organism must invest more of its resources in gamete production in order to achieve any fitness, which limits its ability to invest in other activities, including gaining energy, mating effort, and parental effort.  "
             />
+
+        <SliderInput
+            id="Mortality probability (µ)"
+            min="0"
+            max="1"
+            step="0.001"
+            bind:inputVar={$mu}
+            modalMessage="In any given reproductive cycle, mu is the probability that the organism will die."
+        />
         </div>
 
         <hr
@@ -703,13 +717,14 @@ function bruh() {
         <!-- Container for food shortage sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput
-                id="Food Availability Multiplier"
-                min="0"
-                max="1"
-                step="0.1"
-                bind:inputVar={$foodShort}
-                modalMessage="A multiplier of current food. The lower the value, the lower the food available to the organism."
-            />
+            id="Food Availability Multiplier"
+            min="0"
+            max="1"
+            step="0.1"
+            bind:inputVar={$foodShort}
+            modalMessage="A multiplier of current food. The lower the value, the less energy is accrued by organism during each reproductive cycle."
+        />
+
 
             <SliderTwoInput
                 bind:inputVarHigh={$foodShortend}
@@ -752,7 +767,7 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by the cost function. Decreasing the minimum energy required for reproduction will reduce the costs of investing more into mating effort. However, this is at the expense of investing into parental effort, and at the expense of accumulating energy."
+            modalMessage="Minimum energy required for the organism to reproduce. Energy available at time, t is determined by the cost function. Decreasing the minimum energy required for reproduction will mean that more resources are available to invest in mating, parental effort, and accumulating more resources."
             bind:inputVar={$Xmin}
         />
 
@@ -762,7 +777,7 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the sensitivity in hormone in an organism. Not the same across tissues. The organism maximizes its lifetime success by finding the optimal level of the |ΔSᵢ, ₘₐₓ| at a given target."
+            modalMessage="The absolute value of the max change of the sensitivity in hormone in an organism. This is not the same across tissues. The organism seeks to maximizes its lifetime reproductive success by choosing the optimal level of the S at each target tissue, but it is constrained in reaching that optimum by |ΔSᵢ, ₘₐₓ| because it cannot change more that this value each cycle. Thus, as |ΔSᵢ, ₘₐₓ| increases, the faster that the organism can change its S values at each tissue to reach a phenotypic optimum."
             bind:inputVar={$delSmax}
         />
 
@@ -772,7 +787,7 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="The absolute value of the max rate of change of the circulating hormone in an organism. The organism will try to optimize this value to maximize its lifetime success."
+            modalMessage="The absolute value of the max change of the circulating hormone in an organism. The organism seeks to maximizes its lifetime reproductive success by choosing the optimal level of C at each reproductive cycle, but it is constrained in reaching that optimum by |Cₘₐₓ| because it cannot change more that this value each cycle. Thus, as |Cₘₐₓ| increases, the faster that the organism can change its  hormone production to reach a phenotypic optimum"
             bind:inputVar={$delCmax}
         />
 
@@ -782,7 +797,7 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="Determines the food availible in the environment for the organism. Increasing the food availiability will increase the payoff when investing in foraging."
+            modalMessage="•	Determines the food available in the environment for the organism. Increasing the food availability will increase the payoff when investing in foraging."
             bind:inputVar={$tau}
         />
 
@@ -792,7 +807,7 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="A constant used by the Michaelis-Menten Equation. Equal across all tissues."
+            modalMessage="The Michaelis constant used by the Michaelis-Menten Equation. It is assumed to be equal across all tissues. K is the concentration of a substrate (in this case the hormone) at which the reaction between hormones and receptors reaches half of its maximum velocity. As K increases, more hormone is needed to achieve the same velocity of the reaction. "
             bind:inputVar={$K}
         />
 
@@ -802,7 +817,7 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
+            modalMessage="•	The individual is in an environment that is variable from one period to the next, captured by the random variable β that affects reproductive efficacy at each time point. The distribution is defined by two positive parameters, alpha (A) and beta (B), that together control the shape of the distribution. For more information, see: https://en.wikipedia.org/wiki/Beta_distribution."
             bind:inputVar={$alpha}
         />
 
@@ -812,25 +827,9 @@ function bruh() {
             min="0"
             max="10000"
             step="1"
-            modalMessage="Beta distribution is a function that takes to input variables to determine the shape of the distribution. Takes the form of beta.rvs(A, B) on the backend."
+            modalMessage="•	The individual is in an environment that is variable from one period to the next, captured by the random variable β that affects reproductive efficacy at each time point. The distribution is defined by two positive parameters, alpha (A) and beta (B), that together control the shape of the distribution. For more information, see: https://en.wikipedia.org/wiki/Beta_distribution."
             bind:inputVar={$beta}
         />
-
-        <!--input for mu-->
-        <!--
-        <FormInput
-            id="Mu"
-            inputType="number"
-            min="0"
-            max="1"
-            step="0.001"
-            bind:inputVar={$mu}
-        />
-        -->
-
-        <!--
-        <FormInput id="Z" inputType="text" bind:inputVar={$z} />
-        -->
 
         <FormInput
             id="Number of reproductive cycles (N)"
@@ -929,7 +928,7 @@ function bruh() {
             min="0"
             max={$variableRangeEnd}
             step="1"
-            modalMessage="Sets the starting value for the chosen variable at the beginning of the number of runs."
+            modalMessage="This specifies the beginning of the range. For the multiple run version of the model where you are exploring a range of values, you specify the beginning and end of the range and the number of increments to explore within that range. So, you might choose a variable to range from 1 to 5 with 16 increments will look at values of that variable at 1, 1.25, 1.5, 1.75, 2, etc. up to 5."
             bind:inputVar={$variableRangeBegin}
         />
         <FormInput
@@ -938,7 +937,7 @@ function bruh() {
             min="0"
             max="1000000"
             step="1"
-            modalMessage="Sets the ending value for the variable at the end of the number of runs."
+            modalMessage="This specifies the end of the range. For the multiple run version of the model where you are exploring a range of values, you specify the beginning and end of the range and the number of increments to explore within that range. So, you might choose a variable to range from 1 to 5 with 16 increments will look at values of that variable at 1, 1.25, 1.5, 1.75, 2, etc. up to 5."
             bind:inputVar={$variableRangeEnd}
         />
         <FormInput
@@ -947,7 +946,7 @@ function bruh() {
             min="0"
             max="1000000"
             step="1"
-            modalMessage="Variable that runs the model multiple times. It overlays all simulations onto one graph."
+            modalMessage="For the multiple run version of the model where you are exploring a range of values, you specify the beginning and end of the range and the number of increments to explore within that range. This specifies the number of increments. So, you might choose a variable to range from 1 to 5 with 16 increments will look at values of that variable at 1, 1.25, 1.5, 1.75, 2, etc."
             bind:inputVar={$numRuns}
         />
     </div>
