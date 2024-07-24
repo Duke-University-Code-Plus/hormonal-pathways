@@ -469,7 +469,7 @@
         <SliderInput
             id="Max change of sensitivity"
             min="0.01"
-            max=".9"
+            max="1"
             step="0.01"
             bind:disabled={modelRan}
             bind:inputVar={$delSmax1}
@@ -490,7 +490,7 @@
         <SliderInput
             id="Max change of sensitivity"
             min="0.01"
-            max=".9"
+            max="1"
             step="0.01"
             bind:disabled={modelRan}
             bind:inputVar={$delSmax2}
@@ -511,7 +511,7 @@
         <SliderInput
             id="Max change of sensitivity"
             min="0.01"
-            max=".9"
+            max="1"
             step="0.01"
             bind:disabled={modelRan}
             bind:inputVar={$delSmax3}
