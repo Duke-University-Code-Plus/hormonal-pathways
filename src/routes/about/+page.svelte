@@ -72,8 +72,7 @@ sensitivity, and reproductive fitness
         <!-- svelte-ignore a11y-img-redundant-alt -->
         <img src="/AaronPic.png" alt="Photo of Aaron Kutnick, the Team Lead" class="rounded-full w-32 h-32 mx-auto object-cover">
         <h4 class="text-center text-xl font-bold mt-4">Team Lead: Aaron Kutnick</h4>
-        <p class="text-center mt-2">Best Team Lead in Code+ <br>
-            UX/UI Designer <br> Web Developer for Duke</p>
+        <p class="text-center mt-2">UX/UI Designer <br> Web Developer for Duke</p>
     </div>
     <div class="m-5 p-5 border rounded shadow-lg">
         <!-- svelte-ignore a11y-img-redundant-alt -->
