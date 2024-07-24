@@ -59,6 +59,7 @@
     let ShistConTemp = [];
     let YminCon = 0;
     let YmaxCon = 0;
+    let currprefix = "";
     
     let gamma = [$gamma1, $gamma2, $gamma3];
     let z = [$z1, $z2, $z3]
@@ -214,14 +215,21 @@
 
     const endColor = [0, 0, 255]; // Blue
     const startColor = [255, 0, 0]; // Red
+    if(!$statRun){
+        currprefix = labelPrefix + " " + $variableName;
+    }
     let color = startColor;
-
     const datasets = Array.from({ length: numRunsValue }, (_, runIndex) => {
         const factor = runIndex / (numRunsValue - 1);
+        let stepInValueChange = ($variableRangeEnd-$variableRangeBegin)/numRunsValue;
+        let valueForLabel = $variableRangeBegin+stepInValueChange*(runIndex);
+        if(!$statRun){
+        labelPrefix = currprefix + "=" + valueForLabel
+        }
         if (!$statRun) {
             color = interpolateColor(startColor, endColor, factor);
             return {
-                label: `${labelPrefix} ${runIndex + 1}`,
+                label: `${labelPrefix}`,
                 data: data.map((point) => point[runIndex]),
                 borderColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`,
                 borderWidth: 1,
@@ -280,7 +288,7 @@ function createCharts() {
             type: "line",
             data: {
                 labels: Array.from({ length: Xhist.length }, (_, i) => i),
-                datasets: createDatasets(Xhist, XhistCon, "Body Condition"),
+                datasets: createDatasets(Xhist, XhistCon, "Body Condition "),
             },
             options:{
             plugins: {
@@ -446,11 +454,11 @@ function createSensitivityDatasets(data, labelPrefix) {
     for (let i = 0; i < 3; i++) {
         datasets.push(
             ...Array.from({ length: numRunsValue }, (_, runIndex) => ({
-                label: `${labelPrefix} ${i + 1} Run ${runIndex + 1}`,
+                label: `${labelPrefix} ${$variableName}=${$variableRangeBegin+(($variableRangeEnd-$variableRangeBegin)/numRunsValue)*runIndex}`,
                 data: data[i].map((point) => point[runIndex]),
                 borderColor: `rgba(${colors[i][0]}, ${colors[i][1]}, ${colors[i][2]}, 1)`,
                 borderWidth: 1,
-                radius: 0,
+                radius: 0,  
                 fill: false,
             }))
         );
@@ -459,7 +467,7 @@ function createSensitivityDatasets(data, labelPrefix) {
     return datasets;
 }
 
-    function switchSensitivityGraphs(ChosenTrait) {
+ function switchSensitivityGraphs(ChosenTrait) {
     if (sensitivityChartInstance) sensitivityChartInstance.destroy();
 
     if (ChosenTrait === 'I') {
@@ -485,7 +493,25 @@ function createSensitivityDatasets(data, labelPrefix) {
                 datasets: createDatasets(ShistTemp,ShistConTemp, "Sensitivity"),
             },
             lineTension: 0.5,
-            options: chartOptions,
+            options:{
+            plugins: {
+                legend: {
+                    display: true, // no legend
+                },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Reproductive Cycle" },
+                    max: $N,
+                },
+                y: {
+                    beginAtZero: true,
+                    title: { display: true,text:"Sensitivity"},
+                    //max: maxValue
+                },
+            },
+            },
         }
     );
 }
