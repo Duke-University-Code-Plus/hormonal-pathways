@@ -72,6 +72,8 @@
 
     async function fetchData() {
         try {
+            modelRan = true;
+
             gamma = [$gamma1, $gamma2, $gamma3];
             z = [$z1, $z2, $z3];
             var params = {
@@ -533,11 +535,8 @@
 
 <div>
     <div class="container mx-auto mb-8">
-        <h1
-            class=" flex flex-row flex-wrap text-2xl font-bold justify-center mb-4"
-        >
-            Data Grid
-        </h1>
+
+        {#if modelRan}
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-200">
                 <thead class="bg-gray-200">
@@ -599,11 +598,13 @@
                 </tbody>
             </table>
         </div>
+        {/if}
     </div>
 </div>
 
 <!-- Creating Charts-->
 <div class="flex flex-row flex-wrap gap-6 items-center justify-center mb-8">
+    {#if modelRan}
 
     <div
         class="w-[90%] sm:w-3/5 sm:max-w-[500px] bg-white shadow-md rounded-lg"
@@ -631,6 +632,7 @@
         </h2>
         <canvas id="traitChartBirdOne"></canvas>
     </div>
+    {/if}
 
     {#if showFitnessCharts}
         <div
