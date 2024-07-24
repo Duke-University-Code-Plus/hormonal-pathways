@@ -422,7 +422,7 @@
         <!-- Container for G and mu sliders-->
         <div class="flex flex-wrap justify-center w-full">
             <SliderInput 
-                id="Minimum hormone level for Mature Gametes (G)" 
+                id="Min. hormone for mature gametes (G)" 
                 min="0" 
                 max="1" 
                 step="0.1" 
